@@ -1,5 +1,11 @@
+import db from "./database";
 describe("calculate", () => {
-  it("add", () => {
-    //do nothing
+  test("add", async () => {
+    const { fetchUsers } = db;
+    await fetchUsers();
   });
+});
+
+afterAll(async () => {
+  await db.close();
 });

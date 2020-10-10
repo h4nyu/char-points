@@ -2,8 +2,7 @@
 CREATE EXTENSION "uuid-ossp";
 CREATE TABLE users ( 
     id text NOT NULL PRIMARY KEY,
-    name text NOT NULL, 
-    created_at timestamp NOT NULL
+    name text NOT NULL
 );
 
 

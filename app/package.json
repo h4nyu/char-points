@@ -7,7 +7,10 @@
     "packages/*"
   ],
   "scripts":{
-    "lint": "eslint --fix --ext .tsx,.ts ./packages"
+    "lint": "eslint --fix --ext .tsx,.ts ./packages",
+    "build": "yarn sr:build",
+    "sr:test" : "yarn workspace server test",
+    "sr:build" : "yarn workspace server build"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.4.0",
