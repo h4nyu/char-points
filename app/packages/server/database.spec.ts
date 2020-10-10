@@ -1,2 +1,5 @@
-import {getStore} from "./database";
-describe('calculate', () => { it('add', () => { })});
+describe("calculate", () => {
+  it("add", () => {
+    //do nothing
+  });
+});

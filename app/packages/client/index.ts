@@ -1,1 +1,1 @@
-export const bar = (x: any) => x
+export const bar = (x: number): number => x;
