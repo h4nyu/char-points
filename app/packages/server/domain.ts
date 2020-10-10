@@ -1,7 +1,15 @@
+import * as uuid from "uuid";
 export type User = {
   id: string; // Uuid
   name: string;
 };
+
+export function newUser(): User {
+  return {
+    id: uuid.v4(),
+    name: "",
+  };
+}
 
 export type Store = {
   fetchUsers: () => Promise<User[]>;

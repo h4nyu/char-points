@@ -9,8 +9,8 @@
   "scripts":{
     "lint": "eslint --fix --ext .tsx,.ts ./packages",
     "build": "yarn sr:build",
-    "sr:test" : "yarn workspace server test",
-    "sr:build" : "yarn workspace server build"
+    "sr" : "yarn workspace server",
+    "cl" : "yarn workspace client"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.4.0",
