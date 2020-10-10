@@ -8,7 +8,7 @@
    plugins: ['@typescript-eslint'],
    extends: [
      'eslint:recommended',
-     "plugin:prettier/recommended",
      'plugin:@typescript-eslint/recommended',
+     "plugin:prettier/recommended",
    ],
  };
