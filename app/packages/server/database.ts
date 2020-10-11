@@ -9,7 +9,7 @@ function toUser(r: Row): User {
   };
 }
 
-export const getStore = () => {
+export const Store = () => {
   const sql = postgres("postgres://app:app@db/app");
   const close = async () => {
     await sql.end({ timeout: 5 });
@@ -53,4 +53,4 @@ export const getStore = () => {
     close,
   };
 };
-export default getStore();
+export default Store();

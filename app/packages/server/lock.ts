@@ -10,6 +10,9 @@ export const Lock = (option: {
   const filename = option.filename || "lock";
   const lockPath = path.resolve(path.join(dir, filename));
   const pollInterval = option.pollInterval || 10;
+
+  let isLocked = false; /* eslint-disable */
+
   const watcher = fs.watch(dir, async (event, fn) => {
     if (event === "rename" && fn == filename) {
       try {
@@ -20,8 +23,6 @@ export const Lock = (option: {
       }
     }
   });
-
-  let isLocked = false;
 
   const lock = async () => {
     try {
@@ -37,6 +38,15 @@ export const Lock = (option: {
     isLocked = false;
   };
 
+  const withLock = async (fn: () => Promise<void>) => {
+    try {
+      await lock();
+      await fn();
+    } finally {
+      await unlock();
+    }
+  };
+
   const close = () => {
     if (fs.existsSync(lockPath)) {
       fs.rmdirSync(lockPath);
@@ -45,6 +55,7 @@ export const Lock = (option: {
   };
 
   return {
+    withLock,
     lock,
     unlock,
     close,

@@ -1,5 +1,5 @@
 import db from "./database";
-import { newUser } from "./domain";
+import { defaultUser } from "./domain";
 
 beforeEach(async () => {
   const { clearUsers } = db;
@@ -13,7 +13,7 @@ afterAll(async () => {
 describe("user", () => {
   test("insert and fetch", async () => {
     const { insertUser, fetchUsers } = db;
-    const user = newUser();
+    const user = defaultUser();
     await insertUser(user);
     const users = await fetchUsers();
     expect(users.length).toBe(1);
@@ -21,7 +21,7 @@ describe("user", () => {
 
   test("insert and update", async () => {
     const { insertUser, fetchUser, updateUser } = db;
-    const savedUser = newUser();
+    const savedUser = defaultUser();
     savedUser.name = "aaa";
     await insertUser(savedUser);
     savedUser.name = "bbb";
