@@ -17,3 +17,8 @@ export type Store = {
   // insert: <T>(row: T) => Promise<void>;
   // update: <T>(row: T) => Promise<void>;
 };
+
+export type Lock = {
+  lock: () => Promise<void>;
+  unlock: () => Promise<void>;
+};

@@ -28,7 +28,7 @@ describe("user", () => {
     await updateUser(savedUser);
     let updatedUser = await fetchUser({ name: "aaa" });
     expect(updatedUser).toBe(undefined);
-    let updatedUser = await fetchUser({ name: "bbb" });
+    updatedUser = await fetchUser({ name: "bbb" });
     expect(updatedUser?.name).toBe("bbb");
   });
 });
