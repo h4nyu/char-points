@@ -1,9 +1,11 @@
 import fastify from "fastify";
-import { CreatePayload, createUser } from "./domain";
+import cluster from "cluster";
+import os from "os";
 import { Lock } from "./lock";
 import database from "./database";
+import { CreatePayload, createUser } from "./domain";
 const lock = Lock({ dir: "/tmp" });
-const server = fastify();
+const server = fastify({logger:true});
 
 server.post<{
   Body: CreatePayload;
@@ -12,10 +14,18 @@ server.post<{
   return await createUser(lock, database, payload);
 });
 
-server.listen(80, "0.0.0.0", (err, address) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
+if (cluster.isMaster) {
+  console.log(`Master ${process.pid} is running`);
+  // Fork workers.
+  for (let i = 0; i < os.cpus().length; i++) {
+    cluster.fork();
   }
-  console.log(`Server listening at ${address}`);
-});
+} else {
+  server.listen(80, "0.0.0.0", (err, address) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    console.log(`Slave ${process.pid} Server listening at ${address}`);
+  });
+}
