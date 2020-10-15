@@ -1,0 +1,10 @@
+{
+  "name": "x-web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "vuetify": "^2.3.14"
+  }
+}

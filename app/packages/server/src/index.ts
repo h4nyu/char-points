@@ -3,9 +3,10 @@ import cluster from "cluster";
 import os from "os";
 import { Lock } from "./lock";
 import database from "./database";
-import { CreatePayload, createUser } from "./domain";
+import { CreatePayload, createUser } from "x-core/user";
+
 const lock = Lock({ dir: "/tmp" });
-const server = fastify({logger:true});
+const server = fastify({ logger: true });
 
 server.post<{
   Body: CreatePayload;

@@ -1,5 +1,5 @@
 import db from "./database";
-import { defaultUser } from "./domain";
+import { defaultUser } from "x-core/user";
 
 beforeEach(async () => {
   const { clearUsers } = db;

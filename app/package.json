@@ -6,11 +6,12 @@
   "workspaces": [
     "packages/*"
   ],
-  "scripts":{
+  "scripts": {
     "lint": "eslint --fix --ext .tsx,.ts ./packages",
-    "build": "yarn sr:build",
-    "sr" : "yarn workspace server",
-    "cl" : "yarn workspace client"
+    "sr": "yarn workspace server",
+    "cl": "yarn workspace client",
+    "cr": "yarn workspace x-core",
+    "wb": "yarn workspace x-web"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.4.0",
@@ -18,6 +19,7 @@
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "lerna": "^3.22.1",
     "prettier": "^2.1.2"
   }
 }

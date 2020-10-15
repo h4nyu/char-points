@@ -3,10 +3,6 @@ import { range } from "lodash";
 
 const lock = Lock({ dir: "/tmp" });
 
-afterAll(() => {
-  lock.close();
-});
-
 describe("lock", () => {
   test("lock", async () => {
     let resorceA = 0;
@@ -21,6 +17,5 @@ describe("lock", () => {
     await Promise.all(range(10).map(proc));
     expect(resorceA).toBe(10);
     expect(resorceB).toBe(55);
-    lock.close();
   });
 });

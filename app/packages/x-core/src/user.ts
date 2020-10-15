@@ -1,9 +1,5 @@
 import * as uuid from "uuid";
-import { ErrorKind } from "./error";
-export type User = {
-  id: string; // Uuid
-  name: string;
-};
+import { Store, Lock, ErrorKind, User } from ".";
 
 export function defaultUser(): User {
   return {
@@ -30,12 +26,3 @@ export async function createUser(
   });
   return user.id;
 }
-
-export type Store = {
-  fetchUsers: () => Promise<User[]>;
-  fetchUser: (payload: { name?: string }) => Promise<User | undefined>;
-  insertUser: (row: User) => Promise<void>;
-};
-export type Lock = {
-  withLock: (fn: () => Promise<void>) => Promise<void>;
-};

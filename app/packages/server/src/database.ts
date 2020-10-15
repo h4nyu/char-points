@@ -1,5 +1,5 @@
 import postgres, { Row } from "postgres";
-import { User } from "./domain";
+import { User } from "x-core";
 import { first } from "lodash";
 
 function toUser(r: Row): User {
