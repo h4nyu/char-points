@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios";
-import { CreatePayload } from "server/domain";
+import { CreatePayload } from "x-core/user";
 
 export const UserApi = (axios: AxiosInstance) => {
   const create = async (payload: CreatePayload): Promise<string> => {
