@@ -3,5 +3,21 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch --mode=development"
+  },
+  "devDependencies": {
+    "@types/react-dom": "^16.9.8",
+    "html-webpack-plugin": "^4.5.0",
+    "ts-loader": "^8.0.5",
+    "typescript": "^4.0.3",
+    "webpack": "^5.1.3",
+    "webpack-cli": "^4.0.0"
+  },
+  "dependencies": {
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
+  }
 }

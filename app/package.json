@@ -8,11 +8,11 @@
   ],
   "scripts": {
     "lint": "eslint --fix --ext .tsx,.ts ./packages",
-    "build": "yarn cr build && yarn sr build && yarn cl build",
-    "sr": "yarn workspace server",
-    "cl": "yarn workspace client",
-    "cr": "yarn workspace x-core",
-    "wb": "yarn workspace x-web"
+    "build": "yarn cor build && yarn srv build && yarn api build && yarn web build",
+    "srv": "yarn workspace server",
+    "api": "yarn workspace client",
+    "cor": "yarn workspace x-core",
+    "web": "yarn workspace x-web"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.4.0",
