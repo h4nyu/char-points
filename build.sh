@@ -1,2 +1,2 @@
 #!/bin/sh
-docker-compose -f docker-compose.build.yml build --parallel
+docker-compose -f docker-compose.build.yml build
