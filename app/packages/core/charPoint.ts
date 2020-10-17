@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { CharPoint, PointType } from ".";
 
-
 export function wrap(point: CharPoint) {
   const shift = (diff: { x: number; y: number }) => {
     return wrap({

@@ -1,6 +1,5 @@
 import { Row, Sql } from "postgres";
 import { CharPoint } from "@charpoints/core";
-import { first } from "lodash";
 
 function toCharPoint(r: Row): CharPoint {
   return {

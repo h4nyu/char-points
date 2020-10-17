@@ -9,5 +9,5 @@ afterAll(async () => {
 });
 
 describe("charpoint", () => {
-  beforeEach(async () => {});
+  //TODO
 });

@@ -1,11 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Button from '@material-ui/core/Button';
+import React from "react";
+import Button from "@material-ui/core/Button";
+import AppBar from "./AppBar";
 
 export default function App() {
   return (
-    <Button variant="contained" color="primary">
-      Hello World
-    </Button>
+    <div>
+      <AppBar />
+      <Button variant="contained" color="primary">
+        Hello World
+      </Button>
+    </div>
   );
 }
