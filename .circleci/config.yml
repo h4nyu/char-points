@@ -1,10 +1,7 @@
 version: 2.1
 jobs:
   build:
+    machine: true
     steps:
-      - setup_remote_docker:
-        version: 19.03.13
-
       - checkout
-
       - run: docker-compose config
