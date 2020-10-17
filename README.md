@@ -1,7 +1,8 @@
 # nodejs-monorepo-template
 
-* database migration
+* typescript
 * browser
 * server
 * client
 * core libs
+* database migration
