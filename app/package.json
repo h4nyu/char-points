@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "lint": "eslint --fix --ext .tsx,.ts ./packages",
-    "build": "yarn core build && yarn srv build && yarn api build && yarn web build",
+    "build": "gulp",
     "srv": "yarn workspace @charpoints/server",
     "api": "yarn workspace @charpoints/api",
     "core": "yarn workspace @charpoints/core",
@@ -20,6 +20,7 @@
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "gulp": "^4.0.2",
     "lerna": "^3.22.1",
     "prettier": "^2.1.2"
   },
