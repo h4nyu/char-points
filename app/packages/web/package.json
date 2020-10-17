@@ -17,6 +17,7 @@
     "webpack-cli": "^4.0.0"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0"
   }
