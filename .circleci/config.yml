@@ -1,7 +1,12 @@
 version: 2.1
-orbs:
-  node: circleci/node@3.0.0
-workflows:
-  node-tests:
-    jobs:
-      - node/test
+jobs:
+  build:
+    machine: true
+    steps:
+      - setup_remote_docker:
+        version: 19.03.13
+      - checkout
+        # start proprietary DB using private Docker image
+        # with credentials stored in the UI
+      - run: |
+        docker-compose config
