@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   app:
-    image: "monorepo-node-app"
+    image: "charpoints-app"
     build:
       context: ./app
       args:

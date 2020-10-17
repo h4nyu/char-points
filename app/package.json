@@ -1,5 +1,5 @@
 {
-  "name": "nonorepo",
+  "name": "charpoints",
   "version": "1.0.0",
   "license": "MIT",
   "private": true,
@@ -8,11 +8,11 @@
   ],
   "scripts": {
     "lint": "eslint --fix --ext .tsx,.ts ./packages",
-    "build": "yarn cor build && yarn srv build && yarn api build && yarn web build",
-    "srv": "yarn workspace server",
-    "api": "yarn workspace client",
-    "cor": "yarn workspace x-core",
-    "web": "yarn workspace x-web"
+    "build": "yarn core build && yarn srv build && yarn api build && yarn web build",
+    "srv": "yarn workspace @charpoints/server",
+    "api": "yarn workspace @charpoints/api",
+    "core": "yarn workspace @charpoints/core",
+    "web": "yarn workspace @charpoints/web"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.4.0",

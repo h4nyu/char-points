@@ -3,7 +3,7 @@ import cluster from "cluster";
 import os from "os";
 import { Lock } from "./lock";
 import database from "./database";
-import { CreatePayload, createUser } from "x-core/user";
+import { CreatePayload, createUser } from "@charpoints/core/user";
 import fastifyStatic from "fastify-static"
 
 const lock = Lock({ dir: "/tmp" });

@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   server:
-    image: "monorepo-node-app"
+    image: "charpoints-app"
     command: yarn srv start
     environment:
       - DATABASE_URL=postgres://app:app@db/app
@@ -13,7 +13,7 @@ services:
       - "${SERVER_PORT}:80"
 
   migrate:
-    image: "monorepo-node-app"
+    image: "charpoints-app"
     environment:
       - DATABASE_URL=postgres://app:app@db/app
     command: yarn db-migrate up

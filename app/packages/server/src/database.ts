@@ -1,5 +1,5 @@
 import postgres, { Row } from "postgres";
-import { User } from "x-core";
+import { User } from "@charpoints/core";
 import { first } from "lodash";
 
 function toUser(r: Row): User {
