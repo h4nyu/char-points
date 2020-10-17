@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir":"./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths" : {
+      "x-core/*": ["../x-core/src/*"]
+    }
+  },
+  "references": [
+    { "path": "../x-core" }
+  ]
+}

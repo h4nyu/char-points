@@ -10,7 +10,7 @@ function toUser(r: Row): User {
 }
 
 export const Store = () => {
-  const sql = postgres("postgres://app:app@db/app", { max: 5 });
+  const sql = postgres(process.env.DATABASE_URL || "", { max: 5 });
   const close = async () => {
     await sql.end({ timeout: 5 });
   };

@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "lint": "eslint --fix --ext .tsx,.ts ./packages",
+    "build": "yarn cr build && yarn sr build && yarn cl build",
     "sr": "yarn workspace server",
     "cl": "yarn workspace client",
     "cr": "yarn workspace x-core",
@@ -21,5 +22,9 @@
     "eslint-plugin-prettier": "^3.1.4",
     "lerna": "^3.22.1",
     "prettier": "^2.1.2"
+  },
+  "dependencies": {
+    "db-migrate": "^0.11.11",
+    "db-migrate-pg": "^1.2.2"
   }
 }

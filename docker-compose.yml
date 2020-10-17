@@ -2,31 +2,22 @@ version: '3.4'
 
 services:
   app:
-    build:
-      context: ./app
-      args:
-        - http_proxy
-        - https_proxy
+    image: "monorepo-node-app"
     volumes:
       - ./app:/srv
     command: yarn sr start
-    ports:
-      - $WEB_PORT:80
+    environment:
+      - DATABASE_URL=postgres://app:app@db/app
     depends_on:
       - migrate
 
   migrate:
-    build:
-      context: ./migrate
-      args:
-        - http_proxy
-        - https_proxy
+    image: "monorepo-node-app"
     volumes:
-      - ./migrate:/go/src/migrate
-    command: goose up
+      - ./app:/srv
     environment:
-      GOOSE_DRIVER: postgres
-      GOOSE_DBSTRING: "host=db user=app password=app sslmode=disable"
+      - DATABASE_URL=postgres://app:app@db/app
+    command: yarn db-migrate up
     depends_on:
       - db
 
@@ -35,4 +26,3 @@ services:
     environment:
       POSTGRES_PASSWORD: app
       POSTGRES_USER: app
-
