@@ -2,23 +2,14 @@ import fastify from "fastify";
 import cluster from "cluster";
 import os from "os";
 import { Lock } from "./lock";
-import database from "./database";
-import { CreatePayload, createUser } from "@charpoints/core/user";
-import fastifyStatic from "fastify-static"
+import fastifyStatic from "fastify-static";
 
 const lock = Lock({ dir: "/tmp" });
 const server = fastify({ logger: true });
 
-server.post<{
-  Body: CreatePayload;
-}>("/user", {}, async (request) => {
-  const payload = request.body;
-  return await createUser(lock, database, payload);
-});
-
 server.register(fastifyStatic, {
-  root: '/srv/packages/web/dist',
-})
+  root: "/srv/packages/web/dist",
+});
 
 if (cluster.isMaster) {
   console.log(`Master ${process.pid} is running`);
