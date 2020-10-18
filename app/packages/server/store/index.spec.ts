@@ -27,23 +27,19 @@ describe("charpoint", () => {
   });
   test("filter", async () => {
     await Promise.all([
-      repo.insert(
-        CharPoint().setImageId("testA").unwrap()
-      ),
-      repo.insert(
-        CharPoint().setImageId("testB").unwrap()
-      ),
+      repo.insert(CharPoint().setImageId("testA").unwrap()),
+      repo.insert(CharPoint().setImageId("testB").unwrap()),
       repo.insert(
         CharPoint().setImageId("testB").setPointType(PointType.Stop).unwrap()
-      )
-    ])
-    let res = await repo.filter({})
-    expect(res.length).toBe(3)
-    res = await repo.filter({imageId: "testA"})
-    expect(res.length).toBe(1)
-    res = await repo.filter({imageId: "testB"})
-    expect(res.length).toBe(2)
-    res = await repo.filter({imageId: "testB", pointType: PointType.Stop})
-    expect(res.length).toBe(1)
+      ),
+    ]);
+    let res = await repo.filter({});
+    expect(res.length).toBe(3);
+    res = await repo.filter({ imageId: "testA" });
+    expect(res.length).toBe(1);
+    res = await repo.filter({ imageId: "testB" });
+    expect(res.length).toBe(2);
+    res = await repo.filter({ imageId: "testB", pointType: PointType.Stop });
+    expect(res.length).toBe(1);
   });
 });

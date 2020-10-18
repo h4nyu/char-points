@@ -19,18 +19,18 @@ export default function wrap(arg?: CharPoint) {
   const unwrap = () => {
     return point;
   };
-  const setImageId = (v:string) => {
+  const setImageId = (v: string) => {
     return wrap({
       ...point,
-      imageId: v
-    })
-  }
-  const setPointType = (v:PointType) => {
+      imageId: v,
+    });
+  };
+  const setPointType = (v: PointType) => {
     return wrap({
       ...point,
-      pointType: v
-    })
-  }
+      pointType: v,
+    });
+  };
   return {
     shift,
     setImageId,

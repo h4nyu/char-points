@@ -13,16 +13,19 @@ function toCharPoint(r: Row): CharPoint {
 }
 
 export default (sql: Sql<any>) => {
-  const filter = async (payload:{imageId?:string, pointType?:PointType}): Promise<CharPoint[]> => {
-    const {imageId, pointType} = payload;
-    let rows:Row[] = []
+  const filter = async (payload: {
+    imageId?: string;
+    pointType?: PointType;
+  }): Promise<CharPoint[]> => {
+    const { imageId, pointType } = payload;
+    let rows: Row[] = [];
     if (imageId !== undefined && pointType !== undefined) {
       rows = await sql`SELECT * FROM char_points WHERE image_id=${imageId} AND point_type=${pointType}`;
-    }else if(imageId !== undefined){
+    } else if (imageId !== undefined) {
       rows = await sql`SELECT * FROM char_points WHERE image_id=${imageId}`;
-    }else if(pointType !== undefined){
+    } else if (pointType !== undefined) {
       rows = await sql`SELECT * FROM char_points WHERE point_type=${pointType}`;
-    }else{
+    } else {
       rows = await sql`SELECT * FROM char_points`;
     }
     return rows.map(toCharPoint);
