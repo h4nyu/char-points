@@ -73,8 +73,8 @@ export default (sql: Sql<any>) => {
       id=${r.id}
     `;
   };
-  const delete_ = async (payload: {id?:string}) => {
-    const {id} = payload;
+  const delete_ = async (payload: { id?: string }) => {
+    const { id } = payload;
     if (id !== undefined) {
       await sql`
       DELETE FROM 
@@ -83,7 +83,7 @@ export default (sql: Sql<any>) => {
         id=${id}
       `;
     }
-  }
+  };
 
   const clear = async (): Promise<void> => {
     await sql`TRUNCATE TABLE char_points`;

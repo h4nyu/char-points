@@ -24,7 +24,7 @@ describe("charpoint", () => {
     await repo.update(row);
     res = await repo.find({ id: row.id });
     expect(res).toStrictEqual(row);
-    await repo.delete({id: row.id})
+    await repo.delete({ id: row.id });
     res = await repo.find({ id: row.id });
     expect(res).toBe(undefined);
   });
