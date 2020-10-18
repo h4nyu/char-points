@@ -15,7 +15,7 @@ describe("charpoint", () => {
   beforeEach(async () => {
     await repo.clear();
   });
-  test("create and update", async () => {
+  test("create,update,find,delete", async () => {
     const row = CharPoint().unwrap();
     await repo.insert(row);
     let res = await repo.find({ id: row.id });
@@ -24,6 +24,9 @@ describe("charpoint", () => {
     await repo.update(row);
     res = await repo.find({ id: row.id });
     expect(res).toStrictEqual(row);
+    await repo.delete({id: row.id})
+    res = await repo.find({ id: row.id });
+    expect(res).toBe(undefined);
   });
   test("filter", async () => {
     await Promise.all([

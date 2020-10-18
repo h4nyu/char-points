@@ -10,7 +10,6 @@ export const Lock = (option: {
   const filename = option.filename || "lock";
   const lockPath = path.resolve(path.join(dir, filename));
   const pollInterval = option.pollInterval || 1;
-
   let isLocked = false; /* eslint-disable */
 
   const lock = async () => {
