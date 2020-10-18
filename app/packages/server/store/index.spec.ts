@@ -15,14 +15,35 @@ describe("charpoint", () => {
   beforeEach(async () => {
     await repo.clear();
   });
-  test("insert and find", async () => {
+  test("create and update", async () => {
     const row = CharPoint().unwrap();
-    await repo.create(row);
+    await repo.insert(row);
     let res = await repo.find({ id: row.id });
     expect(res).toStrictEqual(row);
     row.pointType = PointType.Stop;
     await repo.update(row);
     res = await repo.find({ id: row.id });
     expect(res).toStrictEqual(row);
+  });
+  test("filter", async () => {
+    await Promise.all([
+      repo.insert(
+        CharPoint().setImageId("testA").unwrap()
+      ),
+      repo.insert(
+        CharPoint().setImageId("testB").unwrap()
+      ),
+      repo.insert(
+        CharPoint().setImageId("testB").setPointType(PointType.Stop).unwrap()
+      )
+    ])
+    let res = await repo.filter({})
+    expect(res.length).toBe(3)
+    res = await repo.filter({imageId: "testA"})
+    expect(res.length).toBe(1)
+    res = await repo.filter({imageId: "testB"})
+    expect(res.length).toBe(2)
+    res = await repo.filter({imageId: "testB", pointType: PointType.Stop})
+    expect(res.length).toBe(1)
   });
 });

@@ -1,5 +1,5 @@
 import { Row, Sql } from "postgres";
-import { CharPoint } from "@charpoints/core";
+import { CharPoint, PointType } from "@charpoints/core";
 import { first } from "lodash";
 
 function toCharPoint(r: Row): CharPoint {
@@ -13,8 +13,18 @@ function toCharPoint(r: Row): CharPoint {
 }
 
 export default (sql: Sql<any>) => {
-  const filter = async (): Promise<CharPoint[]> => {
-    const rows = await sql`SELECT * FROM char_points`;
+  const filter = async (payload:{imageId?:string, pointType?:PointType}): Promise<CharPoint[]> => {
+    const {imageId, pointType} = payload;
+    let rows:Row[] = []
+    if (imageId !== undefined && pointType !== undefined) {
+      rows = await sql`SELECT * FROM char_points WHERE image_id=${imageId} AND point_type=${pointType}`;
+    }else if(imageId !== undefined){
+      rows = await sql`SELECT * FROM char_points WHERE image_id=${imageId}`;
+    }else if(pointType !== undefined){
+      rows = await sql`SELECT * FROM char_points WHERE point_type=${pointType}`;
+    }else{
+      rows = await sql`SELECT * FROM char_points`;
+    }
     return rows.map(toCharPoint);
   };
 
@@ -29,7 +39,7 @@ export default (sql: Sql<any>) => {
     return first(rows.map(toCharPoint));
   };
 
-  const create = async (r: CharPoint): Promise<void> => {
+  const insert = async (r: CharPoint): Promise<void> => {
     await sql`
     INSERT INTO char_points (
       id,
@@ -67,7 +77,7 @@ export default (sql: Sql<any>) => {
 
   return {
     filter,
-    create,
+    insert,
     update,
     clear,
     find,
