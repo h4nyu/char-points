@@ -15,10 +15,8 @@ export type CharPoint = {
 
 export type CharImage = {
   id: string; // Uuid
-  x: number;
-  y: number;
-  pointType: PointType;
-  imageId: string;
+  data: any; //binary
+  createdAt: string;
 };
 
 export type Lock = {

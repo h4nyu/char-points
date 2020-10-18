@@ -1,12 +1,8 @@
-import * as point from "./charPoint";
+import CharPoint from "./CharPoint";
 
 describe("charPoint", () => {
   test("wrap", () => {
-    const a = point
-      .wrap(point.default())
-      .shift({ x: 1, y: 1 })
-      .shift({ x: 2, y: 2 })
-      .unwrap();
+    const a = CharPoint().shift({ x: 1, y: 1 }).shift({ x: 2, y: 2 }).unwrap();
     console.log(a);
   });
 });
