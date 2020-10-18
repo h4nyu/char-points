@@ -7,12 +7,12 @@ services:
     environment:
       - DATABASE_URL=postgres://app:app@db/app
     restart: on-failure
-    depends_on:
-      - migrate
     ports:
       - "${SERVER_PORT}:80"
+    depends_on:
+      - migration
 
-  migrate:
+  migration:
     image: "charpoints-app"
     environment:
       - DATABASE_URL=postgres://app:app@db/app
