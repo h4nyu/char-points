@@ -6,4 +6,9 @@ jobs:
       - checkout
       - run: sh build.sh
       - run: | 
-          sh build.sh
+          docker-compose run --rm app yarn install
+          docker-compose run --rm app yarn build
+      - run: | 
+          docker-compose run --rm app yarn srv test
+      - run: | 
+          docker-compose run --rm app yarn core test
