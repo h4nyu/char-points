@@ -6,5 +6,4 @@ export default {
   component: Header,
 };
 
-const Template: Story = () => <Header />;
-export const LoggedIn = Template;
+export const Primary: React.SFC<{}> = () => <Header/>;

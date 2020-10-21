@@ -11,7 +11,6 @@ jobs:
       - run: | 
           docker-compose run --rm app yarn install
           docker-compose run --rm app yarn build
-          export SERVER_PORT=8080
       - run: | 
           docker-compose run --rm app yarn srv test
       - run: | 
