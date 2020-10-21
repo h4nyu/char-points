@@ -3,6 +3,11 @@ version: '3.4'
 services:
   app:
     image: "charpoints-app"
+    build:
+      context: ./app
+      args:
+        - http_proxy
+        - https_proxy
     volumes:
       - ./app:/srv
     command: yarn sr start
@@ -42,7 +47,7 @@ services:
       - db
 
   db:
-    image: postgres
+    image: postgres:13
     environment:
       POSTGRES_PASSWORD: app
       POSTGRES_USER: app

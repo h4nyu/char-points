@@ -20,5 +20,5 @@ export type CharImage = {
 };
 
 export type Lock = {
-  withLock: (fn: () => Promise<void>) => Promise<void>;
+  withLock: <T>(fn: () => Promise<T>) => Promise<T>;
 };
