@@ -4,7 +4,7 @@ jobs:
     machine: true
     environment:
       - STORYBOOK_PORT: 9090
-      - WEB_PORT: 8080
+      - SERVER_PORT: 8080
     steps:
       - checkout
       - run: docker-compose build
