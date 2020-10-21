@@ -36,6 +36,14 @@ services:
     depends_on:
       - server
 
+  storybook:
+    image: "charpoints-app"
+    volumes:
+      - ./app:/srv
+    command: yarn web storybook
+    ports:
+      - "${STORYBOOK_PORT}:9090"
+
   migrate:
     image: "charpoints-app"
     volumes:
