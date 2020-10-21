@@ -1,11 +1,11 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import AppBar from "./AppBar";
+import {Header} from "./Header";
 
 export default function App() {
   return (
     <div>
-      <AppBar />
+      <Header />
       <Button variant="contained" color="primary">
         Hello World
       </Button>
