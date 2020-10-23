@@ -1,9 +1,9 @@
-import React from 'react';
-import { Header } from './Header';
+import React from "react";
+import { Header } from "./Header";
 
 export default {
-  title: 'Example/Header',
+  title: "Example/Header",
   component: Header,
 };
 
-export const Primary: React.SFC<{}> = () => <Header/>;
+export const Primary = () => <Header />;

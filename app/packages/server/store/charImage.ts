@@ -11,7 +11,7 @@ function toCharPoint(r: Row): CharPoint {
   };
 }
 
-export default (sql: Sql<any>) => {
+export default (sql: Sql) => {
   const filter = async (): Promise<CharPoint[]> => {
     const rows = await sql`SELECT * FROM charpoints`;
     return rows.map(toCharPoint);

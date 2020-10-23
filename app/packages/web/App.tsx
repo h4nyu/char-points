@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import {Header} from "./Header";
+import { Header } from "./Header";
 
 export default function App() {
   return (

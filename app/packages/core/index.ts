@@ -15,7 +15,6 @@ export type CharPoint = {
 
 export type CharImage = {
   id: string; // Uuid
-  data: any; //binary
   createdAt: string;
 };
 
