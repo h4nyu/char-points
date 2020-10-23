@@ -3,7 +3,7 @@ module.exports = {
     "../**/*.stories.@(ts|tsx)"
   ],
   "addons": [
-    '@storybook/addon-actions',
+    "@storybook/addon-essentials",
     '@storybook/addon-knobs',
   ],
 }

@@ -3,6 +3,17 @@ const path = require('path');
 
 module.exports = {
   entry: './index.tsx',
+  devServer: {
+    host: "0.0.0.0",
+    contentBase: path.join(__dirname, 'dist'),
+    compress: true,
+    port: process.env.WEBPACK_PORT || 9000
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
   module: {
     rules: [
       {
@@ -19,7 +30,7 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
 };

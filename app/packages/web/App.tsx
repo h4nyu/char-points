@@ -1,14 +1,26 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
-import { Header } from "./Header";
+import React, {Suspense, lazy} from "react";
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+
+const MainPage = lazy(() => import("./pages/MainPage"))
+export const routes = [
+  {
+    path: "/",
+    Component: MainPage,
+  }
+]
 
 export default function App() {
   return (
-    <div>
-      <Header />
-      <Button variant="contained" color="primary">
-        Hello World
-      </Button>
-    </div>
+    <Router>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Switch>
+          {routes.map(({path, Component}) => <Route path={path} component={Component}/>)}
+        </Switch>
+      </Suspense>
+    </Router>
   );
 }

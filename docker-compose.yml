@@ -32,7 +32,11 @@ services:
     image: "charpoints-app"
     volumes:
       - ./app:/srv
-    command: yarn web watch
+    command: yarn web start:dev
+    environment:
+      - WEBPACK_PORT
+    ports:
+      - "${WEBPACK_PORT}:${WEBPACK_PORT}"
     depends_on:
       - server
 
@@ -41,8 +45,10 @@ services:
     volumes:
       - ./app:/srv
     command: yarn web storybook
+    environment:
+      - STORYBOOK_PORT
     ports:
-      - "${STORYBOOK_PORT}:9090"
+      - "${STORYBOOK_PORT}:${STORYBOOK_PORT}"
 
   migrate:
     image: "charpoints-app"
