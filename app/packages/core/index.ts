@@ -15,9 +15,17 @@ export type CharPoint = {
 
 export type CharImage = {
   id: string; // Uuid
+  content: Buffer;
   createdAt: string;
 };
 
+export type CharImageStore = {
+  filter: (payload: { id?: string }) => Promise<CharImage[] | Error>;
+  insert: (payload: CharImage) => Promise<void | Error>;
+  update: (payload: CharImage) => Promise<void | Error>;
+  delete: (payload: { id?: string }) => Promise<void | Error>;
+};
+
 export type Lock = {
-  withLock: <T>(fn: () => Promise<T>) => Promise<T>;
+  auto: <T>(fn: () => Promise<T>) => Promise<T>;
 };

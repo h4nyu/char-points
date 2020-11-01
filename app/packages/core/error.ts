@@ -1,4 +1,4 @@
 export enum ErrorKind {
-  UserNotFound = "UserNotFound",
-  UserAlreadyExists = "UserAlreadyExists",
+  CharImageNotFound = "CharImageNotFound",
+  CharImageAlreadyExist = "CharImageAlreadyExist",
 }

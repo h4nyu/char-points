@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 module.exports = {
+  mode: 'development',
   entry: './index.tsx',
   devServer: {
     host: "0.0.0.0",
