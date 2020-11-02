@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
+    "clean": "tsc --build --clean",
     "start": "node bin/start.js",
     "test": "jest"
   },
@@ -22,7 +23,7 @@
     "fastify": "^3.6.0",
     "fastify-static": "^3.2.1",
     "lodash": "^4.17.20",
-    "postgres": "^1.0.2",
+    "postgres": "^2.0.0-beta.2",
     "uuid": "^8.3.1"
   }
 }

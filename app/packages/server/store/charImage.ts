@@ -1,23 +1,63 @@
 import { Row, Sql } from "postgres";
-import { CharPoint } from "@charpoints/core";
+import { CharImage } from "@charpoints/core";
 
-function toCharPoint(r: Row): CharPoint {
+function to(r: Row): CharImage {
   return {
     id: r.id,
-    x: r.x,
-    y: r.y,
-    imageId: r.image_id,
-    pointType: r.point_type,
+    data: r.data,
+    createdAt: r.created_at.toISOString(),
   };
 }
 
-export default (sql: Sql) => {
-  const filter = async (): Promise<CharPoint[]> => {
-    const rows = await sql`SELECT * FROM charpoints`;
-    return rows.map(toCharPoint);
+export const CharImageStore = (sql: Sql<any>) => {
+  const filter = async (payload: {}): Promise<CharImage[] | Error> => {
+    try {
+      const rows = await sql`SELECT * FROM char_images`;
+      return rows.map(to);
+    } catch (err) {
+      return err;
+    }
+  };
+
+  const insert = async (payload: CharImage): Promise<void | Error> => {
+    try {
+      await sql`
+      INSERT INTO char_images (
+        id,
+        data,
+        created_at
+      ) VALUES (
+        ${payload.id},
+        ${payload.data},
+        ${payload.createdAt}
+      )
+      `;
+    } catch (err) {
+      return err;
+    }
+  };
+  const delete_ = async (payload: { id?: string }): Promise<void | Error> => {
+    try {
+      const { id } = payload;
+      if (id !== undefined) {
+        await sql`DELETE FROM char_images WHERE id=${id}`;
+      }
+    } catch (err) {
+      return err;
+    }
+  };
+  const clear = async () => {
+    try {
+      await sql`TRUNCATE char_images`;
+    } catch (err) {
+      return err;
+    }
   };
 
   return {
     filter,
+    delete: delete_,
+    insert,
+    clear,
   };
 };

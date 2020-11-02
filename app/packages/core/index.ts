@@ -15,7 +15,7 @@ export type CharPoint = {
 
 export type CharImage = {
   id: string; // Uuid
-  content: Buffer;
+  data: Buffer;
   createdAt: string;
 };
 

@@ -8,7 +8,7 @@ type Store = {
 export const defaultCharImage = (): CharImage => {
   return {
     id: uuid(),
-    content: new Buffer([]),
+    data: Buffer.from([]),
     createdAt: dayjs().toISOString(),
   };
 };
@@ -19,13 +19,11 @@ export const Service = (args: { store: Store; lock: Lock }) => {
     return await store.charImage.filter(payload);
   };
 
-  const create = async (payload: {
-    content: Buffer;
-  }): Promise<string | Error> => {
+  const create = async (payload: { data: Buffer }): Promise<string | Error> => {
     return await lock.auto(async () => {
       const row = {
         ...defaultCharImage(),
-        content: payload.content,
+        data: payload.data,
       };
       const err = await store.charImage.insert(row);
       if (err instanceof Error) {

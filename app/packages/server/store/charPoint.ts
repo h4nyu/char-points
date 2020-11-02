@@ -12,7 +12,7 @@ function toCharPoint(r: Row): CharPoint {
   };
 }
 
-export default (sql: Sql) => {
+export default (sql: Sql<any>) => {
   const filter = async (payload: {
     imageId?: string;
     pointType?: PointType;

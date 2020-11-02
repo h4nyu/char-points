@@ -1,5 +1,6 @@
 import postgres from "postgres";
 import CharPoint from "./charPoint";
+import { CharImageStore } from "./charImage";
 
 export const Store = (args: { url: string; max?: number }) => {
   const sql = postgres(args.url, { max: args.max || 5 });
@@ -7,7 +8,9 @@ export const Store = (args: { url: string; max?: number }) => {
     await sql.end({ timeout: 5 });
   };
   const charPoint = CharPoint(sql);
+  const charImage = CharImageStore(sql);
   return {
+    charImage,
     charPoint,
     close,
   };
