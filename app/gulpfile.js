@@ -2,7 +2,7 @@ const gulp = require('gulp');
 const exec = require('child_process').exec;
 
 
-function buildCore(cb) {
+function core(cb) {
    exec("yarn core build", function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
@@ -10,23 +10,23 @@ function buildCore(cb) {
   });
 }
 
-function buildServer(cb) {
-   exec("yarn web build", function (err, stdout, stderr) {
+function srv(cb) {
+   exec("yarn srv build", function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);
   });
 }
 
-function buildApi(cb) {
-   exec("yarn web build", function (err, stdout, stderr) {
+function api(cb) {
+   exec("yarn api build", function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);
   });
 }
 
-function buildWeb(cb) {
+function web(cb) {
    exec("yarn web build", function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
@@ -35,6 +35,7 @@ function buildWeb(cb) {
 }
 
 exports.default = gulp.series(
-  buildCore,
-  gulp.parallel(buildWeb,  buildApi, buildServer)
+  core,
+  gulp.parallel(srv,  api),
+  web,
 )
