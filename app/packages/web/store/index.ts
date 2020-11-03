@@ -1,5 +1,10 @@
-import React, { useState } from "react";
+import {DataStore} from './DataStore'
 
-export const Counter = () => {
-};
+export const RootStore = () => {
+  const dataStore = DataStore()
+  return {
+    dataStore
+  }
+}
 
+export default RootStore()
