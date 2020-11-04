@@ -13,13 +13,19 @@ export const defaultCharImage = (): CharImage => {
   };
 };
 
+export type FilterPayload = {};
+export type CreatePayload = {
+  data: Buffer;
+};
 export const Service = (args: { store: Store; lock: Lock }) => {
   const { store, lock } = args;
-  const filter = async (payload: {}): Promise<CharImage[] | Error> => {
+  const filter = async (
+    payload: FilterPayload
+  ): Promise<CharImage[] | Error> => {
     return await store.charImage.filter(payload);
   };
 
-  const create = async (payload: { data: Buffer }): Promise<string | Error> => {
+  const create = async (payload: CreatePayload): Promise<string | Error> => {
     return await lock.auto(async () => {
       const row = {
         ...defaultCharImage(),

@@ -9,6 +9,7 @@
     "watch": "tsc -w",
     "clean": "tsc --build --clean",
     "start": "node bin/start.js",
+    "start:dev": "yarn clean && ts-node bin/start.ts",
     "test": "jest"
   },
   "devDependencies": {

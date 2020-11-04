@@ -1,10 +1,10 @@
-import {DataStore} from './DataStore'
+import { DataStore } from "./DataStore";
 
 export const RootStore = () => {
-  const dataStore = DataStore()
+  const dataStore = DataStore();
   return {
-    dataStore
-  }
-}
+    dataStore,
+  };
+};
 
-export default RootStore()
+export default RootStore();

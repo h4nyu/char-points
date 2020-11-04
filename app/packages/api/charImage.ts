@@ -1,21 +1,26 @@
-import { AxiosInstance } from "axios"
-import { Service as Srv } from '@charpoints/core/charImage'
+import { AxiosInstance } from "axios";
 
-export const CharImageApi = (arg: {http:AxiosInstance, prefix: string}) => {
-  const {http, prefix} = arg
+import { FilterPayload, CreatePayload } from "@charpoints/core/charImage";
 
-  const create = async ():Promise<string|Error> => {
-    return "string"
-  }
+export const CharImageApi = (arg: { http: AxiosInstance; prefix: string }) => {
+  const { http, prefix } = arg;
 
-  const filter = async (payload:Srv.FileUpload):Promise<string|Error> => {
-    const res = await http.post(`${prefix}/filter`,payload).catch(e => new Error(e))
-    if(res instanceof Error){return res}
-    return res.data
-  }
+  const create = async (payload: CreatePayload): Promise<string | Error> => {
+    return "string";
+  };
+
+  const filter = async (payload: FilterPayload): Promise<string | Error> => {
+    const res = await http
+      .post(`${prefix}/filter`, payload)
+      .catch((e) => new Error(e));
+    if (res instanceof Error) {
+      return res;
+    }
+    return res.data;
+  };
 
   return {
     create,
-    filter
-  }
-}
+    filter,
+  };
+};

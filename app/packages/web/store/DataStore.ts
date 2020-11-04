@@ -1,16 +1,15 @@
-import { observable } from "mobx"
-import { CharImage } from "@charpoints/core"
+import { observable } from "mobx";
+import { CharImage } from "@charpoints/core";
 
 type State = {
-  charImages: CharImage[]
-}
+  charImages: CharImage[];
+};
 
 export const DataStore = () => {
-  const state:State = observable({
-    charImages:[]
-  })
-  const fetchCharImages = async () => {
-  }
+  const state: State = observable({
+    charImages: [],
+  });
+  const fetchCharImages = async () => {};
   return {
     state,
   };
