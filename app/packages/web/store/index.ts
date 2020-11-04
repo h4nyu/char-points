@@ -1,9 +1,9 @@
 import { DataStore } from "./DataStore";
-import { CharImageStore } from "./charImage"
+import { CharImageStore } from "./charImage";
 
 export const Store = () => {
   const dataStore = DataStore();
-  const charImage = CharImageStore()
+  const charImage = CharImageStore();
   return {
     dataStore,
   };
