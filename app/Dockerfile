@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:15-slim
 WORKDIR /srv
 COPY . .
 RUN yarn install \

@@ -1,10 +1,11 @@
 import { DataStore } from "./DataStore";
-import { CharImageStore } from "./charImage";
+// import { CharImageStore } from "./charImage";
 
-export const Store = () => {
+export const RootStore = () => {
   const dataStore = DataStore();
-  const charImage = CharImageStore();
+  // const charImage = CharImageStore();
   return {
+    // charImage,
     dataStore,
   };
 };
