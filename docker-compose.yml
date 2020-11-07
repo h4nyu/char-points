@@ -16,11 +16,11 @@ services:
     depends_on:
       - migrate
 
-  server:
+  srv:
     image: "charpoints-app"
     volumes:
       - ./app:/srv
-    command: yarn srv start
+    command: yarn srv start:dev
     environment:
       - DATABASE_URL=postgres://app:app@db/app
     depends_on:
@@ -38,7 +38,7 @@ services:
     ports:
       - "${WEBPACK_PORT}:${WEBPACK_PORT}"
     depends_on:
-      - server
+      - srv
 
   storybook:
     image: "charpoints-app"

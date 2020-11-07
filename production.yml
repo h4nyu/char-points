@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  server:
+  srv:
     image: "charpoints-app"
     command: yarn srv start
     environment:
@@ -21,8 +21,7 @@ services:
     depends_on:
       - db
   db:
-    image: postgres
+    image: "postgres:13"
     environment:
       POSTGRES_PASSWORD: app
       POSTGRES_USER: app
-

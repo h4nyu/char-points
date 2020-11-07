@@ -5,14 +5,7 @@ import store from "../store";
 const { dataStore } = store;
 
 const A = observer(() => {
-  const { charImages } = dataStore.state;
-  return (
-    <>
-      {charImages.map((x) => (
-        <div>aaa</div>
-      ))}
-    </>
-  );
+  return <></>;
 });
 
 export default function MainPage() {

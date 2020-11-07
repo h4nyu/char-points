@@ -1,7 +1,8 @@
-FROM node:alpine
+FROM node:15-alpine
 WORKDIR /srv
 COPY . .
 RUN yarn install \
     && yarn build \
     && rm -rf node_modules \
-    && yarn install --production
+    && yarn install --prod \
+    && yarn cache clean
