@@ -22,7 +22,6 @@ export type CharImage = {
 export type CharImageStore = {
   filter: (payload: { id?: string }) => Promise<CharImage[] | Error>;
   insert: (payload: CharImage) => Promise<void | Error>;
-  update: (payload: CharImage) => Promise<void | Error>;
   delete: (payload: { id?: string }) => Promise<void | Error>;
 };
 

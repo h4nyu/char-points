@@ -5,10 +5,7 @@ import store from "../store";
 const { dataStore } = store;
 
 const A = observer(() => {
-  return (
-    <>
-    </>
-  );
+  return <></>;
 });
 
 export default function MainPage() {
