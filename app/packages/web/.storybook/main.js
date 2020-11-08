@@ -1,8 +1,15 @@
 module.exports = {
-  "stories": [
+  webpackFinal: (config) => {
+    config.module.rules.push({
+      test: /\.txt$/i,
+      use: 'raw-loader',
+    })
+    return config;
+  },
+  stories: [
     "../**/*.stories.@(ts|tsx)"
   ],
-  "addons": [
+  addons: [
     "@storybook/addon-essentials",
     '@storybook/addon-knobs',
   ],

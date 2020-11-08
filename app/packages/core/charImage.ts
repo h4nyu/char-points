@@ -8,14 +8,14 @@ type Store = {
 export const defaultCharImage = (): CharImage => {
   return {
     id: uuid(),
-    data: Buffer.from([]),
+    data: Buffer.from([]).toString('base64'),
     createdAt: dayjs().toISOString(),
   };
 };
 
 export type FilterPayload = {};
 export type CreatePayload = {
-  data: Buffer;
+  data: string; //base64
 };
 export const Service = (args: { store: Store; lock: Lock }) => {
   const { store, lock } = args;

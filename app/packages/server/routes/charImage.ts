@@ -16,9 +16,7 @@ export const CharImageRoutes = (args: {
         data: string;
       };
     }>("/create", {}, async (req, reply) => {
-      const res = await srv.create({
-        data: Buffer.from(req.body.data, "base64"),
-      });
+      const res = await srv.create(req.body);
       reply.send(res);
     });
     app.post<{ Body: FilterPayload }>("/filter", {}, async (req, reply) => {
