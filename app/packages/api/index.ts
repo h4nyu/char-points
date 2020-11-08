@@ -13,10 +13,10 @@ export function toError(err: any): Error {
 
 export type RootApi = {
   setUrl: (url: string) => void;
-  charImage: CharImageApi
-}
+  charImage: CharImageApi;
+};
 
-export const RootApi = ():RootApi => {
+export const RootApi = (): RootApi => {
   const http = axios.create();
   const prefix = "api/v1";
   const charImage = CharImageApi({ http, prefix: `${prefix}/char-image` });

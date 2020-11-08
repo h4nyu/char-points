@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
-import MainPage from "./pages/MainPage"
+import MainPage from "./pages/MainPage";
 
 export const routes = [
   {

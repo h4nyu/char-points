@@ -4,9 +4,9 @@ import { CharImage } from "@charpoints/core";
 import { FilterPayload, CreatePayload } from "@charpoints/core/charImage";
 
 export type CharImageApi = {
-  filter:(payload:FilterPayload)=>Promise<CharImage[] | Error>
-  create:(payload:CreatePayload)=>Promise<string|Error>
-}
+  filter: (payload: FilterPayload) => Promise<CharImage[] | Error>;
+  create: (payload: CreatePayload) => Promise<string | Error>;
+};
 
 export const CharImageApi = (arg: { http: AxiosInstance; prefix: string }) => {
   const { http, prefix } = arg;
@@ -20,7 +20,9 @@ export const CharImageApi = (arg: { http: AxiosInstance; prefix: string }) => {
     }
   };
 
-  const filter = async (payload: FilterPayload): Promise<CharImage[] | Error> => {
+  const filter = async (
+    payload: FilterPayload
+  ): Promise<CharImage[] | Error> => {
     try {
       const res = await http.post(`${prefix}/filter`, payload);
       return res.data;

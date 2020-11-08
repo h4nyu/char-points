@@ -8,7 +8,7 @@ type Store = {
 export const defaultCharImage = (): CharImage => {
   return {
     id: uuid(),
-    data: Buffer.from([]).toString('base64'),
+    data: Buffer.from([]).toString("base64"),
     createdAt: dayjs().toISOString(),
   };
 };

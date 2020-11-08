@@ -7,7 +7,7 @@ describe("charImage", () => {
   const api = rootApi.charImage;
   test("create and filter", async () => {
     const buffer = await fs.promises.readFile("/srv/package.json");
-    const data = buffer.toString('base64')
+    const data = buffer.toString("base64");
     const id = await api.create({ data });
     if (id instanceof Error) {
       throw id;
