@@ -1,13 +1,19 @@
 import React from "react";
 import { Header } from "../components/Header";
-import { observer } from "mobx-react-lite";
+import { Observer } from "mobx-react-lite";
 import store from "../store";
-const { dataStore } = store;
+import ImageGrid from "../components/ImageGrid";
+import Upload from "../components/FileUpload"
+const { dataStore, charImageStore } = store;
 
 export default function MainPage() {
-  return (
-    <>
-      <Header />
-    </>
-  );
+  return  <Observer>
+    {
+      () => <>
+        <Header />
+        <Upload onChange={charImageStore.uploadFiles}/>
+        <ImageGrid charImages={dataStore.state.charImages}/>
+      </>
+    }
+  </Observer>
 }

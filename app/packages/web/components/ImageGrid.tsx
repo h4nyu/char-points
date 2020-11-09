@@ -1,6 +1,6 @@
 import React from "react";
 import { CharImage } from "@charpoints/core";
-import Image from "./Image";
+import Thumbnail from "./Thumbnail";
 
 export const ImageGrid = (props: { charImages: CharImage[] }) => {
   const { charImages } = props;
@@ -12,9 +12,14 @@ export const ImageGrid = (props: { charImages: CharImage[] }) => {
       }}
     >
       {charImages.map((x) => (
-        <div key={x.id} style={{ padding: "0.5em" }}>
-          <Image key={x.id} charImage={x} />
-        </div>
+        <Thumbnail 
+          key={x.id} charImage={x} 
+          style={{
+            height:100,
+            width:100,
+            margin: "0.1em"
+          }}
+        />
       ))}
     </div>
   );

@@ -6,7 +6,12 @@ import { RootApi } from "@charpoints/api";
 type State = {
   charImages: CharImage[];
 };
-export const DataStore = (args: { api: RootApi }) => {
+export type DataStore = {
+  state:State
+  fetchCharImages: () => Promise<void>;
+  init: () => Promise<void>
+}
+export const DataStore = (args: { api: RootApi }):DataStore => {
   const { api } = args;
   const state: State = observable({
     charImages: [],
@@ -18,7 +23,17 @@ export const DataStore = (args: { api: RootApi }) => {
     }
     state.charImages = rows;
   };
+
+  const deleteChartImage = async (id:string): Promise<void> => {
+    await api.charImage.delete({id})
+  }
+
+  const init = async () => {
+    await fetchCharImages()
+  }
   return {
     state,
+    fetchCharImages,
+    init,
   };
 };
