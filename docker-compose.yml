@@ -10,7 +10,6 @@ services:
         - https_proxy
     volumes:
       - ./app:/srv
-    command: yarn sr start
     environment:
       - DATABASE_URL=postgres://app:app@db/app
       - STORYBOOK_PORT
@@ -21,25 +20,14 @@ services:
     image: "charpoints-app"
     volumes:
       - ./app:/srv
-    command: yarn srv start:dev
+    command: wait-for-it db:5432 -- yarn srv start:dev
     environment:
       - DATABASE_URL=postgres://app:app@db/app
+      - NODE_ENV=development
     depends_on:
       - migrate
     ports:
       - "${SERVER_PORT}:80"
-
-  web:
-    image: "charpoints-app"
-    volumes:
-      - ./app:/srv
-    command: yarn web start:dev
-    environment:
-      - WEBPACK_PORT
-    ports:
-      - "${WEBPACK_PORT}:${WEBPACK_PORT}"
-    depends_on:
-      - srv
 
   storybook:
     image: "charpoints-app"
@@ -57,7 +45,7 @@ services:
       - ./app:/srv
     environment:
       - DATABASE_URL=postgres://app:app@db/app
-    command: yarn db-migrate up
+    command: wait-for-it db:5432 -- yarn db-migrate up
     depends_on:
       - db
 

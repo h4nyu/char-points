@@ -13,9 +13,14 @@ export const defaultCharImage = (): CharImage => {
   };
 };
 
-export type FilterPayload = {};
+export type FilterPayload = {
+  ids?:string[]
+};
 export type CreatePayload = {
   data: string; //base64
+};
+export type DeletePayload = {
+  id: string;
 };
 export const Service = (args: { store: Store; lock: Lock }) => {
   const { store, lock } = args;
@@ -39,9 +44,11 @@ export const Service = (args: { store: Store; lock: Lock }) => {
     });
   };
 
-  const delete_ = async (payload: { id: string }): Promise<string | Error> => {
+  const delete_ = async (payload: DeletePayload): Promise<string | Error> => {
     await lock.auto(async () => {
-      const rows = await store.charImage.filter(payload);
+      const rows = await store.charImage.filter({
+        ids: [payload.id]
+      });
       if (rows instanceof Error) {
         return rows;
       }

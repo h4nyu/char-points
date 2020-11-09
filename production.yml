@@ -3,7 +3,7 @@ version: '3.4'
 services:
   srv:
     image: "charpoints-app"
-    command: yarn srv start
+    command: wait-for-it db:5432 -- yarn srv start
     environment:
       - DATABASE_URL=postgres://app:app@db/app
     restart: on-failure
@@ -16,7 +16,7 @@ services:
     image: "charpoints-app"
     environment:
       - DATABASE_URL=postgres://app:app@db/app
-    command: yarn db-migrate up
+    command: wait-for-it db:5432 -- yarn db-migrate up
     restart: on-failure
     depends_on:
       - db
