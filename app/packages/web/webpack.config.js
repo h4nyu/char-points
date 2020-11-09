@@ -13,6 +13,7 @@ module.exports = {
   optimization: {
     splitChunks: {
       chunks: 'all',
+      chunks: 'initial',
     },
   },
   module: {
@@ -21,6 +22,10 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
+      },
+      {
+        test: /\.txt$/i,
+        use: 'raw-loader',
       },
     ],
   },

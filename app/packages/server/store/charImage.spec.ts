@@ -14,7 +14,8 @@ describe("ChartImage", () => {
   };
   beforeAll(async () => {
     await store.clear();
-    row.data = await fs.promises.readFile("/srv/package.json");
+    const buffer = await fs.promises.readFile("/srv/package.json");
+    row.data = buffer.toString("base64");
   });
   test("insert", async () => {
     const err = await store.insert(row);

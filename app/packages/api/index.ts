@@ -1,4 +1,5 @@
 import { CharImageApi } from "./charImage";
+
 import axios from "axios";
 
 export function toError(err: any): Error {
@@ -10,7 +11,12 @@ export function toError(err: any): Error {
   }
 }
 
-export const RootApi = () => {
+export type RootApi = {
+  setUrl: (url: string) => void;
+  charImage: CharImageApi;
+};
+
+export const RootApi = (): RootApi => {
   const http = axios.create();
   const prefix = "api/v1";
   const charImage = CharImageApi({ http, prefix: `${prefix}/char-image` });

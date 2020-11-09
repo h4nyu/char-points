@@ -1,11 +1,10 @@
 import { DataStore } from "./DataStore";
-// import { CharImageStore } from "./charImage";
+import { RootApi } from "@charpoints/api";
 
 export const RootStore = () => {
-  const dataStore = DataStore();
-  // const charImage = CharImageStore();
+  const api = RootApi();
+  const dataStore = DataStore({ api });
   return {
-    // charImage,
     dataStore,
   };
 };

@@ -13,6 +13,7 @@ services:
     command: yarn sr start
     environment:
       - DATABASE_URL=postgres://app:app@db/app
+      - STORYBOOK_PORT
     depends_on:
       - migrate
 

@@ -4,7 +4,7 @@ import { CharImage } from "@charpoints/core";
 function to(r: Row): CharImage {
   return {
     id: r.id,
-    data: r.data,
+    data: r.data.toString("base64"),
     createdAt: r.created_at.toISOString(),
   };
 }
@@ -28,7 +28,7 @@ export const CharImageStore = (sql: Sql<any>) => {
         created_at
       ) VALUES (
         ${payload.id},
-        ${payload.data},
+        ${Buffer.from(payload.data, "base64")},
         ${payload.createdAt}
       )
       `;
