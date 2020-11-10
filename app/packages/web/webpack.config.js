@@ -34,6 +34,10 @@ module.exports = {
           'sass-loader'
         ]
       },
+      {
+        test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'file-loader',
+      },
     ],
   },
   plugins: [new HtmlWebpackPlugin({

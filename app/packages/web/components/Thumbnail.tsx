@@ -5,6 +5,7 @@ import { CharImage } from "@charpoints/core";
 export const ImagePreview = (props: {
   charImage: CharImage;
   style?: CSSProperties;
+  isSelected?: boolean;
   onDeleteClick?: () => void;
 }) => {
   const { charImage, style, onDeleteClick } = props;
