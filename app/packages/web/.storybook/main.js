@@ -4,6 +4,14 @@ module.exports = {
       test: /\.txt$/i,
       use: 'raw-loader',
     })
+    config.module.rules.push({
+      test: /\.(css|scss)$/,
+      use: [
+        'style-loader',
+        'css-loader',
+        'sass-loader'
+      ]
+    })
     return config;
   },
   stories: [
