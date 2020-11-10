@@ -27,6 +27,13 @@ module.exports = {
         test: /\.txt$/i,
         use: 'raw-loader',
       },
+      {
+        test: /\.(css|scss)$/,
+        use: [
+          'css-loader',
+          'sass-loader'
+        ]
+      },
     ],
   },
   plugins: [new HtmlWebpackPlugin({
