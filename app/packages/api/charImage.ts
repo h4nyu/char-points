@@ -1,15 +1,22 @@
 import { AxiosInstance } from "axios";
 import { toError } from ".";
 import { CharImage } from "@charpoints/core";
-import { FilterPayload, CreatePayload, DeletePayload } from "@charpoints/core/charImage";
+import {
+  FilterPayload,
+  CreatePayload,
+  DeletePayload,
+} from "@charpoints/core/charImage";
 
 export type CharImageApi = {
   filter: (payload: FilterPayload) => Promise<CharImage[] | Error>;
   create: (payload: CreatePayload) => Promise<string | Error>;
-  delete: (payload: DeletePayload) => Promise<string | Error>
+  delete: (payload: DeletePayload) => Promise<string | Error>;
 };
 
-export const CharImageApi = (arg: { http: AxiosInstance; prefix: string }):CharImageApi => {
+export const CharImageApi = (arg: {
+  http: AxiosInstance;
+  prefix: string;
+}): CharImageApi => {
   const { http, prefix } = arg;
 
   const create = async (payload: CreatePayload): Promise<string | Error> => {
@@ -44,6 +51,6 @@ export const CharImageApi = (arg: { http: AxiosInstance; prefix: string }):CharI
   return {
     create,
     filter,
-    delete: delete_
+    delete: delete_,
   };
 };

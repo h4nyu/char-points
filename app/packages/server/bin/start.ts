@@ -15,7 +15,7 @@ if (cluster.isMaster && process.env.NODE_ENV !== "development") {
   for (const _ of os.cpus()) {
     cluster.fork();
   }
-  cluster.on('exit', worker => {
+  cluster.on("exit", (worker) => {
     console.log(`Worker ${worker.process.pid} died`);
   });
 } else {

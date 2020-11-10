@@ -2,7 +2,12 @@ import { Sql } from "postgres";
 import { Store } from ".";
 import { CharImage, Lock, CharImageStore } from "@charpoints/core";
 import { FastifyPlugin } from "fastify";
-import { Service, FilterPayload, DeletePayload, CreatePayload } from "@charpoints/core/charImage";
+import {
+  Service,
+  FilterPayload,
+  DeletePayload,
+  CreatePayload,
+} from "@charpoints/core/charImage";
 
 export const CharImageRoutes = (args: {
   store: Store;
@@ -11,7 +16,7 @@ export const CharImageRoutes = (args: {
   const { store, lock } = args;
   const srv = Service({ store, lock });
   return function (app, opts, done) {
-    app.post<{ Body: CreatePayload; }>("/create", {}, async (req, reply) => {
+    app.post<{ Body: CreatePayload }>("/create", {}, async (req, reply) => {
       const res = await srv.create(req.body);
       reply.send(res);
     });

@@ -12,8 +12,8 @@ export const routes = [
 
 export default function App() {
   React.useEffect(() => {
-    rootStore.init()
-  })
+    rootStore.init();
+  });
   return (
     <Router>
       <Suspense fallback={<div>Loading...</div>}>

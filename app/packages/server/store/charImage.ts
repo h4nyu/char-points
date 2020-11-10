@@ -11,14 +11,14 @@ function to(r: Row): CharImage {
 
 export const CharImageStore = (sql: Sql<any>) => {
   const filter = async (payload: {
-    ids?: string[],
+    ids?: string[];
   }): Promise<CharImage[] | Error> => {
     try {
-      const {ids} = payload
-      let rows = []
-      if(ids !== undefined && ids.length > 0) {
-        rows = await sql`SELECT * FROM char_images WHERE ids IN (${ids})`;
-      }else{
+      const { ids } = payload;
+      let rows = [];
+      if (ids !== undefined && ids.length > 0) {
+        rows = await sql`SELECT * FROM char_images WHERE id IN (${ids})`;
+      } else {
         rows = await sql`SELECT * FROM char_images`;
       }
       return rows.map(to);

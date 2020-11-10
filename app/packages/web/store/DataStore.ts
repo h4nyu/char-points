@@ -7,11 +7,12 @@ type State = {
   charImages: CharImage[];
 };
 export type DataStore = {
-  state:State
+  state: State;
   fetchCharImages: () => Promise<void>;
-  init: () => Promise<void>
-}
-export const DataStore = (args: { api: RootApi }):DataStore => {
+  deleteChartImage: (id: string) => Promise<void>;
+  init: () => Promise<void>;
+};
+export const DataStore = (args: { api: RootApi }): DataStore => {
   const { api } = args;
   const state: State = observable({
     charImages: [],
@@ -24,16 +25,21 @@ export const DataStore = (args: { api: RootApi }):DataStore => {
     state.charImages = rows;
   };
 
-  const deleteChartImage = async (id:string): Promise<void> => {
-    await api.charImage.delete({id})
-  }
+  const deleteChartImage = async (id: string): Promise<void> => {
+    const err = await api.charImage.delete({ id });
+    if (err instanceof Error) {
+      return;
+    }
+    state.charImages = state.charImages.filter((x) => x.id !== id);
+  };
 
   const init = async () => {
-    await fetchCharImages()
-  }
+    await fetchCharImages();
+  };
   return {
     state,
     fetchCharImages,
+    deleteChartImage,
     init,
   };
 };

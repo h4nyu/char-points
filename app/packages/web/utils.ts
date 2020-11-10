@@ -26,4 +26,3 @@ export const fileTob64 = (file: File): Promise<string | Error> =>
     };
     reader.onerror = () => resolve(new Error("Fail to convert file to base64"));
   });
-

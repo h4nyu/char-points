@@ -8,7 +8,7 @@ export const RootStore = () => {
   const charImageStore = CharImageStore({ api, dataStore });
   const init = async () => {
     await dataStore.init();
-  }
+  };
   return {
     dataStore,
     charImageStore,

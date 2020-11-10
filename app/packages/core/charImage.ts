@@ -14,7 +14,7 @@ export const defaultCharImage = (): CharImage => {
 };
 
 export type FilterPayload = {
-  ids?:string[]
+  ids?: string[];
 };
 export type CreatePayload = {
   data: string; //base64
@@ -47,7 +47,7 @@ export const Service = (args: { store: Store; lock: Lock }) => {
   const delete_ = async (payload: DeletePayload): Promise<string | Error> => {
     await lock.auto(async () => {
       const rows = await store.charImage.filter({
-        ids: [payload.id]
+        ids: [payload.id],
       });
       if (rows instanceof Error) {
         return rows;

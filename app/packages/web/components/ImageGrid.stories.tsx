@@ -16,4 +16,6 @@ const charImages = range(100).map((x) => {
     data: ImageData,
   };
 });
-export const Primary = () => <ImageGrid charImages={charImages} />;
+export const Primary = () => (
+  <ImageGrid charImages={charImages} onDeleteClick={action("onDeleteClick")} />
+);
