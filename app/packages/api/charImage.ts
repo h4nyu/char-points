@@ -5,18 +5,15 @@ import {
   FilterPayload,
   CreatePayload,
   DeletePayload,
+  Service,
 } from "@charpoints/core/charImage";
 
-export type CharImageApi = {
-  filter: (payload: FilterPayload) => Promise<CharImage[] | Error>;
-  create: (payload: CreatePayload) => Promise<string | Error>;
-  delete: (payload: DeletePayload) => Promise<string | Error>;
-};
+export type CharImageApi = Service;
 
 export const CharImageApi = (arg: {
   http: AxiosInstance;
   prefix: string;
-}): CharImageApi => {
+}): Service => {
   const { http, prefix } = arg;
 
   const create = async (payload: CreatePayload): Promise<string | Error> => {

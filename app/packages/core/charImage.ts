@@ -22,15 +22,19 @@ export type CreatePayload = {
 export type DeletePayload = {
   id: string;
 };
-export const Service = (args: { store: Store; lock: Lock }) => {
+export type Service = {
+  create: (payload: CreatePayload) => Promise<string | Error>;
+  delete: (payload: DeletePayload) => Promise<string | Error>;
+  filter: (payload: FilterPayload) => Promise<CharImage[] | Error>;
+};
+
+export const Service = (args: { store: Store; lock: Lock }): Service => {
   const { store, lock } = args;
-  const filter = async (
-    payload: FilterPayload
-  ): Promise<CharImage[] | Error> => {
+  const filter = async (payload: FilterPayload) => {
     return await store.charImage.filter(payload);
   };
 
-  const create = async (payload: CreatePayload): Promise<string | Error> => {
+  const create = async (payload: CreatePayload) => {
     return await lock.auto(async () => {
       const row = {
         ...defaultCharImage(),
@@ -44,7 +48,7 @@ export const Service = (args: { store: Store; lock: Lock }) => {
     });
   };
 
-  const delete_ = async (payload: DeletePayload): Promise<string | Error> => {
+  const delete_ = async (payload: DeletePayload) => {
     await lock.auto(async () => {
       const rows = await store.charImage.filter({
         ids: [payload.id],

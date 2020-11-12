@@ -11,7 +11,7 @@ export function b64toBlob(base64: string): Blob | Error {
   }
 }
 export const fileTob64 = (file: File): Promise<string | Error> =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {

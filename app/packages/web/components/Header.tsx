@@ -4,9 +4,7 @@ export const Header = () => {
   return (
     <nav className="navbar is-dark" aria-label="main navigation">
       <div className="navbar-brand">
-        <div className="navbar-item">
-          charpoints
-        </div>
+        <div className="navbar-item">charpoints</div>
         <a
           role="button"
           className="navbar-burger burger"
