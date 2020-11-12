@@ -1,6 +1,5 @@
 import { observable } from "mobx";
 import { CharImage } from "@charpoints/core";
-import { RootStore } from ".";
 import { RootApi } from "@charpoints/api";
 
 type State = {

@@ -1,17 +1,24 @@
-import { DataStore } from "./DataStore";
-import { CharImageStore } from "./CharImageStore";
+import { DataStore } from "./data";
+import { CharImageStore } from "./charImage";
 import { RootApi } from "@charpoints/api";
 
-export const RootStore = () => {
+export type RootStore = {
+  data: DataStore;
+  charImage: CharImageStore;
+  api: RootApi;
+  init: () => Promise<void>;
+};
+export const RootStore = (): RootStore => {
   const api = RootApi();
-  const dataStore = DataStore({ api });
-  const charImageStore = CharImageStore({ api, dataStore });
+  const data = DataStore({ api });
+  const charImage = CharImageStore({ api, data });
   const init = async () => {
-    await dataStore.init();
+    await data.init();
   };
   return {
-    dataStore,
-    charImageStore,
+    api,
+    data,
+    charImage,
     init,
   };
 };

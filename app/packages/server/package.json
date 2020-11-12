@@ -22,7 +22,7 @@
   "dependencies": {
     "@charpoints/core": "*",
     "@oniku/lockfile": "^0.0.0",
-    "fastify": "^3.6.0",
+    "fastify": "^3.8.0",
     "fastify-multipart": "^3.3.0",
     "fastify-static": "^3.2.1",
     "lodash": "^4.17.20",

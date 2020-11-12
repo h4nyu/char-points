@@ -1,19 +1,22 @@
 import { observable } from "mobx";
 import { CharImage } from "@charpoints/core";
-import { RootStore } from ".";
 import { RootApi } from "@charpoints/api";
 import { fileTob64 } from "../utils";
-import { saveAs } from "file-saver";
-import { DataStore } from "./DataStore";
+import { DataStore } from "./data";
+import { RootStore } from "."
 
 type State = {
   charImage?: CharImage;
 };
-export const CharImageStore = (args: {
-  api: RootApi;
-  dataStore: DataStore;
+export type CharImageStore = {
+  uploadFiles: (files: File[]) => void;
+  delete: (id: string) => Promise<void>;
+}
+export const CharImageStore = (root: {
+  api: RootApi,
+  data: DataStore,
 }) => {
-  const { api, dataStore } = args;
+  const { api, data } = root;
   const state: State = observable({
     charImage: undefined,
   });
@@ -31,10 +34,10 @@ export const CharImageStore = (args: {
       }
       ids.push(id);
     }
-    await dataStore.fetchCharImages();
+    await data.fetchCharImages();
   };
   const delete_ = async (id: string) => {
-    await dataStore.deleteChartImage(id);
+    await data.deleteChartImage(id);
   };
 
   return {
