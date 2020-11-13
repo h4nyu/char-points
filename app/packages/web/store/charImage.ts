@@ -31,7 +31,7 @@ export const CharImageStore = (root: { api: RootApi; data: DataStore }) => {
       }
       ids.push(id);
     }
-    await data.fetchCharImages();
+    await data.fetchCharImages({ids});
   };
   const delete_ = async (id: string) => {
     await data.deleteChartImage(id);

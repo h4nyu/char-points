@@ -1,9 +1,9 @@
 import React from "react";
-import { CharImage } from "@charpoints/core/charImage";
+import { CharImages } from "../store"
 import Thumbnail from "./Thumbnail";
 
 export const ImageGrid = (props: {
-  charImages: CharImage[];
+  charImages: CharImages;
   onDeleteClick: (id: string) => void;
 }) => {
   const { charImages, onDeleteClick } = props;
@@ -14,7 +14,7 @@ export const ImageGrid = (props: {
         flexWrap: "wrap",
       }}
     >
-      {charImages.map((x) => (
+      {charImages.toList().map((x) => (
         <Thumbnail
           key={x.id}
           charImage={x}
