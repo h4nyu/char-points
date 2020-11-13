@@ -12,9 +12,9 @@ export default function FileUpload(props: {
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      <i className="fas fa-angle-double-down">aaaa</i>
-      <i className="fas fa-adjust"></i>
-      <button className="button">Upload</button>
+      <button className="button">
+        <i className="fas fa-upload"></i>
+      </button>
     </div>
   );
 }
