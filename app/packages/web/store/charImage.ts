@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { CharImage } from "@charpoints/core";
+import { CharImage } from "@charpoints/core/charImage";
 import { RootApi } from "@charpoints/api";
 import { fileTob64 } from "../utils";
 import { DataStore } from "./data";
@@ -19,7 +19,7 @@ export const CharImageStore = (root: { api: RootApi; data: DataStore }) => {
   });
 
   const uploadFiles = async (files: File[]) => {
-    const ids = [];
+    const ids:string[] = [];
     for (const f of files) {
       const data = await fileTob64(f);
       if (data instanceof Error) {

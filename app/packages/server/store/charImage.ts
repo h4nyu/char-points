@@ -3,9 +3,10 @@ import { CharImage } from "@charpoints/core/charImage";
 import { first } from "lodash";
 
 function to(r: Row): CharImage {
+  const data = r.data
   return {
     id: r.id,
-    data: r.data.toString("base64"),
+    data: data && data.toString("base64") || "",
     createdAt: r.created_at.toISOString(),
   };
 }
@@ -32,9 +33,9 @@ export const CharImageStore = (sql: Sql<any>) => {
       const { ids } = payload;
       let rows = [];
       if (ids !== undefined && ids.length > 0) {
-        rows = await sql`SELECT * FROM char_images WHERE id IN (${ids})`;
+        rows = await sql`SELECT id, created_at FROM char_images WHERE id IN (${ids})`;
       } else {
-        rows = await sql`SELECT * FROM char_images`;
+        rows = await sql`SELECT id, created_at FROM char_images`;
       }
       return rows.map(to);
     } catch (err) {

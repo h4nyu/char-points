@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { CharImage } from "@charpoints/core";
+import { CharImage } from "@charpoints/core/charImage";
 import { RootApi } from "@charpoints/api";
 
 type State = {
@@ -21,7 +21,12 @@ export const DataStore = (args: { api: RootApi }): DataStore => {
     if (rows instanceof Error) {
       return;
     }
-    state.charImages = rows;
+    state.charImages = []
+    const reqs =  rows.map(x => api.charImage.find({id: x.id}))
+    for (const row of await Promise.all(reqs)){
+      if(row instanceof Error) {continue}
+      state.charImages.push(row)
+    }
   };
 
   const deleteChartImage = async (id: string): Promise<void> => {

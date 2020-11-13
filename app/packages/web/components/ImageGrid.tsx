@@ -1,5 +1,5 @@
 import React from "react";
-import { CharImage } from "@charpoints/core";
+import { CharImage } from "@charpoints/core/charImage";
 import Thumbnail from "./Thumbnail";
 
 export const ImageGrid = (props: {

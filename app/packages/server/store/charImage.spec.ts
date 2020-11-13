@@ -23,12 +23,19 @@ describe("ChartImage", () => {
       throw err;
     }
   });
+  test("find", async () => {
+    const res = await store.find({id: row.id});
+    if (res instanceof Error) {
+      throw res;
+    }
+    expect(res).toEqual(ro
+  });
   test("filter", async () => {
     const rows = await store.filter({});
     if (rows instanceof Error) {
       throw rows;
     }
-    expect(rows).toEqual([row]);
+    expect(rows).toEqual([{...row, data:""}]);
   });
   test("delete", async () => {
     const err = await store.delete({ id: row.id });

@@ -1,5 +1,5 @@
 import React, { useRef, RefObject, CSSProperties } from "react";
-import { CharImage } from "@charpoints/core";
+import { CharImage } from "@charpoints/core/charImage";
 
 export const ImagePreview = (props: {
   charImage: CharImage;
