@@ -28,7 +28,7 @@ describe("ChartImage", () => {
     if (res instanceof Error) {
       throw res;
     }
-    expect(res).toEqual(ro
+    expect(res).toEqual(row)
   });
   test("filter", async () => {
     const rows = await store.filter({});
