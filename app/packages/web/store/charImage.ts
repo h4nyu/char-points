@@ -3,7 +3,7 @@ import { CharImage } from "@charpoints/core";
 import { RootApi } from "@charpoints/api";
 import { fileTob64 } from "../utils";
 import { DataStore } from "./data";
-import { RootStore } from "."
+import { RootStore } from ".";
 
 type State = {
   charImage?: CharImage;
@@ -11,11 +11,8 @@ type State = {
 export type CharImageStore = {
   uploadFiles: (files: File[]) => void;
   delete: (id: string) => Promise<void>;
-}
-export const CharImageStore = (root: {
-  api: RootApi,
-  data: DataStore,
-}) => {
+};
+export const CharImageStore = (root: { api: RootApi; data: DataStore }) => {
   const { api, data } = root;
   const state: State = observable({
     charImage: undefined,

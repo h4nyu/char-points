@@ -1,11 +1,14 @@
-import { CharImageStore, Lock, ErrorKind, CharImage } from ".";
+import { Lock, ErrorKind, Store } from ".";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
 
-type Store = {
-  charImage: CharImageStore;
+export type CharImage = {
+  id: string; // Uuid
+  data: string; // base64 encoded string
+  createdAt: string;
 };
-export const defaultCharImage = (): CharImage => {
+
+export const CharImage = (): CharImage => {
   return {
     id: uuid(),
     data: Buffer.from([]).toString("base64"),
@@ -22,9 +25,13 @@ export type CreatePayload = {
 export type DeletePayload = {
   id: string;
 };
+export type FindPayload = {
+  id: string;
+};
 export type Service = {
   create: (payload: CreatePayload) => Promise<string | Error>;
   delete: (payload: DeletePayload) => Promise<string | Error>;
+  find: (payload: FindPayload) => Promise<CharImage | Error>;
   filter: (payload: FilterPayload) => Promise<CharImage[] | Error>;
 };
 
@@ -33,11 +40,21 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
   const filter = async (payload: FilterPayload) => {
     return await store.charImage.filter(payload);
   };
+  const find = async (payload: FindPayload) => {
+    const res = await store.charImage.find(payload);
+    if (res instanceof Error) {
+      return res;
+    }
+    if (res === undefined) {
+      return new Error(ErrorKind.CharImageNotFound);
+    }
+    return res;
+  };
 
   const create = async (payload: CreatePayload) => {
     return await lock.auto(async () => {
       const row = {
-        ...defaultCharImage(),
+        ...CharImage(),
         data: payload.data,
       };
       const err = await store.charImage.insert(row);
@@ -71,5 +88,6 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     filter,
     delete: delete_,
     create,
+    find,
   };
 };

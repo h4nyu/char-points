@@ -1,11 +1,12 @@
 import { AxiosInstance } from "axios";
 import { toError } from ".";
-import { CharImage } from "@charpoints/core";
 import {
   FilterPayload,
   CreatePayload,
   DeletePayload,
+  FindPayload,
   Service,
+  CharImage,
 } from "@charpoints/core/charImage";
 
 export type CharImageApi = Service;
@@ -25,9 +26,7 @@ export const CharImageApi = (arg: {
     }
   };
 
-  const filter = async (
-    payload: FilterPayload
-  ): Promise<CharImage[] | Error> => {
+  const filter = async (payload: FilterPayload) => {
     try {
       const res = await http.post(`${prefix}/filter`, payload);
       return res.data;
@@ -36,9 +35,17 @@ export const CharImageApi = (arg: {
     }
   };
 
-  const delete_ = async (payload: DeletePayload): Promise<string | Error> => {
+  const delete_ = async (payload: DeletePayload) => {
     try {
       const res = await http.post(`${prefix}/delete`, payload);
+      return res.data;
+    } catch (err) {
+      return toError(err);
+    }
+  };
+  const find = async (payload: FindPayload) => {
+    try {
+      const res = await http.post(`${prefix}/find`, payload);
       return res.data;
     } catch (err) {
       return toError(err);
@@ -48,6 +55,7 @@ export const CharImageApi = (arg: {
   return {
     create,
     filter,
+    find,
     delete: delete_,
   };
 };

@@ -1,10 +1,10 @@
 import { Sql } from "postgres";
-import { Store } from ".";
-import { CharImage, Lock, CharImageStore } from "@charpoints/core";
+import { Store, Lock } from "@charpoints/core";
 import { FastifyPlugin } from "fastify";
 import {
   Service,
   FilterPayload,
+  FindPayload,
   DeletePayload,
   CreatePayload,
 } from "@charpoints/core/charImage";
@@ -22,6 +22,10 @@ export const CharImageRoutes = (args: {
     });
     app.post<{ Body: FilterPayload }>("/filter", {}, async (req, reply) => {
       const res = await srv.filter(req.body);
+      reply.send(res);
+    });
+    app.post<{ Body: FindPayload }>("/find", {}, async (req, reply) => {
+      const res = await srv.find(req.body);
       reply.send(res);
     });
     app.post<{ Body: DeletePayload }>("/delete", {}, async (req, reply) => {

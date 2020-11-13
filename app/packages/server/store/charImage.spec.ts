@@ -1,6 +1,6 @@
 import { Store } from ".";
 import fs from "fs";
-import { defaultCharImage } from "@charpoints/core/charImage";
+import { CharImage } from "@charpoints/core/charImage";
 const rootStore = Store({ url: process.env.DATABASE_URL || "" });
 
 afterAll(async () => {
@@ -10,7 +10,7 @@ afterAll(async () => {
 describe("ChartImage", () => {
   const store = rootStore.charImage;
   const row = {
-    ...defaultCharImage(),
+    ...CharImage(),
   };
   beforeAll(async () => {
     await store.clear();

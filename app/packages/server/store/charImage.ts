@@ -1,5 +1,6 @@
 import { Row, Sql } from "postgres";
-import { CharImage } from "@charpoints/core";
+import { CharImage } from "@charpoints/core/charImage";
+import { first } from "lodash";
 
 function to(r: Row): CharImage {
   return {
@@ -10,6 +11,20 @@ function to(r: Row): CharImage {
 }
 
 export const CharImageStore = (sql: Sql<any>) => {
+  const find = async (payload: {
+    id?: string;
+  }): Promise<CharImage | undefined | Error> => {
+    try {
+      const { id } = payload;
+      let rows = [];
+      if (id !== undefined) {
+        rows = await sql`SELECT * FROM char_images WHERE id=${id}`;
+      }
+      return first(rows.map(to));
+    } catch (err) {
+      return err;
+    }
+  };
   const filter = async (payload: {
     ids?: string[];
   }): Promise<CharImage[] | Error> => {
@@ -63,6 +78,7 @@ export const CharImageStore = (sql: Sql<any>) => {
   };
 
   return {
+    find,
     filter,
     delete: delete_,
     insert,
