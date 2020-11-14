@@ -3,7 +3,6 @@ import { CharImageStore } from "./charImage";
 import { RootApi } from "@charpoints/api";
 import { Map } from "immutable"
 import { CharImage } from "@charpoints/core/charImage";
-export { CharImage } from "@charpoints/core/charImage";
 export type CharImages = Map<string, CharImage>
 
 export type RootStore = {

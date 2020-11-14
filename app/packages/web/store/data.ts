@@ -34,7 +34,7 @@ export const DataStore = (args: { api: RootApi }): DataStore => {
     if (err instanceof Error) {
       return;
     }
-    state.charImages = state.charImages.filter((x) => x.id !== id);
+    state.charImages = state.charImages.delete(id);
   };
 
   const init = async () => {

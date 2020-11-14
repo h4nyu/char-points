@@ -12,10 +12,6 @@ module.exports = {
         'sass-loader'
       ]
     })
-    config.module.rules.push({
-      test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)(\?.*)?$/,
-      loader: 'file-loader',
-    })
     return config;
   },
   stories: [

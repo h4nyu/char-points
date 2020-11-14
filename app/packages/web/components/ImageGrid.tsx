@@ -4,9 +4,8 @@ import Thumbnail from "./Thumbnail";
 
 export const ImageGrid = (props: {
   charImages: CharImages;
-  onDeleteClick: (id: string) => void;
 }) => {
-  const { charImages, onDeleteClick } = props;
+  const { charImages } = props;
   return (
     <div
       style={{
@@ -23,7 +22,6 @@ export const ImageGrid = (props: {
             width: 100,
             margin: "0.1em",
           }}
-          onDeleteClick={() => onDeleteClick(x.id)}
         />
       ))}
     </div>

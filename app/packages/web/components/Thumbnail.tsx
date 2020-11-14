@@ -9,23 +9,12 @@ export const ImagePreview = (props: {
 }) => {
   const { charImage, style, onDeleteClick } = props;
   return (
-    <div
-      className="card"
-      style={{
-        display: "flex",
-        ...style,
-      }}
-    >
+    <figure className="image is-128x128">
       <img
         src={`data:image;base64,${charImage.data}`}
-        style={{ width: 80, height: 80 }}
+        style={{ width: 128, height: 128 }}
       />
-      {onDeleteClick && (
-        <button className="button" onClick={onDeleteClick}>
-          Delete
-        </button>
-      )}
-    </div>
+    </figure>
   );
 };
 export default ImagePreview;
