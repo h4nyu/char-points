@@ -5,6 +5,6 @@ const DeleteBtn = (props) => {
     <a className="button is-danger is-light" {...props}>
       Delete
     </a>
-  )
-}
-export default DeleteBtn
+  );
+};
+export default DeleteBtn;

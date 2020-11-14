@@ -19,7 +19,7 @@ export const CharImageStore = (root: { api: RootApi; data: DataStore }) => {
   });
 
   const uploadFiles = async (files: File[]) => {
-    const ids:string[] = [];
+    const ids: string[] = [];
     for (const f of files) {
       const data = await fileTob64(f);
       if (data instanceof Error) {
@@ -31,7 +31,7 @@ export const CharImageStore = (root: { api: RootApi; data: DataStore }) => {
       }
       ids.push(id);
     }
-    await data.fetchCharImages({ids});
+    await data.fetchCharImages({ ids });
   };
   const delete_ = async (id: string) => {
     await data.deleteChartImage(id);

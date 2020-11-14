@@ -1,10 +1,8 @@
 import React from "react";
-import { CharImages } from "../store"
+import { CharImages } from "../store";
 import Thumbnail from "./Thumbnail";
 
-export const ImageGrid = (props: {
-  charImages: CharImages;
-}) => {
+export const ImageGrid = (props: { charImages: CharImages }) => {
   const { charImages } = props;
   return (
     <div

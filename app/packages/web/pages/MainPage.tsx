@@ -7,18 +7,18 @@ import DeleteBtn from "../components/DeleteBtn";
 import Upload from "../components/FileUpload";
 
 export default function MainPage() {
-  return <Observer>
-    {() => (
-      <>
-        <Header />
-        <div className="buttons">
-          <Upload onChange={store.charImage.uploadFiles} /> 
-          <DeleteBtn />
-        </div>
-        <ImageGrid
-          charImages={store.data.state.charImages}
-        />
-      </>
-    )}
-  </Observer>
+  return (
+    <Observer>
+      {() => (
+        <>
+          <Header />
+          <div className="buttons">
+            <Upload onChange={store.charImage.uploadFiles} />
+            <DeleteBtn />
+          </div>
+          <ImageGrid charImages={store.data.state.charImages} />
+        </>
+      )}
+    </Observer>
+  );
 }

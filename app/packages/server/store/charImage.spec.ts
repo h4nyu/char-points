@@ -24,18 +24,18 @@ describe("ChartImage", () => {
     }
   });
   test("find", async () => {
-    const res = await store.find({id: row.id});
+    const res = await store.find({ id: row.id });
     if (res instanceof Error) {
       throw res;
     }
-    expect(res).toEqual(row)
+    expect(res).toEqual(row);
   });
   test("filter", async () => {
     const rows = await store.filter({});
     if (rows instanceof Error) {
       throw rows;
     }
-    expect(rows).toEqual([{...row, data:""}]);
+    expect(rows).toEqual([{ ...row, data: "" }]);
   });
   test("delete", async () => {
     const err = await store.delete({ id: row.id });

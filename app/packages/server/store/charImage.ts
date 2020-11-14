@@ -3,10 +3,10 @@ import { CharImage } from "@charpoints/core/charImage";
 import { first } from "lodash";
 
 function to(r: Row): CharImage {
-  const data = r.data
+  const data = r.data;
   return {
     id: r.id,
-    data: data && data.toString("base64") || "",
+    data: (data && data.toString("base64")) || "",
     createdAt: r.created_at.toISOString(),
   };
 }

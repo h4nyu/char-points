@@ -21,6 +21,6 @@ export const Header = () => {
         </div>
       </nav>
       <Progress />
-      </>
+    </>
   );
 };
