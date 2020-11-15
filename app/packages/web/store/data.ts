@@ -1,5 +1,6 @@
 import { observable } from "mobx";
 import { CharImages } from ".";
+import { ToastStore } from "./toast"
 import { Map } from "immutable";
 import { RootApi } from "@charpoints/api";
 import { LoadingStore } from "./loading";
@@ -22,8 +23,9 @@ const State = (): State => {
 export const DataStore = (args: {
   api: RootApi;
   loading: LoadingStore;
+  toast: ToastStore;
 }): DataStore => {
-  const { api, loading } = args;
+  const { api, loading, toast } = args;
   const state = observable(State());
   const fetchCharImages = async (payload: {
     ids?: string[];
@@ -41,6 +43,7 @@ export const DataStore = (args: {
       charImages = charImages.set(row.id, row);
     }
     state.charImages = charImages.sortBy(x => - dayjs(x.createdAt))
+    toast.show("Success")
   };
 
   const deleteChartImage = async (id: string): Promise<void> => {

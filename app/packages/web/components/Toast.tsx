@@ -1,9 +1,9 @@
 import React from 'react';
 import { Level } from "../store"
-import { ToastContainer, toast, style } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const Toast =(props: {message:string, level?: Level}) =>{
+export const Toast =(props: {id:string, message:string, level?: Level}) =>{
   const {message, level} = props
   let color = ""
   if(level === Level.Info){

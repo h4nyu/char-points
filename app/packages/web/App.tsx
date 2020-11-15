@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import rootStore from "./store";
 import Loading from "./connectors/Loading"
-import Toast from "./components/Toast"
+import Toast from "./connectors/Toast"
 const MainPage = lazy(() => import("./pages/MainPage"));
 
 export const routes = [
@@ -20,6 +20,7 @@ export default function App() {
     <>
       <Router>
         <Loading />
+        <Toast />
         <Suspense fallback={<div>Loading...</div>}>
           <Switch>
             {routes.map(({ path, Component }) => (
