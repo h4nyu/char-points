@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { CharImages } from ".";
+import { CharImages, Level } from ".";
 import { ToastStore } from "./toast"
 import { Map } from "immutable";
 import { RootApi } from "@charpoints/api";
@@ -43,7 +43,7 @@ export const DataStore = (args: {
       charImages = charImages.set(row.id, row);
     }
     state.charImages = charImages.sortBy(x => - dayjs(x.createdAt))
-    toast.show("Success")
+    toast.show("Success", Level.Success)
   };
 
   const deleteChartImage = async (id: string): Promise<void> => {

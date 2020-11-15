@@ -10,6 +10,7 @@ export { CharImage } from "@charpoints/core/charImage";
 export type CharImages = Map<string, CharImage>;
 export enum Level {
   Info,
+  Success,
   Warning,
   Error,
 }

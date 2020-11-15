@@ -8,24 +8,34 @@ export type ToastStore = {
   state: State;
   show: (message: string, level?: Level) => void;
 };
+
+
 type State = {
-  message: string;
-  id: string;
-  level?: Level;
+  message: {
+    message: string;
+    id: string;
+    level?: Level;
+  }
 };
+
+
 const State = (): State => {
   return {
-    id: "",
-    message: "",
-    level: undefined
-  };
+    message: {
+      id: "",
+      message: "",
+      level: undefined
+    }
+  }
 };
 export const ToastStore = (): ToastStore => {
   const state = observable(State());
   const show = (message: string, level?: Level) => {
-    state.id = uuid();
-    state.message = message;
-    state.level = level
+    state.message = {
+      id: uuid(),
+      message,
+      level,
+    }
   };
   return {
     state,
