@@ -9,6 +9,8 @@ export const ImageGrid = (props: { charImages: CharImages }) => {
       style={{
         display: "flex",
         flexWrap: "wrap",
+        overflow: "auto",
+        height: "100%"
       }}
     >
       {charImages.toList().map((x) => (

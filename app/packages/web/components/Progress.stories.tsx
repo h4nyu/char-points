@@ -6,4 +6,4 @@ export default {
   component: Progress,
 };
 
-export const Primary = () => <Progress />;
+export const Primary = (args) => <Progress {...args} />;

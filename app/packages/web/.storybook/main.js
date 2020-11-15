@@ -5,7 +5,7 @@ module.exports = {
       use: 'raw-loader',
     })
     config.module.rules.push({
-      test: /\.(css|scss)$/,
+      test: /\.scss$/,
       use: [
         'style-loader',
         'css-loader',

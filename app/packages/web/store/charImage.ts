@@ -5,18 +5,12 @@ import { fileTob64 } from "../utils";
 import { DataStore } from "./data";
 import { RootStore } from ".";
 
-type State = {
-  charImage?: CharImage;
-};
 export type CharImageStore = {
   uploadFiles: (files: File[]) => void;
   delete: (id: string) => Promise<void>;
 };
 export const CharImageStore = (root: { api: RootApi; data: DataStore }) => {
   const { api, data } = root;
-  const state: State = observable({
-    charImage: undefined,
-  });
 
   const uploadFiles = async (files: File[]) => {
     const ids: string[] = [];
@@ -38,7 +32,6 @@ export const CharImageStore = (root: { api: RootApi; data: DataStore }) => {
   };
 
   return {
-    ...state,
     uploadFiles,
     delete: delete_,
   };

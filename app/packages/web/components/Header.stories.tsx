@@ -5,5 +5,4 @@ export default {
   title: "Header",
   component: Header,
 };
-
-export const Primary = () => <Header />;
+export const Primary = (args) => <Header {...args} />;
