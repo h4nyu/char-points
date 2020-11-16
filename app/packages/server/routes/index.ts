@@ -10,7 +10,7 @@ export type Store = {
 
 export const App = (args: { store: Store; lock: Lock }) => {
   const { store, lock } = args;
-  const app = fastify({ logger: true });
+  const app = fastify();
   const prefix = path.join("/", process.env.PREFIX || "", "/api/v1");
   app.register(fastifyStatic, {
     root: "/srv/packages/web/dist",

@@ -16,7 +16,6 @@ export const CharImageApi = (arg: {
   prefix: string;
 }): Service => {
   const { http, prefix } = arg;
-
   const create = async (payload: CreatePayload): Promise<string | Error> => {
     try {
       const res = await http.post(`${prefix}/create`, payload);

@@ -20,4 +20,6 @@ range(100).forEach((x) => {
   };
   charImages = charImages.set(row.id, row);
 });
-export const Primary = () => <ImageGrid charImages={charImages} />;
+export const Primary = (args) => (
+  <ImageGrid {...args} charImages={charImages} />
+);

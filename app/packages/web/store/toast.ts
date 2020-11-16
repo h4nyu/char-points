@@ -2,31 +2,29 @@ import { observable, computed, IComputedValue } from "mobx";
 import { Level } from ".";
 import { Map } from "immutable";
 import { RootApi } from "@charpoints/api";
-import { v4 as uuid } from "uuid"
+import { v4 as uuid } from "uuid";
 
 export type ToastStore = {
   state: State;
   show: (message: string, level?: Level) => void;
 };
 
-
 type State = {
   message: {
     message: string;
     id: string;
     level?: Level;
-  }
+  };
 };
-
 
 const State = (): State => {
   return {
     message: {
       id: "",
       message: "",
-      level: undefined
-    }
-  }
+      level: undefined,
+    },
+  };
 };
 export const ToastStore = (): ToastStore => {
   const state = observable(State());
@@ -35,11 +33,10 @@ export const ToastStore = (): ToastStore => {
       id: uuid(),
       message,
       level,
-    }
+    };
   };
   return {
     state,
     show,
   };
 };
-

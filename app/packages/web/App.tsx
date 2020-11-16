@@ -1,8 +1,8 @@
 import React, { Suspense, lazy } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import rootStore from "./store";
-import Loading from "./connectors/Loading"
-import Toast from "./connectors/Toast"
+import Loading from "./connectors/Loading";
+import Toast from "./connectors/Toast";
 const MainPage = lazy(() => import("./pages/MainPage"));
 
 export const routes = [

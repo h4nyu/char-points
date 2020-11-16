@@ -4,6 +4,7 @@ import { CharImageStore } from "./charImage";
 import { LoadingStore } from "./loading";
 import { ToastStore } from "./toast";
 import { RootApi } from "@charpoints/api";
+import { ErrorStore } from "./error";
 import { Map } from "immutable";
 import { CharImage } from "@charpoints/core/charImage";
 export { CharImage } from "@charpoints/core/charImage";
@@ -27,11 +28,19 @@ export const RootStore = (): RootStore => {
   const api = RootApi();
   const loading = LoadingStore();
   const toast = ToastStore();
+  const error = ErrorStore({ toast });
 
-  const data = DataStore({ api, loading, toast });
-  const charImage = CharImageStore({ api, data });
+  const data = DataStore({ api, loading, toast, error });
+  const charImage = CharImageStore({
+    api,
+    data,
+    toast,
+    loading,
+    error,
+  });
   const init = async () => {
     await data.init();
+    toast.show("Success", Level.Success);
   };
   return {
     api,

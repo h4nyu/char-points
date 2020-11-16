@@ -11,7 +11,7 @@ export default function FileUpload(props: {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   return (
     <div className="button is-light" {...getRootProps()}>
-      <input {...getInputProps()} />
+      <input {...getInputProps()} accept="image/*" />
       <i className="fas fa-upload"></i>
     </div>
   );

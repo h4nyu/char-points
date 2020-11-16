@@ -1,7 +1,8 @@
 import { observable } from "mobx";
 import { CharImages, Level } from ".";
-import { ToastStore } from "./toast"
+import { ToastStore } from "./toast";
 import { Map } from "immutable";
+import { ErrorStore } from "./error";
 import { RootApi } from "@charpoints/api";
 import { LoadingStore } from "./loading";
 import dayjs from "dayjs";
@@ -24,34 +25,42 @@ export const DataStore = (args: {
   api: RootApi;
   loading: LoadingStore;
   toast: ToastStore;
+  error: ErrorStore;
 }): DataStore => {
-  const { api, loading, toast } = args;
+  const { api, loading, toast, error } = args;
   const state = observable(State());
+
   const fetchCharImages = async (payload: {
     ids?: string[];
   }): Promise<void> => {
     const rows = await api.charImage.filter(payload);
-    let { charImages } = state
+    const { charImages } = state;
     if (rows instanceof Error) {
       return;
     }
     const reqs = rows.map((x) => api.charImage.find({ id: x.id }));
-    for (const row of await Promise.all(reqs)) {
-      if (row instanceof Error) {
-        continue;
+
+    await loading.auto(async () => {
+      for (const req of reqs) {
+        const row = await req;
+        if (row instanceof Error) {
+          error.notify(row);
+          continue;
+        }
+        state.charImages = state.charImages
+          .set(row.id, row)
+          .sortBy((x) => -dayjs(x.createdAt));
       }
-      charImages = charImages.set(row.id, row);
-    }
-    state.charImages = charImages.sortBy(x => - dayjs(x.createdAt))
-    toast.show("Success", Level.Success)
+    });
   };
 
   const deleteChartImage = async (id: string): Promise<void> => {
+    const { charImages } = state;
     const err = await api.charImage.delete({ id });
     if (err instanceof Error) {
       return;
     }
-    state.charImages = state.charImages.delete(id);
+    state.charImages = charImages.delete(id);
   };
 
   const init = async () => {

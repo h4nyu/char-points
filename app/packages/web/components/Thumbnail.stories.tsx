@@ -13,9 +13,4 @@ export default {
   component: Thumbnail,
 };
 
-export const Basic = (args) => (
-  <Thumbnail
-    {...args}
-    charImage={charImage}
-  />
-);
+export const Basic = (args) => <Thumbnail {...args} charImage={charImage} />;

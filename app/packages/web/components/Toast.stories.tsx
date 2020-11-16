@@ -1,7 +1,6 @@
 import React from "react";
 import { Toast } from "./Toast";
-import { Level } from "../store"
-
+import { Level } from "../store";
 
 export default {
   title: "Toast",
@@ -10,16 +9,14 @@ export default {
     level: {
       control: {
         type: "select",
-        options:[
-          Level.Info,
-          Level.Warning,
-        ]
-      }
-    }
-  }
+        options: [Level.Info, Level.Warning, Level.Success, Level.Error],
+      },
+    },
+  },
 };
 
-export const Primary = (args) => <>
-  <Toast {...args} />
-</>;
-
+export const Primary = (args) => (
+  <>
+    <Toast {...args} />
+  </>
+);
