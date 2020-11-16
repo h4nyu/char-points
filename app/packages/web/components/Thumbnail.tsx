@@ -16,13 +16,18 @@ export const ImagePreview = (props: {
   const { charImage, style, onClick, isSelected } = props;
   const backgroundColor = (isSelected && "has-background-primary") || "";
   return (
-    <div className={`card p-2 m-1 ${backgroundColor}`} onClick={onClick}>
-      <figure className="image is-128x128">
+    <div 
+      className={`card p-2 m-1`} onClick={onClick} 
+    >
+      <figure className="image is-16x16"
+        style={{display:"flex", alignItems:"center", justifyContent:"center"}}
+      >
         <img
           src={`data:image;base64,${charImage.data}`}
-          style={{ width: 128, height: 128 }}
+          style={{  width: "auto", maxHeight: "100%" }}
         />
       </figure>
+      {isSelected && <CheckIcon/>}
     </div>
   );
 };
