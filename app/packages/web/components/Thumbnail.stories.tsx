@@ -13,10 +13,9 @@ export default {
   component: Thumbnail,
 };
 
-export const Basic = () => (
+export const Basic = (args) => (
   <Thumbnail
+    {...args}
     charImage={charImage}
-    isSelected={boolean("isSelected", false)}
-    onDeleteClick={action("onDeleteClick")}
   />
 );
