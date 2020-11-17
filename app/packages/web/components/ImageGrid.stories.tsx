@@ -5,7 +5,6 @@ import { Map } from "immutable";
 import { CharImages } from "../store";
 import { CharImage } from "@charpoints/core/charImage";
 import ImageData from "../data/imageData.txt";
-import ImageData from "/srv/data/annot.json";
 import { range } from "lodash";
 
 export default {
