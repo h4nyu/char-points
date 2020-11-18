@@ -22,7 +22,6 @@ export const ImagePreview = (props: { data: any }) => {
     if (!ctx) {
       return;
     }
-    console.log();
     ctx.drawImage(image, 0, 0);
     data.shapes.forEach((s) => {
       if (!s.points) {
@@ -34,7 +33,6 @@ export const ImagePreview = (props: { data: any }) => {
       ctx.fillStyle = "red";
       ctx.fill();
     });
-    // ctx.arc(x, y);
   };
 
   return (

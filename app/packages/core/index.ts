@@ -1,18 +1,6 @@
 export { ErrorKind } from "./error";
 import { CharImage } from "./charImage";
-
-export enum PointType {
-  Start,
-  Stop,
-}
-
-export type CharPoint = {
-  id: string; // Uuid
-  x: number;
-  y: number;
-  pointType: PointType;
-  imageId: string;
-};
+import { Point } from "./point";
 
 export type CharImageStore = {
   filter: (payload: { ids?: string[] }) => Promise<CharImage[] | Error>;

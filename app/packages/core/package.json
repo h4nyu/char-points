@@ -10,7 +10,7 @@
     "prebuild": "yarn clean",
     "build": "tsc",
     "prepack": "yarn build",
-    "test": "jest"
+    "test": "yarn clean && jest"
   },
   "dependencies": {
     "dayjs": "^1.9.4",

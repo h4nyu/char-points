@@ -1,4 +1,5 @@
 import { Lock, ErrorKind, Store } from ".";
+import { Point, PointType } from "./point";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
 
@@ -6,6 +7,37 @@ export type CharImage = {
   id: string; // Uuid
   data: string; // base64 encoded string
   createdAt: string;
+};
+
+export type LabelMe = {
+  version: string;
+  shapes: {
+    label: string;
+    line_color: string | null;
+    fill_color: string | null;
+    shape_type: string;
+    points: [number, number][];
+  }[];
+  imagePath: string;
+  imageData: string;
+  imageHeight: number;
+  imageWidth: number;
+};
+
+export const fromLabelMe = (prev: any): [CharImage, Point[]] => {
+  const image = CharImage();
+  image.data = prev.imageData;
+  const points = prev.shapes.map((s) => {
+    const [x, y] = s.points[0];
+    return {
+      id: uuid(),
+      x,
+      y,
+      pointType: PointType.Start,
+      imageId: image.id,
+    };
+  });
+  return [image, points];
 };
 
 export const CharImage = (): CharImage => {
