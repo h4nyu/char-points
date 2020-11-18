@@ -1,5 +1,4 @@
 import { observable } from "mobx";
-import { CharImage } from "@charpoints/core/charImage";
 import { ToastStore } from "./toast";
 import { ErrorStore } from "./error";
 import { LoadingStore } from "./loading";
@@ -7,7 +6,7 @@ import { Set } from "immutable";
 import { RootApi } from "@charpoints/api";
 import { fileTob64 } from "../utils";
 import { DataStore } from "./data";
-import { RootStore, Level } from ".";
+import { Level } from ".";
 
 export type State = {
   selectedIds: Set<string>;

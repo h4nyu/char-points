@@ -1,7 +1,4 @@
-import { observable, computed, IComputedValue } from "mobx";
-import { CharImages } from ".";
-import { Map } from "immutable";
-import { RootApi } from "@charpoints/api";
+import { observable } from "mobx";
 
 export type LoadingStore = {
   state: State;
@@ -23,8 +20,6 @@ export const LoadingStore = (): LoadingStore => {
       pendingNum = pendingNum + 1;
       state.isActive = isActive();
       return await fn();
-    } catch (e) {
-      throw e;
     } finally {
       pendingNum = pendingNum - 1;
       state.isActive = isActive();

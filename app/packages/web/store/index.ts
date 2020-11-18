@@ -1,4 +1,3 @@
-import { observable } from "mobx";
 import { DataStore } from "./data";
 import { CharImageStore } from "./charImage";
 import { LoadingStore } from "./loading";
@@ -30,7 +29,7 @@ export const RootStore = (): RootStore => {
   const toast = ToastStore();
   const error = ErrorStore({ toast });
 
-  const data = DataStore({ api, loading, toast, error });
+  const data = DataStore({ api, loading, error });
   const charImage = CharImageStore({
     api,
     data,

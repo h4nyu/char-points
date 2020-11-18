@@ -1,6 +1,5 @@
 import { observable } from "mobx";
-import { CharImages, Level } from ".";
-import { ToastStore } from "./toast";
+import { CharImages } from ".";
 import { Map } from "immutable";
 import { ErrorStore } from "./error";
 import { RootApi } from "@charpoints/api";
@@ -24,17 +23,15 @@ const State = (): State => {
 export const DataStore = (args: {
   api: RootApi;
   loading: LoadingStore;
-  toast: ToastStore;
   error: ErrorStore;
 }): DataStore => {
-  const { api, loading, toast, error } = args;
+  const { api, loading, error } = args;
   const state = observable(State());
 
   const fetchCharImages = async (payload: {
     ids?: string[];
   }): Promise<void> => {
     const rows = await api.charImage.filter(payload);
-    const { charImages } = state;
     if (rows instanceof Error) {
       return;
     }
