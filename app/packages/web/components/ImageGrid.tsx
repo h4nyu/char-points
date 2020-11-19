@@ -2,6 +2,7 @@ import React from "react";
 import { CharImages } from "../store";
 import { Set } from "immutable";
 import Thumbnail from "./Thumbnail";
+import CharPlot from "./CharPlot";
 
 export const ImageGrid = (props: {
   charImages: CharImages;
@@ -18,17 +19,10 @@ export const ImageGrid = (props: {
       }}
     >
       {charImages.toList().map((x) => (
-        <Thumbnail
-          key={x.id}
-          charImage={x}
-          isSelected={selectedIds?.has(x.id)}
-          onClick={() => onClick && onClick(x.id)}
-          style={{
-            height: 100,
-            width: 100,
-            margin: "0.1em",
-          }}
-        />
+          <CharPlot
+            key={x.id}
+            image={x}
+          />
       ))}
     </div>
   );
