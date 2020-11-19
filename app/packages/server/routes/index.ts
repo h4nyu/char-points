@@ -1,12 +1,8 @@
 import fastify, { FastifyPlugin } from "fastify";
-import { Lock, CharImageStore } from "@charpoints/core";
+import { Lock, Store } from "@charpoints/core";
 import path from "path";
 import { CharImageRoutes } from "./charImage";
 import fastifyStatic from "fastify-static";
-
-export type Store = {
-  charImage: CharImageStore;
-};
 
 export const App = (args: { store: Store; lock: Lock }) => {
   const { store, lock } = args;

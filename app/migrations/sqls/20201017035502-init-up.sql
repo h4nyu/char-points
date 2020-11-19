@@ -1,6 +1,6 @@
 /* Replace with your SQL commands */
 CREATE EXTENSION "uuid-ossp";
-CREATE TABLE char_points ( 
+CREATE TABLE points ( 
     id text NOT NULL PRIMARY KEY,
     x integer NOT NULL,
     y integer NOT NULL,

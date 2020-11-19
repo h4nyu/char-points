@@ -10,7 +10,7 @@
     "clean": "tsc --build --clean",
     "start": "node bin/start.js",
     "start:dev": "yarn clean && ts-node bin/start.ts",
-    "test": "jest"
+    "test": "yarn clean && jest"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.161",
