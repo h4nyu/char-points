@@ -13,10 +13,9 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
-    "@storybook/addon-actions": "^6.0.26",
-    "@storybook/addon-essentials": "^6.0.27",
+    "@storybook/addon-essentials": "^6.1.0",
     "@storybook/addon-knobs": "^6.0.26",
-    "@storybook/react": "^6.1.0-rc.2",
+    "@storybook/react": "^6.1.0-rc.6",
     "@types/file-saver": "^2.0.1",
     "@types/react-dom": "^16.8.3",
     "@types/react-router-dom": "^5.1.6",
