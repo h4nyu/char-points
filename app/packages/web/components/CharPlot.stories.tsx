@@ -11,7 +11,7 @@ export default {
   component: CharPlot,
 };
 
-const [image, points] = fromLabelMe(labelMeData);
+const image = fromLabelMe(labelMeData);
 export const Basic = (args) => (
-  <CharPlot {...args} image={image} points={points} />
+  <CharPlot {...args} image={image}  />
 );

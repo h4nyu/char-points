@@ -1,7 +1,6 @@
 /* Replace with your SQL commands */
 CREATE EXTENSION "uuid-ossp";
 CREATE TABLE points ( 
-    id text NOT NULL PRIMARY KEY,
     x integer NOT NULL,
     y integer NOT NULL,
     point_type smallint NOT NULL,
@@ -10,7 +9,7 @@ CREATE TABLE points (
 
 CREATE TABLE char_images ( 
     id text NOT NULL PRIMARY KEY,
-    data bytea NOT NULL,
+    data bytea,
     created_at timestamp NOT NULL
 );
 

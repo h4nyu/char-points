@@ -1,11 +1,31 @@
 import { Lock, ErrorKind, Store } from ".";
-import { Point, PointType } from "./point";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
 
+export enum PointType {
+  Start,
+  Corner,
+  Stop,
+}
+
+export type Point = {
+  x: number;
+  y: number;
+  pointType: PointType;
+};
+
+export const Point = () => {
+  return {
+    x: 0,
+    y: 0,
+    pointType: PointType.Start,
+  };
+};
+
 export type CharImage = {
   id: string; // Uuid
-  data: string; // base64 encoded string
+  data?: string; // base64 encoded string
+  points?: Point[];
   createdAt: string;
 };
 
@@ -24,26 +44,23 @@ export type LabelMe = {
   imageWidth: number;
 };
 
-export const fromLabelMe = (prev: any): [CharImage, Point[]] => {
+export const fromLabelMe = (prev: any): CharImage => {
   const image = CharImage();
   image.data = prev.imageData;
-  const points = prev.shapes.map((s) => {
+  image.points = prev.shapes.map((s) => {
     const [x, y] = s.points[0];
     return {
-      id: uuid(),
       x,
       y,
       pointType: PointType.Start,
-      imageId: image.id,
     };
   });
-  return [image, points];
+  return image
 };
 
 export const CharImage = (): CharImage => {
   return {
     id: uuid(),
-    data: Buffer.from([]).toString("base64"),
     createdAt: dayjs().toISOString(),
   };
 };
@@ -53,6 +70,7 @@ export type FilterPayload = {
 };
 export type CreatePayload = {
   data: string; //base64
+  points?: Point[];
 };
 export type DeletePayload = {
   id: string;
@@ -87,12 +105,10 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     return await lock.auto(async () => {
       const row = {
         ...CharImage(),
-        data: payload.data,
+        ...payload,
       };
-      const err = await store.charImage.insert(row);
-      if (err instanceof Error) {
-        return err;
-      }
+      let err = await store.charImage.insert(row);
+      if (err instanceof Error) { return err; }
       return row.id;
     });
   };

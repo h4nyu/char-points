@@ -1,6 +1,5 @@
 export { ErrorKind } from "./error";
 import { CharImage } from "./charImage";
-import { Point } from "./point";
 
 export type CharImageStore = {
   filter: (payload: { ids?: string[] }) => Promise<CharImage[] | Error>;
@@ -10,17 +9,10 @@ export type CharImageStore = {
   clear: () => Promise<void | Error>;
 };
 
-export type PointStore = {
-  filter: (payload: { imageId?: string }) => Promise<Point[] | Error>;
-  insert: (payload: Point[]) => Promise<void | Error>;
-  delete: (payload: { imageId?: string }) => Promise<void | Error>;
-  clear: () => Promise<void | Error>;
-};
 export type Lock = {
   auto: <T>(fn: () => Promise<T>) => Promise<T>;
 };
 
 export type Store = {
   charImage: CharImageStore;
-  point: PointStore;
 };
