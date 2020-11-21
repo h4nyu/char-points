@@ -34,15 +34,17 @@ export const CharPlot = (props: {
     };
   }, [])
   return (
-    <figure 
-      className="image is-128x128" 
-      style={{
-        display: "flex", 
-        justifyContent: "center"
-      }}
-    >
-      <canvas ref={canvasRef} />
-    </figure>
+    <div className="card p-1 m-1 is-focused">
+      <figure 
+        className="image is-128x128" 
+        style={{
+          display: "flex", 
+          justifyContent: "center"
+        }}
+      >
+        <canvas ref={canvasRef} />
+      </figure>
+    </div>
   );
 };
 export default CharPlot;
