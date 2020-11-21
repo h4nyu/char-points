@@ -13,7 +13,7 @@ export default {
 };
 
 let charImages: CharImages = Map();
-range(100).forEach((x) => {
+range(10).forEach((x) => {
   const row = {
     ...CharImage(),
     data: ImageData,

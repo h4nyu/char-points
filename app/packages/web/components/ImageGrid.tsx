@@ -1,8 +1,8 @@
 import React from "react";
 import { CharImages } from "../store";
 import { Set } from "immutable";
-import Thumbnail from "./Thumbnail";
 import CharPlot from "./CharPlot";
+import CornerSelect from "./CornerSelect";
 
 export const ImageGrid = (props: {
   charImages: CharImages;
@@ -18,11 +18,22 @@ export const ImageGrid = (props: {
         overflow: "auto",
       }}
     >
-      {charImages.toList().map((x) => (
-          <CharPlot
-            key={x.id}
-            image={x}
-          />
+      {charImages
+        .toList()
+        .sortBy(x => - x.points?.length)
+        .map((x) => (
+        <div 
+          key={x.id}
+          onClick={() => onClick && onClick(x.id)}
+        >
+          <CornerSelect
+            isSelected={selectedIds?.includes(x.id)}
+          >
+            <CharPlot
+              image={x}
+            />
+          </CornerSelect>
+        </div>
       ))}
     </div>
   );
