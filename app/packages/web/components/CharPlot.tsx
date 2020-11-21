@@ -1,34 +1,48 @@
-import React, { useRef, RefObject, useState } from "react";
+import React, { useRef, RefObject, useState, useEffect } from "react";
 import { CharImage } from "@charpoints/core/charImage";
 
 export const CharPlot = (props: {
   image: CharImage;
-  scale?: number;
 }) => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef(null);
   const { image } = props;
-  const scale = props.scale || 2.0;
   const img = new Image();
-  img.src = `data:image;base64,${image.data}`;
-  img.onload = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      return;
-    }
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      return;
-    }
-    ctx.drawImage(img, 0, 0, img.width * scale, img.height * scale);
-    image.points?.forEach((p) => {
-      ctx.beginPath();
-      ctx.arc(p.x * scale, p.y * scale, 1, 0, 2 * Math.PI);
-      ctx.fillStyle = "red";
-      ctx.fill();
-    });
-  };
+  useEffect(() => {
+    img.src = `data:image;base64,${image.data}`;
+    img.onload = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        return;
+      }
+      const maxLength = Math.max(img.width, img.height);
+      const scale = 128 / maxLength 
+      const height = img.height * scale
+      const width = img.width * scale;
+      canvas.height = height
+      canvas.width = width
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        return;
+      }
+      ctx.drawImage(img, 0, 0, width, height);
+      image.points?.forEach((p) => {
+        ctx.beginPath();
+        ctx.arc(p.x * scale , p.y * scale, 1 * scale, 0, 2 * Math.PI);
+        ctx.fillStyle = "red";
+        ctx.fill();
+      });
+    };
+  }, [])
   return (
-    <canvas ref={canvasRef} />
+    <figure 
+      className="image is-128x128" 
+      style={{
+        display: "flex", 
+        justifyContent: "center"
+      }}
+    >
+      <canvas ref={canvasRef} />
+    </figure>
   );
 };
 export default CharPlot;
