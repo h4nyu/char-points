@@ -26,3 +26,20 @@ export const fileTob64 = (file: File): Promise<string | Error> =>
     };
     reader.onerror = () => resolve(new Error("Fail to convert file to base64"));
   });
+
+export const readAsText = (file: File): Promise<string | Error> =>
+  new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        resolve(result);
+      } else if (result instanceof ArrayBuffer) {
+        resolve(new Error("ArrayBuffer is Unsupported"));
+      } else {
+        resolve(new Error("Fail to convert file to base64"));
+      }
+    };
+    reader.onerror = () => resolve(new Error("Fail to convert file to base64"));
+  });

@@ -4,8 +4,9 @@ import { ErrorStore } from "./error";
 import { LoadingStore } from "./loading";
 import { Set } from "immutable";
 import { RootApi } from "@charpoints/api";
-import { fileTob64 } from "../utils";
+import { readAsText } from "../utils";
 import { DataStore } from "./data";
+import { fromLabelMe } from "@charpoints/core/charImage";
 import { Level } from ".";
 
 export type State = {
@@ -39,11 +40,14 @@ export const CharImageStore = (root: {
     const ids: string[] = [];
     await loading.auto(async () => {
       for (const f of files) {
-        const data = await fileTob64(f);
-        if (data instanceof Error) {
+        const text = await readAsText(f);
+        if (text instanceof Error) {
           continue;
         }
-        const id = await api.charImage.create({ data });
+        const charImage = fromLabelMe(JSON.parse(text))
+        const { data, points } = charImage
+        if(data === undefined){ continue; }
+        const id = await api.charImage.create({data, points});
         if (id instanceof Error) {
           error.notify(id);
           continue;

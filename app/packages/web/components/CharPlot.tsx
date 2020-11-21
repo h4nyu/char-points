@@ -7,7 +7,7 @@ export const CharPlot = (props: {
 }) => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef(null);
   const { image } = props;
-  const scale = props.scale || 1.0;
+  const scale = props.scale || 2.0;
   const img = new Image();
   img.src = `data:image;base64,${image.data}`;
   img.onload = () => {
@@ -19,7 +19,7 @@ export const CharPlot = (props: {
     if (!ctx) {
       return;
     }
-    ctx.drawImage(img, 0, 0, img.width, img.height);
+    ctx.drawImage(img, 0, 0, img.width * scale, img.height * scale);
     image.points?.forEach((p) => {
       ctx.beginPath();
       ctx.arc(p.x * scale, p.y * scale, 1, 0, 2 * Math.PI);
@@ -28,7 +28,7 @@ export const CharPlot = (props: {
     });
   };
   return (
-    <canvas ref={canvasRef} style={{ width: 128, height: 128 }} />
+    <canvas ref={canvasRef} />
   );
 };
 export default CharPlot;
