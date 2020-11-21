@@ -20,7 +20,8 @@ export const ImageGrid = (props: {
     >
       {charImages
         .toList()
-        .sortBy(x => - x.points?.length)
+        .sortBy(x => x.points?.length )
+        .reverse()
         .map((x) => (
         <div 
           key={x.id}

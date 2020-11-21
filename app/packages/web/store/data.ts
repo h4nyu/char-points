@@ -46,7 +46,6 @@ export const DataStore = (args: {
         }
         state.charImages = state.charImages
           .set(row.id, row)
-          .sortBy((x) => -dayjs(x.createdAt));
       }
     });
   };
