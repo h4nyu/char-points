@@ -7,6 +7,7 @@ const CheckIcon = () => (
     className="fas fa-check-circle"
   />
 );
+
 export const Select:React.FC<{
   isSelected?: boolean;
 }> = (props) => {

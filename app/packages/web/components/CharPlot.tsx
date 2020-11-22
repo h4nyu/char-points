@@ -3,11 +3,46 @@ import { CharImage } from "@charpoints/core/charImage";
 
 export const CharPlot = (props: {
   image: CharImage;
+  size?: number
+  onClick?: (pos:{
+    x: number,
+    y: number
+  }) => void
 }) => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef(null);
-  const { image } = props;
-  const img = new Image();
+  const { image, onClick } = props;
+  let position = {x: 0, y:0}
+  let scale = 1.0
+  const size = props.size || 128
+
+  const handleClick = (e) => {
+    if(onClick === undefined) {return}
+    const canvas = canvasRef.current;
+    if (!canvas) { return; }
+    const { left, top } = canvas.getBoundingClientRect();
+    const { clientX, clientY } = e
+    const x = clientX - left
+    const y = clientY - top
+    onClick({
+      x,
+      y 
+    })
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return;
+    }
+    ctx.beginPath();
+    ctx.arc(x, y, 1 * scale, 0, 2 * Math.PI);
+    ctx.fillStyle = "red";
+    ctx.fill();
+  }
+
+  const handleDrag = (e) => {
+    console.log(e)
+  }
+
   useEffect(() => {
+    const img = new Image();
     img.src = `data:image;base64,${image.data}`;
     img.onload = () => {
       const canvas = canvasRef.current;
@@ -15,7 +50,7 @@ export const CharPlot = (props: {
         return;
       }
       const maxLength = Math.max(img.width, img.height);
-      const scale = 128 / maxLength 
+      scale = size / maxLength 
       const height = img.height * scale
       const width = img.width * scale;
       canvas.height = height
@@ -32,18 +67,19 @@ export const CharPlot = (props: {
         ctx.fill();
       });
     };
-  }, [])
+  }, [size])
   return (
-    <div className="card p-1 m-1 is-focused">
-      <figure 
-        className="image is-128x128" 
-        style={{
-          display: "flex", 
-          justifyContent: "center"
-        }}
-      >
-        <canvas ref={canvasRef} />
-      </figure>
+    <div className="card p-1 m-1 is-focused"
+      style={{
+        display: "flex", 
+        justifyContent: "center"
+      }}
+    >
+      <canvas ref={canvasRef} 
+        onClick={handleClick} 
+        onDrag={handleDrag}
+        draggable
+      />
     </div>
   );
 };

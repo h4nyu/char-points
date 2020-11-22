@@ -15,3 +15,7 @@ const image = fromLabelMe(labelMeData);
 export const Basic = (args) => (
   <CharPlot {...args} image={image}  />
 );
+
+export const Large = (args) => (
+  <CharPlot {...args} image={image} size={512}  />
+);

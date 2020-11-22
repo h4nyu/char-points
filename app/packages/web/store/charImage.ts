@@ -67,6 +67,7 @@ export const CharImageStore = (root: {
     }
     state.selectedIds = selectedIds;
   };
+
   const selectAll = () => {
     const { charImages } = data.state;
     state.selectedIds = charImages.keySeq().toSet();
