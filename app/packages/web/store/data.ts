@@ -44,8 +44,7 @@ export const DataStore = (args: {
           error.notify(row);
           continue;
         }
-        state.charImages = state.charImages
-          .set(row.id, row)
+        state.charImages = state.charImages.set(row.id, row);
       }
     });
   };

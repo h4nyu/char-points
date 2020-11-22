@@ -55,7 +55,7 @@ export const fromLabelMe = (prev: any): CharImage => {
       pointType: PointType.Start,
     };
   });
-  return image
+  return image;
 };
 
 export const CharImage = (): CharImage => {
@@ -107,8 +107,10 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
         ...CharImage(),
         ...payload,
       };
-      let err = await store.charImage.insert(row);
-      if (err instanceof Error) { return err; }
+      const err = await store.charImage.insert(row);
+      if (err instanceof Error) {
+        return err;
+      }
       return row.id;
     });
   };

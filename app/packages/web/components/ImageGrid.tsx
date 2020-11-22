@@ -20,22 +20,15 @@ export const ImageGrid = (props: {
     >
       {charImages
         .toList()
-        .sortBy(x => x.points?.length )
+        .sortBy((x) => x.points?.length)
         .reverse()
         .map((x) => (
-        <div 
-          key={x.id}
-          onClick={() => onClick && onClick(x.id)}
-        >
-          <CornerSelect
-            isSelected={selectedIds?.includes(x.id)}
-          >
-            <CharPlot
-              image={x}
-            />
-          </CornerSelect>
-        </div>
-      ))}
+          <div key={x.id} onClick={() => onClick && onClick(x.id)}>
+            <CornerSelect isSelected={selectedIds?.includes(x.id)}>
+              <CharPlot image={x} />
+            </CornerSelect>
+          </div>
+        ))}
     </div>
   );
 };

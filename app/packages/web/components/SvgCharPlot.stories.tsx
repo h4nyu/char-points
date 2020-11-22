@@ -12,5 +12,14 @@ export default {
   component: Component,
 };
 
-export const Primary = (args) => <Component {...args} data={charImage.data} points={charImage.points}/>;
-export const Large = (args) => <Component {...args} data={charImage.data} size={512} points={charImage.points}/>;
+export const Primary = (args) => (
+  <Component {...args} data={charImage.data} points={charImage.points} />
+);
+export const Large = (args) => (
+  <Component
+    {...args}
+    data={charImage.data}
+    size={512}
+    points={charImage.points}
+  />
+);

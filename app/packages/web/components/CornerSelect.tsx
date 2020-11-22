@@ -8,11 +8,11 @@ const CheckIcon = () => (
   />
 );
 
-export const Select:React.FC<{
+export const Select: React.FC<{
   isSelected?: boolean;
 }> = (props) => {
   return (
-    <div style={{position: 'relative'}}>
+    <div style={{ position: "relative" }}>
       {props.children}
       {props.isSelected && <CheckIcon />}
     </div>

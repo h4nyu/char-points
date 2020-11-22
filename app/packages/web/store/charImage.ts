@@ -44,10 +44,12 @@ export const CharImageStore = (root: {
         if (text instanceof Error) {
           continue;
         }
-        const charImage = fromLabelMe(JSON.parse(text))
-        const { data, points } = charImage
-        if(data === undefined){ continue; }
-        const id = await api.charImage.create({data, points});
+        const charImage = fromLabelMe(JSON.parse(text));
+        const { data, points } = charImage;
+        if (data === undefined) {
+          continue;
+        }
+        const id = await api.charImage.create({ data, points });
         if (id instanceof Error) {
           error.notify(id);
           continue;
