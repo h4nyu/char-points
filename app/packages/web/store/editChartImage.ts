@@ -45,8 +45,7 @@ export const EditChartImage = (root: {data:DataStore}):EditChartImage => {
       ...point,
       ...pos
     }
-    console.log(points[0])
-    state.points = points
+    state.points = [...points]
   }
 
   return {
