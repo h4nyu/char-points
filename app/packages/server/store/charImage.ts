@@ -1,5 +1,5 @@
 import { Row, Sql } from "postgres";
-import { CharImage, Point, PointType } from "@charpoints/core/charImage";
+import { CharImage, Point } from "@charpoints/core/charImage";
 import { first } from "lodash";
 
 const PointStore = (sql: Sql<any>) => {
@@ -7,7 +7,6 @@ const PointStore = (sql: Sql<any>) => {
     return {
       x: r.x,
       y: r.y,
-      pointType: r.point_type,
     };
   };
   const filter = async (payload: { imageId: string }): Promise<Point[]> => {
@@ -29,14 +28,12 @@ const PointStore = (sql: Sql<any>) => {
       return {
         ...x,
         image_id: imageId,
-        point_type: x.pointType,
       };
     });
     await sql` INSERT INTO points ${sql(
       rows,
       "x",
       "y",
-      "point_type",
       "image_id"
     )}
     `;

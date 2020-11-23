@@ -1,6 +1,6 @@
 import { Store } from ".";
 import fs from "fs";
-import { CharImage, PointType } from "@charpoints/core/charImage";
+import { CharImage } from "@charpoints/core/charImage";
 const rootStore = Store({ url: process.env.DATABASE_URL || "" });
 
 afterAll(async () => {
@@ -20,7 +20,6 @@ describe("ChartImage", () => {
       {
         x: 2,
         y: 3,
-        pointType: PointType.Start,
       },
     ];
   });

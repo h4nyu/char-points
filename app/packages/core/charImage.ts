@@ -2,23 +2,16 @@ import { Lock, ErrorKind, Store } from ".";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
 
-export enum PointType {
-  Start,
-  Corner,
-  Stop,
-}
 
 export type Point = {
   x: number;
   y: number;
-  pointType: PointType;
 };
 
 export const Point = () => {
   return {
     x: 0,
     y: 0,
-    pointType: PointType.Start,
   };
 };
 
@@ -52,7 +45,6 @@ export const fromLabelMe = (prev: any): CharImage => {
     return {
       x: x / prev.imageWidth,
       y: y / prev.imageHeight,
-      pointType: PointType.Start,
     };
   });
   return image;

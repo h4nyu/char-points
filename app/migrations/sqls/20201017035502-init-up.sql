@@ -3,7 +3,6 @@ CREATE EXTENSION "uuid-ossp";
 CREATE TABLE points ( 
     x double precision NOT NULL,
     y double precision NOT NULL,
-    point_type smallint NOT NULL,
     image_id text NOT NULL
 );
 

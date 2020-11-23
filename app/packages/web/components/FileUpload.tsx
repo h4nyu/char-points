@@ -11,9 +11,14 @@ export default function FileUpload(props: {
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   return (
-    <div className="button is-light" {...getRootProps()}>
+    <div className="button is-light is-fullwidth" {...getRootProps()}
+      style={{height:105}}
+    >
       <input {...getInputProps()} accept={accept} />
-      <i className="fas fa-upload"></i>
+      <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+        <i className="fas fa-upload fa-3x"></i>
+        Drag and drop
+      </div>
     </div>
   );
 }
