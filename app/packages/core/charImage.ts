@@ -123,17 +123,21 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
 
   const update = async (payload: UpdatePayload) => {
     return await lock.auto(async () => {
-      const row = await store.charImage.find({id:payload.id});
+      const row = await store.charImage.find({ id: payload.id });
       if (row instanceof Error) {
         return row;
       }
       if (row === undefined) {
         return new Error(ErrorKind.CharImageNotFound);
       }
-      let err = await store.charImage.delete({id:row.id})
-      if(err instanceof Error){return err}
-      err = await store.charImage.insert({...row, ...payload})
-      if(err instanceof Error){return err}
+      let err = await store.charImage.delete({ id: row.id });
+      if (err instanceof Error) {
+        return err;
+      }
+      err = await store.charImage.insert({ ...row, ...payload });
+      if (err instanceof Error) {
+        return err;
+      }
       return row.id;
     });
   };

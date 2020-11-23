@@ -22,7 +22,9 @@ const PointStore = (sql: Sql<any>) => {
     imageId: string;
   }): Promise<void> => {
     const { points, imageId } = payload;
-    if(points.length === 0) { return }
+    if (points.length === 0) {
+      return;
+    }
     const rows = points.map((x) => {
       return {
         ...x,

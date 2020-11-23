@@ -7,10 +7,8 @@ import SvgCharPlot from "../components/SvgCharPlot";
 import DeleteBtn from "../components/DeleteBtn";
 import PointList from "../components/PointList";
 import Upload from "../components/FileUpload";
-import { RouteComponentProps } from 'react-router';
-import {
-  useParams
-} from "react-router-dom";
+import { RouteComponentProps } from "react-router";
+import { useParams } from "react-router-dom";
 
 const { editCharImage } = store;
 const Content = observer(() => {
@@ -31,7 +29,7 @@ const Content = observer(() => {
       <button className="button" onClick={() => changeSize(size * 0.9)}>
         <i className="fas fa-minus" />
       </button>
-      <div style={{ display: "flex"}}>
+      <div style={{ display: "flex" }}>
         <div>
           <SvgCharPlot
             data={imageData}
@@ -44,9 +42,7 @@ const Content = observer(() => {
             size={size}
           />
         </div>
-        <div
-          style={{height:size, overflow: "scroll" }}
-        >
+        <div style={{ height: size, overflow: "scroll" }}>
           <PointList
             points={points}
             selectedId={draggingId}

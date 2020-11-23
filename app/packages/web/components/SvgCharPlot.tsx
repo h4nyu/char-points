@@ -65,7 +65,7 @@ export const SvgCharPlot = (props: {
   };
 
   return (
-    <div style={{ position: "relative", minHeight:height, minWidth:width }}>
+    <div style={{ position: "relative", minHeight: height, minWidth: width }}>
       <img
         ref={imgRef}
         style={{ position: "absolute", width, height, userSelect: "none" }}

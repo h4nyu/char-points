@@ -14,10 +14,7 @@ const Content = observer(() => {
   const { uploadFiles } = store.charImage;
   return (
     <>
-      <Upload 
-        accept={"application/json, image/*"}
-        onChange={uploadFiles}
-      />
+      <Upload accept={"application/json, image/*"} onChange={uploadFiles} />
       <div
         style={{
           display: "flex",
@@ -30,18 +27,21 @@ const Content = observer(() => {
           .sortBy((x) => x.points?.length)
           .reverse()
           .map((x) => (
-            <div
-              className="card m-1"
-              key={x.id}
-            >
+            <div className="card m-1" key={x.id}>
               <div className="card-image">
                 <SvgCharPlot data={x.data} points={x.points} size={128} />
               </div>
               <footer className="card-footer">
-                <button className="card-footer-item button" onClick={() => init(x.id)}>
+                <button
+                  className="card-footer-item button"
+                  onClick={() => init(x.id)}
+                >
                   <i className="fas fa-edit"></i>
                 </button>
-                <button className="card-footer-item button" onClick={() => deleteChartImage(x.id)}>
+                <button
+                  className="card-footer-item button"
+                  onClick={() => deleteChartImage(x.id)}
+                >
                   <i className="fas fa-trash"></i>
                 </button>
               </footer>
@@ -51,7 +51,6 @@ const Content = observer(() => {
     </>
   );
 });
-
 
 export default function MainPage() {
   return <PageLayout header={<Header />} content={<Content />} />;

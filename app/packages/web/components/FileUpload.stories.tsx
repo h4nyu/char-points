@@ -7,5 +7,7 @@ export default {
   component: FileUpload,
 };
 
-export const ImageUpload = (args) => <FileUpload {...args} accept="image/*"/>;
-export const JsonUpload = (args) => <FileUpload {...args} accept="application/json" />;
+export const ImageUpload = (args) => <FileUpload {...args} accept="image/*" />;
+export const JsonUpload = (args) => (
+  <FileUpload {...args} accept="application/json" />
+);

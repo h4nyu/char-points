@@ -37,7 +37,7 @@ export const CharImageStore = (root: {
   const { api, data, toast, loading, error } = root;
   const state = observable(State());
 
-  const uploadLabelMe = async (f: File):Promise<CreatePayload|Error> => {
+  const uploadLabelMe = async (f: File): Promise<CreatePayload | Error> => {
     const text = await readAsText(f);
     if (text instanceof Error) {
       return text;
@@ -46,7 +46,7 @@ export const CharImageStore = (root: {
     const { data, points } = charImage;
     if (data === undefined) {
       return {
-        data: ""
+        data: "",
       };
     }
     return {
@@ -55,34 +55,34 @@ export const CharImageStore = (root: {
     };
   };
 
-  const uploadImage = async (f: File):Promise<CreatePayload | Error> => {
+  const uploadImage = async (f: File): Promise<CreatePayload | Error> => {
     const data = await readAsBase64(f);
     if (data instanceof Error) {
       return data;
     }
     return {
-      data
-    }
+      data,
+    };
   };
 
   const uploadFiles = async (files: File[]) => {
     const ids: string[] = [];
     await loading.auto(async () => {
       for (const f of files) {
-        let payload:CreatePayload | Error = new Error("UnsupportedFormat")
-        if(f.type === "application/json"){
-          payload = await uploadLabelMe(f)
+        let payload: CreatePayload | Error = new Error("UnsupportedFormat");
+        if (f.type === "application/json") {
+          payload = await uploadLabelMe(f);
         }
-        if(f.type.includes("image")){
-          payload = await uploadImage(f)
+        if (f.type.includes("image")) {
+          payload = await uploadImage(f);
         }
-        if(payload instanceof Error){
-          error.notify(payload)
-          continue
+        if (payload instanceof Error) {
+          error.notify(payload);
+          continue;
         }
         const id = await api.charImage.create(payload);
         if (id instanceof Error) {
-          continue
+          continue;
         }
         await root.data.fetchCharImages({ ids: [id] });
       }

@@ -15,4 +15,4 @@ const charImage = fromLabelMe(labelMeData);
 charImage.points = [];
 const { editCharImage, data } = store;
 data.state.charImages = data.state.charImages.set(charImage.id, charImage);
-export const Primary = (args) => <Page {...args} id={charImage.id}/>;
+export const Primary = (args) => <Page {...args} id={charImage.id} />;

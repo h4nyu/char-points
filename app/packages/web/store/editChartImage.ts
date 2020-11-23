@@ -7,7 +7,7 @@ import { LoadingStore } from "./loading";
 import { DataStore } from "./data";
 
 export type State = {
-  id: string
+  id: string;
   points: Point[];
   imageData?: string;
   draggingId: number;
@@ -41,14 +41,23 @@ export type EditChartImage = {
   save: () => Promise<void>;
   init: (id: string) => void;
 };
-export const EditChartImage = (root: { data: DataStore, history: History, api:RootApi, loading:LoadingStore, toast:ToastStore, error:ErrorStore }): EditChartImage => {
+export const EditChartImage = (root: {
+  data: DataStore;
+  history: History;
+  api: RootApi;
+  loading: LoadingStore;
+  toast: ToastStore;
+  error: ErrorStore;
+}): EditChartImage => {
   const state = observable(State());
-  const { history, data, api, loading, toast, error } = root
+  const { history, data, api, loading, toast, error } = root;
   const init = async (id: string) => {
-    history.push('/edit')
-    const charImage = data.state.charImages.get(id)
-    if(charImage===undefined){return }
-    state.id = charImage.id
+    history.push("/edit");
+    const charImage = data.state.charImages.get(id);
+    if (charImage === undefined) {
+      return;
+    }
+    state.id = charImage.id;
     state.imageData = charImage.data;
     state.points = charImage.points || [];
   };
@@ -100,17 +109,17 @@ export const EditChartImage = (root: { data: DataStore, history: History, api:Ro
       id: state.id,
       points: state.points,
       data: state.imageData,
-    }
+    };
     await loading.auto(async () => {
-      let id = await api.charImage.update(payload)
-      if(id instanceof Error) {
-        error.notify(id)
-        return
+      const id = await api.charImage.update(payload);
+      if (id instanceof Error) {
+        error.notify(id);
+        return;
       }
-      data.fetchCharImages({ids:[id]})
-    })
+      data.fetchCharImages({ ids: [id] });
+    });
     toast.show("Success", Level.Success);
-    history.goBack()
+    history.goBack();
   };
 
   return {

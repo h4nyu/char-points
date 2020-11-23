@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
 export default function FileUpload(props: {
-  accept?:string,
+  accept?: string;
   onChange?: (files: File[]) => void;
 }) {
   const { onChange, accept } = props;
