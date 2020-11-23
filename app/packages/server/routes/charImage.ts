@@ -6,6 +6,7 @@ import {
   FilterPayload,
   FindPayload,
   DeletePayload,
+  UpdatePayload,
   CreatePayload,
 } from "@charpoints/core/charImage";
 
@@ -18,6 +19,10 @@ export const CharImageRoutes = (args: {
   return function (app, opts, done) {
     app.post<{ Body: CreatePayload }>("/create", {}, async (req, reply) => {
       const res = await srv.create(req.body);
+      reply.send(res);
+    });
+    app.post<{ Body: UpdatePayload }>("/update", {}, async (req, reply) => {
+      const res = await srv.update(req.body);
       reply.send(res);
     });
     app.post<{ Body: FilterPayload }>("/filter", {}, async (req, reply) => {

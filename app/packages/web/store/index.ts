@@ -22,6 +22,7 @@ export enum Level {
 }
 export type History = {
   push: (name: string) => void;
+  goBack: () => void;
 };
 
 export type RootStore = {
@@ -42,7 +43,7 @@ export const RootStore = (): RootStore => {
   const history = createHashHistory();
 
   const data = DataStore({ api, loading, error });
-  const editCharImage = EditChartImage({ data, history });
+  const editCharImage = EditChartImage({ data, history, api, loading, toast, error });
   const charImage = CharImageStore({
     api,
     data,

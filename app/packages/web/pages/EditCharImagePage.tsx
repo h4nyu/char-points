@@ -16,6 +16,7 @@ const { editCharImage } = store;
 const Content = observer(() => {
   const { points, size, draggingId, imageData } = editCharImage.state;
   const {
+    save,
     changeSize,
     addPoint,
     toggleSelect,
@@ -54,6 +55,9 @@ const Content = observer(() => {
           />
         </div>
       </div>
+      <button className="button is-info is-light" onClick={save}>
+        save
+      </button>
     </>
   );
 });

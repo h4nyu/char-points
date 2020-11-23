@@ -10,7 +10,7 @@ export function b64toBlob(base64: string): Blob | Error {
     return e;
   }
 }
-export const fileTob64 = (file: File): Promise<string | Error> =>
+export const readAsBase64 = (file: File): Promise<string | Error> =>
   new Promise((resolve) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);

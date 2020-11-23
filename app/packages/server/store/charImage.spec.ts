@@ -29,8 +29,6 @@ describe("ChartImage", () => {
     if (err instanceof Error) {
       throw err;
     }
-  });
-  test("find", async () => {
     const res = await store.find({ id: row.id });
     if (res instanceof Error) {
       throw res;

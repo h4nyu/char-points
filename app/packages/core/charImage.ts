@@ -72,6 +72,11 @@ export type CreatePayload = {
   data: string; //base64
   points?: Point[];
 };
+
+export type UpdatePayload = {
+  id: string;
+  points?: Point[];
+};
 export type DeletePayload = {
   id: string;
 };
@@ -81,6 +86,7 @@ export type FindPayload = {
 export type Service = {
   create: (payload: CreatePayload) => Promise<string | Error>;
   delete: (payload: DeletePayload) => Promise<string | Error>;
+  update: (payload: UpdatePayload) => Promise<string | Error>;
   find: (payload: FindPayload) => Promise<CharImage | Error>;
   filter: (payload: FilterPayload) => Promise<CharImage[] | Error>;
 };
@@ -115,6 +121,23 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     });
   };
 
+  const update = async (payload: UpdatePayload) => {
+    return await lock.auto(async () => {
+      const row = await store.charImage.find({id:payload.id});
+      if (row instanceof Error) {
+        return row;
+      }
+      if (row === undefined) {
+        return new Error(ErrorKind.CharImageNotFound);
+      }
+      let err = await store.charImage.delete({id:row.id})
+      if(err instanceof Error){return err}
+      err = await store.charImage.insert({...row, ...payload})
+      if(err instanceof Error){return err}
+      return row.id;
+    });
+  };
+
   const delete_ = async (payload: DeletePayload) => {
     await lock.auto(async () => {
       const rows = await store.charImage.filter({
@@ -136,6 +159,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
 
   return {
     filter,
+    update,
     delete: delete_,
     create,
     find,

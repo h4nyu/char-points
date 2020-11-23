@@ -3,6 +3,7 @@ import { toError } from ".";
 import {
   FilterPayload,
   CreatePayload,
+  UpdatePayload,
   DeletePayload,
   FindPayload,
   Service,
@@ -33,6 +34,14 @@ export const CharImageApi = (arg: {
       return toError(err);
     }
   };
+  const update = async (payload: UpdatePayload) => {
+    try {
+      const res = await http.post(`${prefix}/update`, payload);
+      return res.data;
+    } catch (err) {
+      return toError(err);
+    }
+  };
 
   const delete_ = async (payload: DeletePayload) => {
     try {
@@ -54,6 +63,7 @@ export const CharImageApi = (arg: {
   return {
     create,
     filter,
+    update,
     find,
     delete: delete_,
   };

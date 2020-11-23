@@ -9,11 +9,15 @@ import Upload from "../components/FileUpload";
 const Content = observer(() => {
   const { history } = store;
   const { charImages } = store.data.state;
+  const { deleteChartImage } = store.data;
   const { init } = store.editCharImage;
   const { uploadFiles } = store.charImage;
   return (
     <>
-      <Upload onChange={uploadFiles}/>
+      <Upload 
+        accept={"application/json, image/*"}
+        onChange={uploadFiles}
+      />
       <div
         style={{
           display: "flex",
@@ -37,7 +41,7 @@ const Content = observer(() => {
                 <button className="card-footer-item button" onClick={() => init(x.id)}>
                   <i className="fas fa-edit"></i>
                 </button>
-                <button className="card-footer-item button">
+                <button className="card-footer-item button" onClick={() => deleteChartImage(x.id)}>
                   <i className="fas fa-trash"></i>
                 </button>
               </footer>

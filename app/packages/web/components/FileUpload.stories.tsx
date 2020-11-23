@@ -7,4 +7,5 @@ export default {
   component: FileUpload,
 };
 
-export const Primary = () => <FileUpload onChange={action("onChange")} />;
+export const ImageUpload = (args) => <FileUpload {...args} accept="image/*"/>;
+export const JsonUpload = (args) => <FileUpload {...args} accept="application/json" />;

@@ -4,10 +4,11 @@ import { ErrorStore } from "./error";
 import { LoadingStore } from "./loading";
 import { Set } from "immutable";
 import { RootApi } from "@charpoints/api";
-import { readAsText } from "../utils";
+import { readAsText, readAsBase64 } from "../utils";
 import { DataStore } from "./data";
 import { fromLabelMe } from "@charpoints/core/charImage";
-import { Level } from ".";
+import { Level, Point } from ".";
+import { CreatePayload } from "@charpoints/core/charImage";
 
 export type State = {
   selectedIds: Set<string>;
@@ -36,23 +37,52 @@ export const CharImageStore = (root: {
   const { api, data, toast, loading, error } = root;
   const state = observable(State());
 
+  const uploadLabelMe = async (f: File):Promise<CreatePayload|Error> => {
+    const text = await readAsText(f);
+    if (text instanceof Error) {
+      return text;
+    }
+    const charImage = fromLabelMe(JSON.parse(text));
+    const { data, points } = charImage;
+    if (data === undefined) {
+      return {
+        data: ""
+      };
+    }
+    return {
+      data,
+      points,
+    };
+  };
+
+  const uploadImage = async (f: File):Promise<CreatePayload | Error> => {
+    const data = await readAsBase64(f);
+    if (data instanceof Error) {
+      return data;
+    }
+    return {
+      data
+    }
+  };
+
   const uploadFiles = async (files: File[]) => {
     const ids: string[] = [];
     await loading.auto(async () => {
       for (const f of files) {
-        const text = await readAsText(f);
-        if (text instanceof Error) {
-          continue;
+        let payload:CreatePayload | Error = new Error("UnsupportedFormat")
+        if(f.type === "application/json"){
+          payload = await uploadLabelMe(f)
         }
-        const charImage = fromLabelMe(JSON.parse(text));
-        const { data, points } = charImage;
-        if (data === undefined) {
-          continue;
+        if(f.type.includes("image")){
+          payload = await uploadImage(f)
         }
-        const id = await api.charImage.create({ data, points });
+        if(payload instanceof Error){
+          error.notify(payload)
+          continue
+        }
+        const id = await api.charImage.create(payload);
         if (id instanceof Error) {
-          error.notify(id);
-          continue;
+          continue
         }
         await root.data.fetchCharImages({ ids: [id] });
       }
