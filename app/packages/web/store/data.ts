@@ -4,6 +4,7 @@ import { Map } from "immutable";
 import { ErrorStore } from "./error";
 import { RootApi } from "@charpoints/api";
 import { LoadingStore } from "./loading";
+import { MemoryRouter } from 'react-router'
 import dayjs from "dayjs";
 
 export type DataStore = {

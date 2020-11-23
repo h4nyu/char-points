@@ -12,7 +12,7 @@ export default {
 };
 
 const charImage = fromLabelMe(labelMeData);
-charImage.points = [{ ...Point() }];
-const { editCharImage } = store;
-editCharImage.init(charImage);
-export const Primary = () => <Page />;
+charImage.points = [];
+const { editCharImage, data } = store;
+data.state.charImages = data.state.charImages.set(charImage.id, charImage);
+export const Primary = (args) => <Page {...args} id={charImage.id}/>;

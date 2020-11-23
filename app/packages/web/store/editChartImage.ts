@@ -1,44 +1,61 @@
 import { observable } from "mobx";
-import { Point, CharImage } from ".";
+import { Point, CharImage, History } from ".";
 import { DataStore } from "./data";
 
 export type State = {
   points: Point[];
   imageData?: string;
   draggingId: number;
+  size: number;
+  pos: {
+    x: number;
+    y: number;
+  };
 };
 export const State = (): State => {
   return {
     points: [],
     imageData: undefined,
     draggingId: -1,
+    size: 512,
+    pos: {
+      x: 0.5,
+      y: 0.5,
+    },
   };
 };
 
 export type EditChartImage = {
   state: State;
-  startDrag: (pointId: number) => void;
-  endDrag: () => void;
+  toggleSelect: (pointId?: number) => void;
+  addPoint: () => void;
   movePoint: (pos: { x: number; y: number }) => void;
-  init: (charImage: CharImage) => void;
+  delPoint: (pointId: number) => void;
+  changeSize: (size: number) => void;
+  init: (id: string) => void;
 };
-export const EditChartImage = (root: { data: DataStore }): EditChartImage => {
+export const EditChartImage = (root: { data: DataStore, history: History }): EditChartImage => {
   const state = observable(State());
-  const init = (charImage: CharImage) => {
+  const { history, data } = root
+  const init = async (id: string) => {
+    history.push('/edit')
+    const charImage = data.state.charImages.get(id)
+    if(charImage===undefined){return }
     state.imageData = charImage.data;
     state.points = charImage.points || [];
   };
 
-  const startDrag = (pointId: number) => {
-    state.draggingId = pointId;
-  };
-
-  const endDrag = () => {
-    state.draggingId = -1;
+  const toggleSelect = (pointId?: number) => {
+    if (pointId !== undefined && state.draggingId !== pointId) {
+      state.draggingId = pointId;
+    } else {
+      state.draggingId = -1;
+    }
   };
 
   const movePoint = (pos: { x: number; y: number }) => {
     const { points, draggingId } = state;
+    state.pos = pos;
     if (draggingId === -1) {
       return;
     }
@@ -50,11 +67,33 @@ export const EditChartImage = (root: { data: DataStore }): EditChartImage => {
     state.points = [...points];
   };
 
+  const addPoint = () => {
+    if (state.draggingId !== -1) {
+      return;
+    }
+    let { points } = state;
+    points = [{ ...Point(), ...state.pos }, ...points];
+    state.draggingId = 0;
+    state.points = points;
+  };
+
+  const delPoint = (pointId: number) => {
+    const { points } = state;
+    state.points = points.filter((v, k) => k !== pointId);
+    toggleSelect(pointId);
+  };
+
+  const changeSize = (value: number) => {
+    state.size = value;
+  };
+
   return {
     state,
-    startDrag,
-    endDrag,
+    toggleSelect,
     movePoint,
+    changeSize,
+    addPoint,
+    delPoint,
     init,
   };
 };

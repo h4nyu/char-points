@@ -4,6 +4,7 @@ import rootStore from "./store";
 import Loading from "./connectors/Loading";
 import Toast from "./connectors/Toast";
 const MainPage = lazy(() => import("./pages/MainPage"));
+const EditChartImagePage = lazy(() => import("./pages/EditCharImagePage"));
 
 export const routes = [
   {
@@ -23,9 +24,8 @@ export default function App() {
         <Toast />
         <Suspense fallback={<div>Loading...</div>}>
           <Switch>
-            {routes.map(({ path, Component }) => (
-              <Route key={path} path={path} component={Component} />
-            ))}
+            <Route path={"/edit"} component={EditChartImagePage} />
+            <Route path={"/"} component={MainPage} />
           </Switch>
         </Suspense>
       </Router>

@@ -50,8 +50,8 @@ export const fromLabelMe = (prev: any): CharImage => {
   image.points = prev.shapes.map((s) => {
     const [x, y] = s.points[0];
     return {
-      x,
-      y,
+      x: x / prev.imageWidth,
+      y: y / prev.imageHeight,
       pointType: PointType.Start,
     };
   });
