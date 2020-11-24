@@ -2,7 +2,6 @@ import { Lock, ErrorKind, Store } from ".";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
 
-
 export type Point = {
   x: number;
   y: number;

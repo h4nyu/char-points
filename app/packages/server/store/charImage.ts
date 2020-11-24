@@ -30,12 +30,7 @@ const PointStore = (sql: Sql<any>) => {
         image_id: imageId,
       };
     });
-    await sql` INSERT INTO points ${sql(
-      rows,
-      "x",
-      "y",
-      "image_id"
-    )}
+    await sql` INSERT INTO points ${sql(rows, "x", "y", "image_id")}
     `;
   };
 
