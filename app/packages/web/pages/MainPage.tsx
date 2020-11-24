@@ -24,8 +24,7 @@ const Content = observer(() => {
       >
         {charImages
           .toList()
-          .sortBy((x) => - x.points?.length)
-          .reverse()
+          .sortBy((x) => x.points?.length)
           .map((x) => (
             <div className="card m-1" key={x.id}>
               <div className="card-image">
