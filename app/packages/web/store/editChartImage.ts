@@ -95,9 +95,9 @@ export const EditChartImage = (root: {
   };
 
   const delPoint = (pointId: number) => {
-    const { points } = state;
+    const { points, draggingId } = state;
     state.points = points.filter((v, k) => k !== pointId);
-    toggleSelect(pointId);
+    state.draggingId = -1
   };
 
   const changeSize = (value: number) => {
