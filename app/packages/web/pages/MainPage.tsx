@@ -25,7 +25,7 @@ const Content = observer(() => {
       >
         {charImages
           .toList()
-          .sortBy((x) => parseISO(x.createdAt))
+          .sortBy((x) => - parseISO(x.createdAt))
           .sortBy((x) => x.points?.length)
           .map((x) => (
             <div className="card m-1" key={x.id}>
