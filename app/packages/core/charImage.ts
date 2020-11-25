@@ -1,23 +1,11 @@
 import { Lock, ErrorKind, Store } from ".";
+import { Point } from "./point";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
-
-export type Point = {
-  x: number;
-  y: number;
-};
-
-export const Point = () => {
-  return {
-    x: 0,
-    y: 0,
-  };
-};
 
 export type CharImage = {
   id: string; // Uuid
   data?: string; // base64 encoded string
-  points?: Point[];
   createdAt: string;
 };
 
@@ -36,17 +24,18 @@ export type LabelMe = {
   imageWidth: number;
 };
 
-export const fromLabelMe = (prev: any): CharImage => {
+export const fromLabelMe = (prev: any): [CharImage, Point[]] => {
   const image = CharImage();
   image.data = prev.imageData;
-  image.points = prev.shapes.map((s) => {
+  const points = prev.shapes.map((s) => {
     const [x, y] = s.points[0];
     return {
       x: x / prev.imageWidth,
       y: y / prev.imageHeight,
+      imageId: image.id,
     };
   });
-  return image;
+  return [image, points];
 };
 
 export const CharImage = (): CharImage => {
@@ -66,7 +55,7 @@ export type CreatePayload = {
 
 export type UpdatePayload = {
   id: string;
-  points?: Point[];
+  points: Point[];
 };
 export type DeletePayload = {
   id: string;
@@ -100,13 +89,17 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
 
   const create = async (payload: CreatePayload) => {
     return await lock.auto(async () => {
+      const { data, points } = payload;
       const row = {
         ...CharImage(),
-        ...payload,
+        data,
       };
-      const err = await store.charImage.insert(row);
+      let err = await store.charImage.insert(row);
       if (err instanceof Error) {
         return err;
+      }
+      if (points) {
+        err = await store.point.load(points);
       }
       return row.id;
     });
@@ -114,42 +107,43 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
 
   const update = async (payload: UpdatePayload) => {
     return await lock.auto(async () => {
-      const row = await store.charImage.find({ id: payload.id });
+      const { id, points } = payload;
+      const row = await store.charImage.find({ id });
       if (row instanceof Error) {
         return row;
       }
       if (row === undefined) {
         return new Error(ErrorKind.CharImageNotFound);
       }
-      let err = await store.charImage.delete({ id: row.id });
+      let err = await store.point.delete({ imageId: id });
       if (err instanceof Error) {
         return err;
       }
-      err = await store.charImage.insert({ ...row, ...payload });
+      err = await store.point.load(points.filter((x) => x.imageId === id));
       if (err instanceof Error) {
         return err;
       }
-      return row.id;
+      return id;
     });
   };
 
   const delete_ = async (payload: DeletePayload) => {
-    await lock.auto(async () => {
-      const rows = await store.charImage.filter({
-        ids: [payload.id],
-      });
-      if (rows instanceof Error) {
-        return rows;
+    return await lock.auto(async () => {
+      const { id } = payload;
+      const row = await store.charImage.find({ id });
+      if (row instanceof Error) {
+        return row;
       }
-      if (rows.length !== 1) {
+      if (row === undefined) {
         return new Error(ErrorKind.CharImageNotFound);
       }
-      const err = await store.charImage.delete(payload);
+      let err = await store.charImage.delete({ id });
       if (err instanceof Error) {
         return err;
       }
+      err = await store.point.delete({ imageId: id });
+      return id;
     });
-    return payload.id;
   };
 
   return {

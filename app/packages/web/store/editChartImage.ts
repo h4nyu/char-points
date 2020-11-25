@@ -1,14 +1,15 @@
 import { observable } from "mobx";
 import { RootApi } from "@charpoints/api";
+import { List } from "immutable"
 import { ErrorStore } from "./error";
-import { Point, CharImage, History, Level } from ".";
+import { Points, Point, CharImage, History, Level } from ".";
 import { ToastStore } from "./toast";
 import { LoadingStore } from "./loading";
 import { DataStore } from "./data";
 
 export type State = {
   id: string;
-  points: Point[];
+  points: Points;
   imageData?: string;
   draggingId: number;
   size: number;
@@ -20,7 +21,7 @@ export type State = {
 export const State = (): State => {
   return {
     id: "",
-    points: [],
+    points: List(),
     imageData: undefined,
     draggingId: -1,
     size: 512,
@@ -57,9 +58,10 @@ export const EditChartImage = (root: {
     if (charImage === undefined) {
       return;
     }
+    const points = data.state.points.filter(x => x.imageId === charImage.id) ;
+    state.points = points;
     state.id = charImage.id;
     state.imageData = charImage.data;
-    state.points = charImage.points || [];
   };
 
   const toggleSelect = (pointId?: number) => {
@@ -71,17 +73,14 @@ export const EditChartImage = (root: {
   };
 
   const movePoint = (pos: { x: number; y: number }) => {
-    const { points, draggingId } = state;
+    let { points, draggingId } = state;
     state.pos = pos;
     if (draggingId === -1) {
       return;
     }
-    const point = points[draggingId];
-    points[draggingId] = {
-      ...point,
-      ...pos,
-    };
-    state.points = [...points];
+    const point = points.get(draggingId);
+    if(!point){return}
+    state.points = points.set(draggingId, {...point, ...pos})
   };
 
   const addPoint = () => {
@@ -89,9 +88,8 @@ export const EditChartImage = (root: {
       return;
     }
     let { points } = state;
-    points = [{ ...Point(), ...state.pos }, ...points];
     state.draggingId = 0;
-    state.points = points;
+    state.points = points.push({ ...Point(), ...state.pos });
   };
 
   const delPoint = (pointId: number) => {
@@ -107,7 +105,7 @@ export const EditChartImage = (root: {
   const save = async () => {
     const payload = {
       id: state.id,
-      points: state.points,
+      points: state.points.toJS(),
       data: state.imageData,
     };
     await loading.auto(async () => {

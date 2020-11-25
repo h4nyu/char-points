@@ -5,7 +5,7 @@ import { CharImage } from "../store";
 import { fromLabelMe } from "@charpoints/core/charImage";
 import annot from "/srv/data/annto.json";
 
-const charImage = fromLabelMe(annot);
+const [charImage, points] = fromLabelMe(annot);
 
 export default {
   title: "SvgCharPlot",
@@ -13,13 +13,13 @@ export default {
 };
 
 export const Primary = (args) => (
-  <Component {...args} data={charImage.data} points={charImage.points} />
+  <Component {...args} data={charImage.data} points={points} />
 );
 export const Large = (args) => (
   <Component
     {...args}
     data={charImage.data}
     size={512}
-    points={charImage.points}
+    points={points}
   />
 );

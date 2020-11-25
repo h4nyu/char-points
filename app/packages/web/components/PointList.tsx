@@ -1,8 +1,8 @@
 import React from "react";
-import { Point } from "../store";
+import { Points } from "../store";
 
 export const PointList = (props: {
-  points: Point[];
+  points: Points;
   selectedId?: number;
   onHover?: (id: number) => void;
   onCloseClick?: (id: number) => void;

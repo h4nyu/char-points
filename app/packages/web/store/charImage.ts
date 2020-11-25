@@ -42,8 +42,8 @@ export const CharImageStore = (root: {
     if (text instanceof Error) {
       return text;
     }
-    const charImage = fromLabelMe(JSON.parse(text));
-    const { data, points } = charImage;
+    const [charImage, points]  = fromLabelMe(JSON.parse(text));
+    const { data } = charImage
     if (data === undefined) {
       return {
         data: "",

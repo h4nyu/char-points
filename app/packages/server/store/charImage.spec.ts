@@ -16,12 +16,6 @@ describe("ChartImage", () => {
     await store.clear();
     const buffer = await fs.promises.readFile("/srv/package.json");
     row.data = buffer.toString("base64");
-    row.points = [
-      {
-        x: 2,
-        y: 3,
-      },
-    ];
   });
   test("insert", async () => {
     const err = await store.insert(row);
@@ -39,9 +33,7 @@ describe("ChartImage", () => {
     if (rows instanceof Error) {
       throw rows;
     }
-    expect(rows).toMatchObject([
-      { ...row, data: undefined, points: undefined },
-    ]);
+    expect(rows).toMatchObject([{ ...row, data: undefined }]);
   });
   test("delete", async () => {
     const err = await store.delete({ id: row.id });

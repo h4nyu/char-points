@@ -2,6 +2,7 @@ import fastify, { FastifyPlugin } from "fastify";
 import { Lock, Store } from "@charpoints/core";
 import path from "path";
 import { CharImageRoutes } from "./charImage";
+import { Routes as PointRoutes } from "./point"
 import fastifyStatic from "fastify-static";
 
 export const App = (args: { store: Store; lock: Lock }) => {
@@ -13,6 +14,9 @@ export const App = (args: { store: Store; lock: Lock }) => {
   });
   app.register(CharImageRoutes({ store, lock }), {
     prefix: `${prefix}/char-image`,
+  });
+  app.register(PointRoutes({ store, lock }), {
+    prefix: `${prefix}/point`,
   });
   app.ready(async () => {
     console.log(app.printRoutes());

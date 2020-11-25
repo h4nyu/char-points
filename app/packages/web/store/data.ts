@@ -1,6 +1,6 @@
 import { observable } from "mobx";
-import { CharImages } from ".";
-import { Map } from "immutable";
+import { CharImages, Points } from ".";
+import { Map, List } from "immutable";
 import { ErrorStore } from "./error";
 import { RootApi } from "@charpoints/api";
 import { LoadingStore } from "./loading";
@@ -15,10 +15,12 @@ export type DataStore = {
 };
 type State = {
   charImages: CharImages;
+  points: Points;
 };
 const State = (): State => {
   return {
     charImages: Map(),
+    points: List(),
   };
 };
 export const DataStore = (args: {

@@ -4,16 +4,19 @@ import { LoadingStore } from "./loading";
 import { ToastStore } from "./toast";
 import { RootApi } from "@charpoints/api";
 import { ErrorStore } from "./error";
-import { Map } from "immutable";
+import { Map, List } from "immutable";
 import { EditChartImage } from "./editChartImage";
-import { CharImage, Point } from "@charpoints/core/charImage";
 import { createHashHistory } from "history";
-export { CharImage, Point } from "@charpoints/core/charImage";
+import { CharImage } from "@charpoints/core/charImage";
+export { CharImage } from "@charpoints/core/charImage";
+export { Point } from "@charpoints/core/point";
+import { Point } from "@charpoints/core/point";
 import { configure } from "mobx";
 configure({
   enforceActions: "never",
 });
 export type CharImages = Map<string, CharImage>;
+export type Points = List<Point>;
 export enum Level {
   Info,
   Success,

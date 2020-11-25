@@ -1,9 +1,9 @@
 import React, { RefObject, useRef, useEffect, useState } from "react";
-import { CharImage, Point } from "@charpoints/core/charImage";
+import { CharImage, Points } from "../store";
 
 export const SvgCharPlot = (props: {
   data?: string;
-  points?: Point[];
+  points: Points;
   size?: number;
   selectedId?: number;
   onStartDrag?: (pointId: number) => void;
@@ -80,7 +80,7 @@ export const SvgCharPlot = (props: {
         onMouseMove={handleMove}
         onMouseLeave={(e) => onEndDrag && onEndDrag()}
       >
-        {points?.map((p, i) => (
+        {points.map((p, i) => (
           <circle
             key={i}
             cx={p.x * width}
