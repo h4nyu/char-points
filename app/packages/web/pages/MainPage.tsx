@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import { observer } from "mobx-react-lite";
 import PageLayout from "../components/PageLayout";
 import store from "../store";
+import { parseISO } from "date-fns"
 import SvgCharPlot from "../components/SvgCharPlot";
 import Upload from "../components/FileUpload";
 
@@ -24,6 +25,7 @@ const Content = observer(() => {
       >
         {charImages
           .toList()
+          .sortBy((x) => parseISO(x.createdAt))
           .sortBy((x) => x.points?.length)
           .map((x) => (
             <div className="card m-1" key={x.id}>
