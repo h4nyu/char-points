@@ -38,7 +38,7 @@ export const DataStore = (args: {
     if (rows instanceof Error) {
       return;
     }
-    const points = await api.point.filter({})
+    const points = await api.point.filter({imageIds:payload.ids})
     if(points instanceof Error){ return }
     state.points = List(points)
     const reqs = rows.map((x) => api.charImage.find({ id: x.id }));
