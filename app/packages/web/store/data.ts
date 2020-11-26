@@ -38,9 +38,6 @@ export const DataStore = (args: {
     if (rows instanceof Error) {
       return;
     }
-    const points = await api.point.filter({imageIds:payload.ids})
-    if(points instanceof Error){ return }
-    state.points = List(points)
     const reqs = rows.map((x) => api.charImage.find({ id: x.id }));
 
     await loading.auto(async () => {
@@ -52,6 +49,11 @@ export const DataStore = (args: {
         }
         state.charImages = state.charImages.set(row.id, row);
       }
+      const points = await api.point.filter({
+        imageIds:state.charImages.map(x => x.id).toList().toJS(),
+      })
+      if(points instanceof Error){ return }
+      state.points = List(points)
     });
   };
 
