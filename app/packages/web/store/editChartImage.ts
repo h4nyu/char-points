@@ -87,9 +87,9 @@ export const EditChartImage = (root: {
     if (state.draggingId !== -1) {
       return;
     }
-    let { points } = state;
+    let { points, id } = state;
     state.draggingId = 0;
-    state.points = points.push({ ...Point(), ...state.pos });
+    state.points = points.push({ ...Point(), ...state.pos, imageId:id });
   };
 
   const delPoint = (pointId: number) => {

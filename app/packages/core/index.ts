@@ -11,7 +11,7 @@ export type CharImageStore = {
 };
 
 export type PointStore = {
-  filter: (payload: { imageId?: string }) => Promise<Point[] | Error>;
+  filter: (payload: { imageIds?: string[] }) => Promise<Point[] | Error>;
   load: (payload: Point[]) => Promise<void | Error>;
   delete: (payload: { imageId?: string }) => Promise<void | Error>;
   clear: () => Promise<void | Error>;

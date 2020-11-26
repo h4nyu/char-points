@@ -7,7 +7,7 @@ export const Store = (sql: Sql<any>): PointStore => {
     return {
       x: r.x,
       y: r.y,
-      imageId: r.imageId,
+      imageId: r.image_id,
       label: r.label || undefined,
     };
   };
@@ -20,12 +20,14 @@ export const Store = (sql: Sql<any>): PointStore => {
       label: p.label || null,
     };
   };
-  const filter = async (payload: { imageId?: string }) => {
+  const filter = async (payload: { imageIds?: string[] }) => {
     try {
-      const { imageId } = payload;
+      const { imageIds } = payload;
       let rows: Row[] = [];
-      if (imageId !== undefined) {
-        rows = await sql`SELECT * FROM points WHERE image_id=${imageId}`;
+      if (imageIds !== undefined && imageIds.length > 0) {
+        rows = await sql`SELECT * FROM points WHERE image_id IN (${imageIds})`;
+      }else{
+        rows = await sql`SELECT * FROM points`;
       }
       return rows.map(to);
     } catch (err) {
