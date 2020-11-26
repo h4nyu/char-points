@@ -1,11 +1,12 @@
 import React from "react";
 import Progress from "./Progress";
+import PACKAGE from "../package.json";
 
 export const Header = () => {
   return (
     <nav className="navbar is-dark" aria-label="main navigation">
       <div className="navbar-brand">
-        <div className="navbar-item">charpoints</div>
+        <div className="navbar-item">charpoints v{PACKAGE.version}</div>
       </div>
     </nav>
   );
