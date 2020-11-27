@@ -10,3 +10,4 @@ CREATE TABLE boxes (
     label text
 );
 CREATE INDEX boxes_image_id_idx ON boxes (image_id);
+ALTER TABLE char_images RENAME TO images;
