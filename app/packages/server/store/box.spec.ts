@@ -1,6 +1,6 @@
 import { Store } from ".";
 import fs from "fs";
-import { Point } from "@charpoints/core/point";
+import { Box } from "@charpoints/core/box";
 
 const rootStore = Store({ url: process.env.DATABASE_URL || "" });
 
@@ -8,9 +8,9 @@ afterAll(async () => {
   await rootStore.close();
 });
 
-describe("point", () => {
-  const store = rootStore.point;
-  const row = { ...Point(), imageId: "aaa" }
+describe("box", () => {
+  const store = rootStore.box;
+  const row = { ...Box(), imageId: "aaa" }
 
   beforeAll(async () => {
     await store.clear();

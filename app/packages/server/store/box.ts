@@ -1,23 +1,27 @@
 import { Row, Sql } from "postgres";
-import { Point } from "@charpoints/core/point";
-import { PointStore } from "@charpoints/core";
+import { Box } from "@charpoints/core/box";
+import { BoxStore } from "@charpoints/core";
 
-export const Store = (sql: Sql<any>): PointStore => {
-  const to = (r: Row): Point => {
+export const Store = (sql: Sql<any>): BoxStore => {
+  const to = (r: Row): Box => {
     return {
-      x: r.x,
-      y: r.y,
+      x0: r.x0, 
+      y0: r.y0, 
+      x1: r.x1, 
+      y1: r.y1,
       imageId: r.image_id,
-      label: r.label || undefined,
-    };
+      label: r.label || undefined
+    }
   };
 
-  const from = (p: Point): Row => {
+  const from = (b: Box): Row => {
     return {
-      x: p.x,
-      y: p.y,
-      image_id: p.imageId,
-      label: p.label || null,
+      x0: b.x0,
+      y0: b.y0,
+      x1: b.x1,
+      y1: b.y1,
+      image_id: b.imageId,
+      label: b.label || null,
     };
   };
   const filter = async (payload: { imageId?: string }) => {
@@ -25,9 +29,9 @@ export const Store = (sql: Sql<any>): PointStore => {
       const { imageId } = payload;
       let rows: Row[] = [];
       if (imageId !== undefined) {
-        rows = await sql`SELECT * FROM points WHERE image_id =${imageId}`;
+        rows = await sql`SELECT * FROM boxes WHERE image_id =${imageId}`;
       }else {
-        rows = await sql`SELECT * FROM points`;
+        rows = await sql`SELECT * FROM boxes`;
       }
       return rows.map(to);
     } catch (err) {
@@ -35,13 +39,13 @@ export const Store = (sql: Sql<any>): PointStore => {
     }
   };
 
-  const load = async (payload: Point[]) => {
+  const load = async (payload: Box[]) => {
     try {
       if (payload.length === 0) {
         return;
       }
       const rows = payload.map(from);
-      await sql` INSERT INTO points ${sql(rows, "x", "y", "image_id", "label")}
+      await sql` INSERT INTO boxes ${sql(rows, "x0", "y0", "x1", "y1", "image_id", "label")}
       `;
     } catch (err) {
       return err;
@@ -52,7 +56,7 @@ export const Store = (sql: Sql<any>): PointStore => {
     try {
       const { imageId } = payload;
       if (imageId !== undefined) {
-        await sql`DELETE FROM points WHERE image_id=${imageId}`;
+        await sql`DELETE FROM boxes WHERE image_id=${imageId}`;
       }
     } catch (err) {
       return err;
@@ -61,7 +65,7 @@ export const Store = (sql: Sql<any>): PointStore => {
 
   const clear = async (): Promise<void> => {
     try {
-      await sql`TRUNCATE TABLE points`;
+      await sql`TRUNCATE TABLE boxes`;
     } catch (err) {
       return err;
     }
@@ -73,4 +77,4 @@ export const Store = (sql: Sql<any>): PointStore => {
     clear,
     delete: delete_,
   };
-};
+}

@@ -1,11 +1,14 @@
 import { Lock, ErrorKind, Store } from ".";
 import { Point } from "./point";
+import { Box } from "./box";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
 
 export type CharImage = {
   id: string; // Uuid
   data?: string; // base64 encoded string
+  points?: Point[];
+  boxs?: Box[];
   createdAt: string;
 };
 
@@ -77,14 +80,22 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     return await store.charImage.filter(payload);
   };
   const find = async (payload: FindPayload) => {
-    const res = await store.charImage.find(payload);
-    if (res instanceof Error) {
-      return res;
+    const image = await store.charImage.find(payload);
+    if (image instanceof Error) {
+      return image;
     }
-    if (res === undefined) {
+    if (image === undefined) {
       return new Error(ErrorKind.CharImageNotFound);
     }
-    return res;
+    const points = await store.point.filter({imageId: image.id})
+    if(points instanceof Error){ return points }
+    const boxes = await store.box.filter({imageId: image.id})
+    if(boxes instanceof Error){ return boxes }
+
+    return {
+      ...image,
+      points,
+    };
   };
 
   const create = async (payload: CreatePayload) => {
