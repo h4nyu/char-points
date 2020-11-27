@@ -2,24 +2,29 @@ import React from "react";
 import Header from "../components/Header";
 import { observer } from "mobx-react-lite";
 import PageLayout from "../components/PageLayout";
-import store from "../store";
+import store, { InputMode } from "../store";
 import SvgCharPlot from "../components/SvgCharPlot";
 import DeleteBtn from "../components/DeleteBtn";
 import PointList from "../components/PointList";
+import BoxList from "../components/BoxList"
 import Upload from "../components/FileUpload";
 import { RouteComponentProps } from "react-router";
 import { useParams } from "react-router-dom";
 
 const { editCharImage } = store;
 const Content = observer(() => {
-  const { points, size, draggingId, imageData } = editCharImage.state;
+  const { points, 
+    boxes,
+    size, draggingId, imageData, 
+    mode } = editCharImage.state;
   const {
     save,
     changeSize,
-    addPoint,
+    add,
     toggleSelect,
-    movePoint,
-    delPoint,
+    move,
+    setMode,
+    del,
   } = editCharImage;
   return (
     <>
@@ -34,23 +39,54 @@ const Content = observer(() => {
           <SvgCharPlot
             data={imageData}
             points={points}
+            mode={mode}
+            boxes={boxes}
             selectedId={draggingId}
             onStartDrag={toggleSelect}
             onEndDrag={toggleSelect}
-            onMouseMove={movePoint}
-            onMouseDown={addPoint}
+            onMouseMove={move}
+            onMouseDown={add}
             size={size}
           />
         </div>
-        <div style={{ height: size, overflow: "scroll" }}>
-          <PointList
-            points={points}
-            selectedId={draggingId}
-            onHover={toggleSelect}
-            onCloseClick={delPoint}
-          />
+
+        <div  style={{height: size, width:"100%" }}>
+          <div className="tabs is-boxed">
+            <ul>
+              <li className={mode === InputMode.Point && "is-active" || undefined}>
+                <a onClick={() => setMode(InputMode.Point)}>Points</a>
+              </li>
+              <li className={mode === InputMode.Box && "is-active" || undefined}>
+                <a onClick={() => setMode(InputMode.Box)}>Boxes</a>
+              </li>
+            </ul>
+          </div>
+          <div style={{ overflow: "scroll" }}>
+            {
+              mode === InputMode.Point && <PointList
+                points={points}
+                selectedId={draggingId}
+                onHover={i => toggleSelect(i, InputMode.Point)}
+                onCloseClick={del}
+              />
+            }
+            {
+              (mode === InputMode.Box 
+              || mode === InputMode.TR
+              || mode === InputMode.TL
+              || mode === InputMode.BR
+              || mode === InputMode.BL)
+              && <BoxList
+                boxes={boxes}
+                selectedId={draggingId}
+                onHover={(i) => toggleSelect(i, InputMode.Box)}
+                onCloseClick={del}
+              />
+            }
+          </div>
         </div>
       </div>
+
       <button className="button is-info is-light" onClick={save}>
         save
       </button>

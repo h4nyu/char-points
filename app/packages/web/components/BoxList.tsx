@@ -1,25 +1,27 @@
 import React from "react";
-import { Point } from "../store";
+import { Points, Box } from "../store";
 
-export const PointList = (props: {
-  points: Point[];
+export const BoxList = (props: {
+  boxes: Box[];
   selectedId?: number;
   onHover?: (id: number) => void;
   onCloseClick?: (id: number) => void;
 }) => {
-  const { points, selectedId, onHover, onCloseClick } = props;
+  const { boxes, selectedId, onHover, onCloseClick } = props;
   return (
     <table className="table is-fullwidth">
       <thead>
         <tr>
           <th> id </th>
-          <th> x </th>
-          <th> y </th>
+          <th> x0 </th>
+          <th> y0 </th>
+          <th> x1 </th>
+          <th> y1 </th>
           {onCloseClick && <th> </th>}
         </tr>
       </thead>
       <tbody>
-        {points.map((p, i) => (
+        {boxes.map((b, i) => (
           <tr
             key={i}
             className={selectedId === i ? "is-selected" : ""}
@@ -27,8 +29,10 @@ export const PointList = (props: {
             onMouseLeave={() => onHover && onHover(i)}
           >
             <th>{i}</th>
-            <th>{p.x.toFixed(3)}</th>
-            <th>{p.y.toFixed(3)}</th>
+            <th>{b.x0.toFixed(3)}</th>
+            <th>{b.y0.toFixed(3)}</th>
+            <th>{b.x1.toFixed(3)}</th>
+            <th>{b.y1.toFixed(3)}</th>
             {onCloseClick && (
               <th>
                 <a onClick={() => onCloseClick(i)} className="delete"></a>
@@ -41,4 +45,4 @@ export const PointList = (props: {
   );
 };
 
-export default PointList;
+export default BoxList;

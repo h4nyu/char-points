@@ -1,15 +1,16 @@
 import { observable } from "mobx";
 import { RootApi } from "@charpoints/api";
-import { List } from "immutable"
 import { ErrorStore } from "./error";
-import { Points, Point, CharImage, History, Level } from ".";
+import { Points, Point, CharImage, History, Level, InputMode, Box } from ".";
 import { ToastStore } from "./toast";
 import { LoadingStore } from "./loading";
 import { DataStore } from "./data";
 
 export type State = {
   id: string;
-  points: Points;
+  points: Point[];
+  boxes: Box[];
+  mode?:InputMode;
   imageData?: string;
   draggingId: number;
   size: number;
@@ -21,7 +22,9 @@ export type State = {
 export const State = (): State => {
   return {
     id: "",
-    points: List(),
+    points: [],
+    boxes: [],
+    mode: undefined,
     imageData: undefined,
     draggingId: -1,
     size: 512,
@@ -34,10 +37,11 @@ export const State = (): State => {
 
 export type EditChartImage = {
   state: State;
-  toggleSelect: (pointId?: number) => void;
-  addPoint: () => void;
-  movePoint: (pos: { x: number; y: number }) => void;
-  delPoint: (pointId: number) => void;
+  toggleSelect: (pointId?: number, mode?:InputMode) => void;
+  setMode: (mode:InputMode) => void;
+  add: () => void;
+  move: (pos: { x: number; y: number }) => void;
+  del: (id: number) => void;
   changeSize: (size: number) => void;
   save: () => Promise<void>;
   init: (id: string) => void;
@@ -58,42 +62,103 @@ export const EditChartImage = (root: {
     if (charImage === undefined) {
       return;
     }
-    state.points = charImage.points && List(charImage.points) || List();
+    state.points = charImage.points || [];
     state.id = charImage.id;
     state.imageData = charImage.data;
   };
 
-  const toggleSelect = (pointId?: number) => {
-    if (pointId !== undefined && state.draggingId !== pointId) {
-      state.draggingId = pointId;
+  const setMode = (mode?:InputMode) => {
+    state.mode = mode;
+  }
+
+  const toggleSelect = (id?: number, mode?:InputMode) => {
+    const { mode } = state
+    if (id !== undefined && state.draggingId !== id) {
+      state.draggingId = id;
     } else {
       state.draggingId = -1;
     }
+    if([
+      InputMode.TR,
+      InputMode.BR,
+      InputMode.TL,
+      InputMode.BL,
+    ].includes(mode)){
+    }
+    setMode(mode)
   };
 
-  const movePoint = (pos: { x: number; y: number }) => {
-    let { points, draggingId } = state;
+  const move = (pos: { x: number; y: number }) => {
+    let { points, boxes, draggingId, mode } = state;
     state.pos = pos;
     if (draggingId === -1) {
       return;
     }
-    const point = points.get(draggingId);
-    if(!point){return}
-    state.points = points.set(draggingId, {...point, ...pos})
+    if(mode === InputMode.Point){
+      points[draggingId] = {...points[draggingId], ...pos }
+      state.points = [...points]
+    }
+    if(mode === InputMode.Box){
+      const box = boxes[draggingId]
+      const width = box.x1 - box.x0
+      const height = box.y1 - box.y0 
+      boxes[draggingId] = {...box, x0:pos.x - width/2, y0:pos.y - height/2, x1: pos.x+width/2, y1:pos.y+height/2 }
+      state.boxes = [...boxes]
+    }
+    else if(mode === InputMode.TL){
+      const box = boxes[draggingId]
+      const x0 = pos.x < box.x1 ? pos.x : box.x1
+      const y0 = pos.y < box.y1 ? pos.y : box.y1
+      boxes[draggingId] ={...box, x0, y0};
+      state.boxes = [...boxes]
+    }
+    else if(mode === InputMode.BR){
+      const box = boxes[draggingId]
+      const x1 = pos.x > box.x0 ? pos.x : box.x0
+      const y1 = pos.y > box.y0 ? pos.y : box.y0
+      boxes[draggingId] ={...box, x1, y1};
+      state.boxes = [...boxes]
+    }
+    else if(mode === InputMode.BL){
+      const box = boxes[draggingId]
+      const x0 = pos.x < box.x1 ? pos.x : box.x1
+      const y1 = pos.y > box.y0 ? pos.y : box.y0
+      boxes[draggingId] ={...box, x0, y1};
+      state.boxes = [...boxes]
+    }
+    else if(mode === InputMode.TR){
+      const box = boxes[draggingId]
+      const x1 = pos.x > box.x0 ? pos.x : box.x0
+      const y0 = pos.y < box.y1 ? pos.y : box.y1
+      boxes[draggingId] ={...box, x1, y0};
+      state.boxes = [...boxes]
+    }
   };
 
-  const addPoint = () => {
-    if (state.draggingId !== -1) {
+  const add = () => {
+    let { draggingId, mode, pos, boxes, points, id } = state;
+    if (draggingId !== -1) {
       return;
     }
-    let { points, id } = state;
-    state.points = points.push({ ...Point(), ...state.pos, imageId:id });
-    state.draggingId = state.points.size - 1
+
+    if(mode === InputMode.Point){
+      state.points = [{ ...Point(), ...pos, imageId:id }, ...points];
+    }
+    else if(mode === InputMode.Box){
+      state.boxes = [ {...Box(), imageId:id, x0:pos.x, y0:pos.y, x1: pos.x, y1:pos.y}, ...boxes];
+      setMode(InputMode.BR)
+    }
+    state.draggingId = 0
   };
 
-  const delPoint = (pointId: number) => {
-    const { points, draggingId } = state;
-    state.points = points.filter((v, k) => k !== pointId);
+
+  const del = (id: number) => {
+    const { points, draggingId, boxes, mode } = state;
+    if(mode === InputMode.Point){
+      state.points = points.filter((v, k) => k !== id);
+    }else if(mode === InputMode.Box){
+      state.boxes = boxes.filter((v, k) => k !== id);
+    }
     state.draggingId = -1;
   };
 
@@ -104,7 +169,7 @@ export const EditChartImage = (root: {
   const save = async () => {
     const payload = {
       id: state.id,
-      points: state.points.toJS(),
+      points: state.points,
       data: state.imageData,
     };
     await loading.auto(async () => {
@@ -122,10 +187,11 @@ export const EditChartImage = (root: {
   return {
     state,
     toggleSelect,
-    movePoint,
+    setMode,
+    move,
     changeSize,
-    addPoint,
-    delPoint,
+    add,
+    del,
     save,
     init,
   };

@@ -1,12 +1,14 @@
 import React, { RefObject, useRef, useEffect, useState } from "react";
-import { CharImage, Points } from "../store";
+import { CharImage, Point, Box, InputMode } from "../store";
 
 export const SvgCharPlot = (props: {
   data?: string;
-  points: Points;
+  mode?: InputMode;
+  points?: Point[];
+  boxes?: Box[];
   size?: number;
   selectedId?: number;
-  onStartDrag?: (pointId: number) => void;
+  onStartDrag?: (id: number, InputMode:InputMode) => void;
   onEndDrag?: () => void;
   onMouseDown?: () => void;
   onMouseMove?: (pos: { x: number; y: number }) => void;
@@ -14,10 +16,12 @@ export const SvgCharPlot = (props: {
 }) => {
   const {
     data,
+    mode,
     onStartDrag,
     onEndDrag,
     onMouseMove,
     points,
+    boxes,
     selectedId,
     onMouseLeave,
     onMouseDown,
@@ -80,15 +84,56 @@ export const SvgCharPlot = (props: {
         onMouseMove={handleMove}
         onMouseLeave={(e) => onEndDrag && onEndDrag()}
       >
-        {points.map((p, i) => (
+        {points?.map((p, i) => (
           <circle
             key={i}
             cx={p.x * width}
             cy={p.y * height}
             r={pointSize}
-            fill={selectedId === i ? "yellow" : "red"}
-            onMouseDown={(e) => onStartDrag && onStartDrag(i)}
+            fill={mode === InputMode.Point && selectedId === i ? "yellow" : "red"}
+            onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.Point)}
           />
+        ))}
+        {boxes?.map((b, i) => (
+          <g key={i}>
+            <rect 
+              x={b.x0 * width} 
+              y={b.y0 * height} 
+              width={(b.x1 - b.x0) * width}
+              height={(b.y1 - b.y0) * height}
+              fill='transparent'
+              stroke={selectedId === i && mode === InputMode.Box ? "yellow" : "red"}
+              onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.Box)}
+            />
+            <circle
+              cx={b.x0 * width}
+              cy={b.y0 * height}
+              r={pointSize}
+              fill={selectedId === i && mode === InputMode.TL ? "yellow" : "red"}
+              onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TL)}
+            />
+            <circle
+              cx={b.x1 * width}
+              cy={b.y0 * height}
+              r={pointSize}
+              fill={selectedId === i && mode === InputMode.TR ? "yellow" : "red"}
+              onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TR)}
+            />
+            <circle
+              cx={b.x0 * width}
+              cy={b.y1 * height}
+              r={pointSize}
+              fill={selectedId === i && mode === InputMode.BL ? "yellow" : "red"}
+              onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BL)}
+            />
+            <circle
+              cx={b.x1 * width}
+              cy={b.y1 * height}
+              r={pointSize}
+              fill={selectedId === i && mode === InputMode.BR ? "yellow" : "red"}
+              onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BR)}
+            />
+          </g>
         ))}
       </svg>
     </div>
