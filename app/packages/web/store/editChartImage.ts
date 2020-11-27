@@ -58,8 +58,7 @@ export const EditChartImage = (root: {
     if (charImage === undefined) {
       return;
     }
-    const points = data.state.points.filter(x => x.imageId === charImage.id) ;
-    state.points = points;
+    state.points = charImage.points && List(charImage.points) || List();
     state.id = charImage.id;
     state.imageData = charImage.data;
   };

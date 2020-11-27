@@ -15,12 +15,10 @@ export type DataStore = {
 };
 type State = {
   charImages: CharImages;
-  points: Points;
 };
 const State = (): State => {
   return {
     charImages: Map(),
-    points: List(),
   };
 };
 export const DataStore = (args: {
@@ -49,11 +47,6 @@ export const DataStore = (args: {
         }
         state.charImages = state.charImages.set(row.id, row);
       }
-      const points = await api.point.filter({
-        imageIds:state.charImages.map(x => x.id).toList().toJS(),
-      })
-      if(points instanceof Error){ return }
-      state.points = List(points)
     });
   };
 

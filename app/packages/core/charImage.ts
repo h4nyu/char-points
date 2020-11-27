@@ -87,11 +87,12 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     if (image === undefined) {
       return new Error(ErrorKind.CharImageNotFound);
     }
-    const points = await store.point.filter({imageId: image.id})
+    const [points, boxes] = await Promise.all([
+      store.point.filter({imageId: image.id}), 
+      store.box.filter({imageId: image.id})
+    ])
     if(points instanceof Error){ return points }
-    const boxes = await store.box.filter({imageId: image.id})
     if(boxes instanceof Error){ return boxes }
-
     return {
       ...image,
       points,
