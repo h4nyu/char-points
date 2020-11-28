@@ -8,7 +8,7 @@ export type CharImage = {
   id: string; // Uuid
   data?: string; // base64 encoded string
   points?: Point[];
-  boxs?: Box[];
+  boxes?: Box[];
   createdAt: string;
 };
 
@@ -54,11 +54,13 @@ export type FilterPayload = {
 export type CreatePayload = {
   data: string; //base64
   points?: Point[];
+  boxes?: Box[];
 };
 
 export type UpdatePayload = {
   id: string;
-  points: Point[];
+  points?: Point[];
+  boxes?: Box[];
 };
 export type DeletePayload = {
   id: string;
@@ -96,6 +98,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     return {
       ...image,
       points,
+      boxes,
     };
   };
 
@@ -119,7 +122,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
 
   const update = async (payload: UpdatePayload) => {
     return await lock.auto(async () => {
-      const { id, points } = payload;
+      const { id, points, boxes } = payload;
       const row = await store.charImage.find({ id });
       if (row instanceof Error) {
         return row;
@@ -127,13 +130,17 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       if (row === undefined) {
         return new Error(ErrorKind.CharImageNotFound);
       }
-      let err = await store.point.delete({ imageId: id });
-      if (err instanceof Error) {
-        return err;
+      if(points !== undefined){
+        let err = await store.point.delete({ imageId: id });
+        if (err instanceof Error) { return err; }
+        err = await store.point.load(points.filter((x) => x.imageId === id));
+        if (err instanceof Error) { return err; }
       }
-      err = await store.point.load(points.filter((x) => x.imageId === id));
-      if (err instanceof Error) {
-        return err;
+      if(boxes !== undefined){
+        let err = await store.box.delete({ imageId: id });
+        if (err instanceof Error) { return err; }
+        err = await store.box.load(boxes.filter((x) => x.imageId === id));
+        if (err instanceof Error) { return err; }
       }
       return id;
     });

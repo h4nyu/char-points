@@ -15,58 +15,62 @@ const { editCharImage } = store;
 const Content = observer(() => {
   const { points, 
     boxes,
-    size, draggingId, imageData, 
-    mode } = editCharImage.state;
+    size, 
+    draggingId, 
+    imageData, 
+    mode 
+  } = editCharImage.state;
   const {
     save,
     changeSize,
     add,
-    toggleSelect,
+    select,
+    unselect,
     move,
     setMode,
     del,
   } = editCharImage;
   return (
     <>
-      <button className="button" onClick={() => changeSize(size * 1.1)}>
-        <i className="fas fa-plus" />
-      </button>
-      <button className="button" onClick={() => changeSize(size * 0.9)}>
-        <i className="fas fa-minus" />
-      </button>
       <div style={{ display: "flex" }}>
         <div>
+          <button className="button" onClick={() => changeSize(size * 1.1)}>
+            <i className="fas fa-plus" />
+          </button>
+          <button className="button" onClick={() => changeSize(size * 0.9)}>
+            <i className="fas fa-minus" />
+          </button>
           <SvgCharPlot
             data={imageData}
             points={points}
             mode={mode}
             boxes={boxes}
             selectedId={draggingId}
-            onStartDrag={toggleSelect}
-            onEndDrag={toggleSelect}
+            onStartDrag={select}
+            onEndDrag={unselect}
             onMouseMove={move}
             onMouseDown={add}
             size={size}
           />
         </div>
-
-        <div  style={{height: size, width:"100%" }}>
+        <div style={{height: size }}>
           <div className="tabs is-boxed">
             <ul>
               <li className={mode === InputMode.Point && "is-active" || undefined}>
                 <a onClick={() => setMode(InputMode.Point)}>Points</a>
               </li>
-              <li className={mode === InputMode.Box && "is-active" || undefined}>
+              <li className={[InputMode.Box, InputMode.TR, InputMode.TR, InputMode.BR, InputMode.BL,].includes(mode) && "is-active" || undefined}>
                 <a onClick={() => setMode(InputMode.Box)}>Boxes</a>
               </li>
             </ul>
           </div>
-          <div style={{ overflow: "scroll" }}>
+          <div style={{ overflow: "scroll", maxHeight:size - 42 - 24 }}>
             {
               mode === InputMode.Point && <PointList
                 points={points}
                 selectedId={draggingId}
-                onHover={i => toggleSelect(i, InputMode.Point)}
+                onMouseLeave={unselect}
+                onMouseEnter={i => select(i, InputMode.Point)}
                 onCloseClick={del}
               />
             }
@@ -79,7 +83,8 @@ const Content = observer(() => {
               && <BoxList
                 boxes={boxes}
                 selectedId={draggingId}
-                onHover={(i) => toggleSelect(i, InputMode.Box)}
+                onMouseLeave={unselect}
+                onMouseEnter={i => select(i, InputMode.Box)}
                 onCloseClick={del}
               />
             }

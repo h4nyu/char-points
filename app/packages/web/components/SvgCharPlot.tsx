@@ -102,35 +102,35 @@ export const SvgCharPlot = (props: {
               width={(b.x1 - b.x0) * width}
               height={(b.y1 - b.y0) * height}
               fill='transparent'
-              stroke={selectedId === i && mode === InputMode.Box ? "yellow" : "red"}
+              stroke={selectedId === i && mode === InputMode.Box  ? "yellow" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.Box)}
             />
             <circle
               cx={b.x0 * width}
               cy={b.y0 * height}
-              r={pointSize}
-              fill={selectedId === i && mode === InputMode.TL ? "yellow" : "red"}
+              r={pointSize/2}
+              fill={selectedId === i && (mode === InputMode.Box || mode === InputMode.TL)  ? "yellow" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TL)}
             />
             <circle
               cx={b.x1 * width}
               cy={b.y0 * height}
-              r={pointSize}
-              fill={selectedId === i && mode === InputMode.TR ? "yellow" : "red"}
+              r={pointSize/2}
+              fill={selectedId === i && (mode === InputMode.Box || mode === InputMode.TR) ? "yellow" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TR)}
             />
             <circle
               cx={b.x0 * width}
               cy={b.y1 * height}
-              r={pointSize}
-              fill={selectedId === i && mode === InputMode.BL ? "yellow" : "red"}
+              r={pointSize/2}
+              fill={selectedId === i && (mode === InputMode.Box || mode === InputMode.BL) ? "yellow" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BL)}
             />
             <circle
               cx={b.x1 * width}
               cy={b.y1 * height}
-              r={pointSize}
-              fill={selectedId === i && mode === InputMode.BR ? "yellow" : "red"}
+              r={pointSize/2}
+              fill={selectedId === i && (mode === InputMode.Box || mode === InputMode.BR) ? "yellow" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BR)}
             />
           </g>

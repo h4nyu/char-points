@@ -10,7 +10,7 @@ export type State = {
   id: string;
   points: Point[];
   boxes: Box[];
-  mode?:InputMode;
+  mode:InputMode;
   imageData?: string;
   draggingId: number;
   size: number;
@@ -24,7 +24,7 @@ export const State = (): State => {
     id: "",
     points: [],
     boxes: [],
-    mode: undefined,
+    mode: InputMode.Point,
     imageData: undefined,
     draggingId: -1,
     size: 512,
@@ -37,7 +37,8 @@ export const State = (): State => {
 
 export type EditChartImage = {
   state: State;
-  toggleSelect: (pointId?: number, mode?:InputMode) => void;
+  select: (pointId: number, mode:InputMode) => void;
+  unselect: () => void;
   setMode: (mode:InputMode) => void;
   add: () => void;
   move: (pos: { x: number; y: number }) => void;
@@ -63,29 +64,22 @@ export const EditChartImage = (root: {
       return;
     }
     state.points = charImage.points || [];
+    state.boxes = charImage.boxes || [];
     state.id = charImage.id;
     state.imageData = charImage.data;
   };
 
-  const setMode = (mode?:InputMode) => {
+  const setMode = (mode:InputMode) => {
     state.mode = mode;
   }
 
-  const toggleSelect = (id?: number, mode?:InputMode) => {
-    const { mode } = state
-    if (id !== undefined && state.draggingId !== id) {
-      state.draggingId = id;
-    } else {
-      state.draggingId = -1;
-    }
-    if([
-      InputMode.TR,
-      InputMode.BR,
-      InputMode.TL,
-      InputMode.BL,
-    ].includes(mode)){
-    }
-    setMode(mode)
+  const unselect = () => {
+    state.draggingId = -1
+  }
+
+  const select = (id: number, mode:InputMode) => {
+    state.draggingId = id;
+    setMode(mode);
   };
 
   const move = (pos: { x: number; y: number }) => {
@@ -101,36 +95,36 @@ export const EditChartImage = (root: {
     if(mode === InputMode.Box){
       const box = boxes[draggingId]
       const width = box.x1 - box.x0
-      const height = box.y1 - box.y0 
+      const height = box.y1 - box.y0
       boxes[draggingId] = {...box, x0:pos.x - width/2, y0:pos.y - height/2, x1: pos.x+width/2, y1:pos.y+height/2 }
       state.boxes = [...boxes]
     }
     else if(mode === InputMode.TL){
       const box = boxes[draggingId]
-      const x0 = pos.x < box.x1 ? pos.x : box.x1
-      const y0 = pos.y < box.y1 ? pos.y : box.y1
-      boxes[draggingId] ={...box, x0, y0};
+      if(pos.x > box.x1){ return setMode(InputMode.TR) }
+      if(pos.y > box.y1){ return setMode(InputMode.BL) }
+      boxes[draggingId] = {...box, x0: pos.x, y0: pos.y };
       state.boxes = [...boxes]
     }
     else if(mode === InputMode.BR){
       const box = boxes[draggingId]
-      const x1 = pos.x > box.x0 ? pos.x : box.x0
-      const y1 = pos.y > box.y0 ? pos.y : box.y0
-      boxes[draggingId] ={...box, x1, y1};
+      if(pos.x < box.x0){ return setMode(InputMode.BL) }
+      if(pos.y < box.y0){ return setMode(InputMode.TR) }
+      boxes[draggingId] ={...box, x1:pos.x, y1:pos.y};
       state.boxes = [...boxes]
     }
     else if(mode === InputMode.BL){
       const box = boxes[draggingId]
-      const x0 = pos.x < box.x1 ? pos.x : box.x1
-      const y1 = pos.y > box.y0 ? pos.y : box.y0
-      boxes[draggingId] ={...box, x0, y1};
+      if(pos.x > box.x1){ return setMode(InputMode.BR) }
+      if(pos.y < box.y0){ return setMode(InputMode.TL) }
+      boxes[draggingId] ={...box, x0:pos.x, y1:pos.y};
       state.boxes = [...boxes]
     }
     else if(mode === InputMode.TR){
       const box = boxes[draggingId]
-      const x1 = pos.x > box.x0 ? pos.x : box.x0
-      const y0 = pos.y < box.y1 ? pos.y : box.y1
-      boxes[draggingId] ={...box, x1, y0};
+      if(pos.x < box.x0){ return setMode(InputMode.TL) }
+      if(pos.y > box.y1){ return setMode(InputMode.BR) }
+      boxes[draggingId] ={...box, x1:pos.x, y0:pos.y};
       state.boxes = [...boxes]
     }
   };
@@ -143,14 +137,16 @@ export const EditChartImage = (root: {
 
     if(mode === InputMode.Point){
       state.points = [{ ...Point(), ...pos, imageId:id }, ...points];
+      state.draggingId = 0
     }
-    else if(mode === InputMode.Box){
+    else if(
+      [InputMode.Box, InputMode.TR, InputMode.TL, InputMode.BL, InputMode.BR].includes(mode)
+    ){
       state.boxes = [ {...Box(), imageId:id, x0:pos.x, y0:pos.y, x1: pos.x, y1:pos.y}, ...boxes];
       setMode(InputMode.BR)
+      state.draggingId = 0
     }
-    state.draggingId = 0
   };
-
 
   const del = (id: number) => {
     const { points, draggingId, boxes, mode } = state;
@@ -171,6 +167,7 @@ export const EditChartImage = (root: {
       id: state.id,
       points: state.points,
       data: state.imageData,
+      boxes: state.boxes,
     };
     await loading.auto(async () => {
       const id = await api.charImage.update(payload);
@@ -186,7 +183,8 @@ export const EditChartImage = (root: {
 
   return {
     state,
-    toggleSelect,
+    select,
+    unselect,
     setMode,
     move,
     changeSize,

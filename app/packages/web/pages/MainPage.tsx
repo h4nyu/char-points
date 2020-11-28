@@ -31,7 +31,7 @@ const Content = observer(() => {
           .map(x => (
             <div className="card m-1" key={x.id}>
               <div className="card-image">
-                <SvgCharPlot data={x.data} points={x.points} size={128} />
+                <SvgCharPlot data={x.data} points={x.points} boxes={x.boxes} size={128} />
               </div>
               <footer className="card-footer">
                 <button

@@ -4,10 +4,12 @@ import { Point } from "../store";
 export const PointList = (props: {
   points: Point[];
   selectedId?: number;
-  onHover?: (id: number) => void;
+  onMouseEnter?: (id: number) => void;
+  onMouseLeave?: () => void;
   onCloseClick?: (id: number) => void;
 }) => {
-  const { points, selectedId, onHover, onCloseClick } = props;
+  const { points, selectedId, onMouseEnter, onMouseLeave, onCloseClick } = props;
+  console.log(selectedId)
   return (
     <table className="table is-fullwidth">
       <thead>
@@ -23,8 +25,8 @@ export const PointList = (props: {
           <tr
             key={i}
             className={selectedId === i ? "is-selected" : ""}
-            onMouseEnter={() => onHover && onHover(i)}
-            onMouseLeave={() => onHover && onHover(i)}
+            onMouseEnter={() => onMouseEnter && onMouseEnter(i)}
+            onMouseLeave={() => onMouseLeave && onMouseLeave()}
           >
             <th>{i}</th>
             <th>{p.x.toFixed(3)}</th>

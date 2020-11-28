@@ -4,10 +4,11 @@ import { Points, Box } from "../store";
 export const BoxList = (props: {
   boxes: Box[];
   selectedId?: number;
-  onHover?: (id: number) => void;
+  onMouseEnter?: (id: number) => void;
+  onMouseLeave?: () => void;
   onCloseClick?: (id: number) => void;
 }) => {
-  const { boxes, selectedId, onHover, onCloseClick } = props;
+  const { boxes, selectedId, onMouseEnter, onMouseLeave, onCloseClick } = props;
   return (
     <table className="table is-fullwidth">
       <thead>
@@ -25,8 +26,8 @@ export const BoxList = (props: {
           <tr
             key={i}
             className={selectedId === i ? "is-selected" : ""}
-            onMouseEnter={() => onHover && onHover(i)}
-            onMouseLeave={() => onHover && onHover(i)}
+            onMouseEnter={() => onMouseEnter && onMouseEnter(i)}
+            onMouseLeave={() => onMouseLeave && onMouseLeave()}
           >
             <th>{i}</th>
             <th>{b.x0.toFixed(3)}</th>
