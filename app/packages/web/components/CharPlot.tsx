@@ -3,12 +3,11 @@ import { CharImage, Points } from "../store";
 
 export const CharPlot = (props: {
   image: CharImage;
-  points: Points;
   size?: number;
   onClick?: (pos: { x: number; y: number }) => void;
 }) => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef(null);
-  const { image, points, onClick } = props;
+  const { image, onClick } = props;
   const position = { x: 0, y: 0 };
   let scale = 1.0;
   const size = props.size || 128;
@@ -39,10 +38,6 @@ export const CharPlot = (props: {
     ctx.fill();
   };
 
-  const handleDrag = (e) => {
-    console.log(e);
-  };
-
   useEffect(() => {
     const img = new Image();
     img.src = `data:image;base64,${image.data}`;
@@ -62,7 +57,7 @@ export const CharPlot = (props: {
         return;
       }
       ctx.drawImage(img, 0, 0, width, height);
-      points.forEach((p) => {
+      image.points?.forEach((p) => {
         ctx.beginPath();
         ctx.arc(p.x * scale, p.y * scale, 1 * scale, 0, 2 * Math.PI);
         ctx.fillStyle = "red";
@@ -81,7 +76,6 @@ export const CharPlot = (props: {
       <canvas
         ref={canvasRef}
         onClick={handleClick}
-        onDrag={handleDrag}
         draggable
       />
     </div>

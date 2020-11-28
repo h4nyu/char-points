@@ -16,7 +16,7 @@ export const Point = (): Point => {
   };
 };
 export type FilterPayload = { 
-  imageIds?: string[]
+  imageId?: string
 }
 export type Service = {
   filter: (payload: FilterPayload) => Promise<Point[] | Error>;

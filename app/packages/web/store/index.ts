@@ -11,6 +11,8 @@ import { CharImage } from "@charpoints/core/charImage";
 export { CharImage } from "@charpoints/core/charImage";
 export { Point } from "@charpoints/core/point";
 import { Point } from "@charpoints/core/point";
+export { Box } from "@charpoints/core/box";
+import { Box } from "@charpoints/core/box";
 import { configure } from "mobx";
 configure({
   enforceActions: "never",
@@ -23,9 +25,19 @@ export enum Level {
   Warning,
   Error,
 }
+
 export type History = {
   push: (name: string) => void;
   goBack: () => void;
+};
+
+export enum InputMode {
+  Point = "Point",
+  Box = "Box",
+  TL = "TL",
+  TR = "TR",
+  BL = "BL",
+  BR = "BR"
 };
 
 export type RootStore = {

@@ -19,7 +19,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
       const { id } = payload;
       let rows = [];
       if (id !== undefined) {
-        rows = await sql`SELECT * FROM char_images WHERE id=${id}`;
+        rows = await sql`SELECT * FROM images WHERE id=${id}`;
       }
       const row = first(rows.map(to));
       if (row === undefined) {
@@ -37,9 +37,9 @@ export const Store = (sql: Sql<any>): CharImageStore => {
       const { ids } = payload;
       let rows = [];
       if (ids !== undefined && ids.length > 0) {
-        rows = await sql`SELECT id, created_at FROM char_images WHERE id IN (${ids})`;
+        rows = await sql`SELECT id, created_at FROM images WHERE id IN (${ids})`;
       } else {
-        rows = await sql`SELECT id, created_at FROM char_images`;
+        rows = await sql`SELECT id, created_at FROM images`;
       }
       return rows.map(to);
     } catch (err) {
@@ -51,7 +51,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
     try {
       const { id, data, createdAt } = payload;
       await sql`
-      INSERT INTO char_images (
+      INSERT INTO images (
         id,
         data,
         created_at
@@ -69,7 +69,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
     try {
       const { id } = payload;
       if (id !== undefined) {
-        await sql`DELETE FROM char_images WHERE id=${id}`;
+        await sql`DELETE FROM images WHERE id=${id}`;
       }
     } catch (err) {
       return err;
@@ -77,7 +77,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
   };
   const clear = async () => {
     try {
-      await sql`TRUNCATE char_images`;
+      await sql`TRUNCATE images`;
     } catch (err) {
       return err;
     }

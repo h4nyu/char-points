@@ -1,11 +1,14 @@
 import { Lock, ErrorKind, Store } from ".";
 import { Point } from "./point";
+import { Box } from "./box";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
 
 export type CharImage = {
   id: string; // Uuid
   data?: string; // base64 encoded string
+  points?: Point[];
+  boxes?: Box[];
   createdAt: string;
 };
 
@@ -51,11 +54,13 @@ export type FilterPayload = {
 export type CreatePayload = {
   data: string; //base64
   points?: Point[];
+  boxes?: Box[];
 };
 
 export type UpdatePayload = {
   id: string;
-  points: Point[];
+  points?: Point[];
+  boxes?: Box[];
 };
 export type DeletePayload = {
   id: string;
@@ -77,14 +82,24 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     return await store.charImage.filter(payload);
   };
   const find = async (payload: FindPayload) => {
-    const res = await store.charImage.find(payload);
-    if (res instanceof Error) {
-      return res;
+    const image = await store.charImage.find(payload);
+    if (image instanceof Error) {
+      return image;
     }
-    if (res === undefined) {
+    if (image === undefined) {
       return new Error(ErrorKind.CharImageNotFound);
     }
-    return res;
+    const [points, boxes] = await Promise.all([
+      store.point.filter({imageId: image.id}), 
+      store.box.filter({imageId: image.id})
+    ])
+    if(points instanceof Error){ return points }
+    if(boxes instanceof Error){ return boxes }
+    return {
+      ...image,
+      points,
+      boxes,
+    };
   };
 
   const create = async (payload: CreatePayload) => {
@@ -107,7 +122,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
 
   const update = async (payload: UpdatePayload) => {
     return await lock.auto(async () => {
-      const { id, points } = payload;
+      const { id, points, boxes } = payload;
       const row = await store.charImage.find({ id });
       if (row instanceof Error) {
         return row;
@@ -115,13 +130,17 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       if (row === undefined) {
         return new Error(ErrorKind.CharImageNotFound);
       }
-      let err = await store.point.delete({ imageId: id });
-      if (err instanceof Error) {
-        return err;
+      if(points !== undefined){
+        let err = await store.point.delete({ imageId: id });
+        if (err instanceof Error) { return err; }
+        err = await store.point.load(points.filter((x) => x.imageId === id));
+        if (err instanceof Error) { return err; }
       }
-      err = await store.point.load(points.filter((x) => x.imageId === id));
-      if (err instanceof Error) {
-        return err;
+      if(boxes !== undefined){
+        let err = await store.box.delete({ imageId: id });
+        if (err instanceof Error) { return err; }
+        err = await store.box.load(boxes.filter((x) => x.imageId === id));
+        if (err instanceof Error) { return err; }
       }
       return id;
     });

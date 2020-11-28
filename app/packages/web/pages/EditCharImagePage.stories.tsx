@@ -14,4 +14,5 @@ export default {
 const [charImage, points] = fromLabelMe(labelMeData);
 const { editCharImage, data } = store;
 data.state.charImages = data.state.charImages.set(charImage.id, charImage);
-export const Primary = (args) => <Page {...args} id={charImage.id} />;
+editCharImage.init(charImage.id);
+export const Primary = (args) => <Page />;
