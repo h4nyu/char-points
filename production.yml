@@ -9,6 +9,7 @@ services:
     command: wait-for-it db:5432 -- yarn srv start
     environment:
       - DATABASE_URL=postgres://app:app@db/app
+      - DETECTION_API  
     restart: on-failure
     ports:
       - "${SERVER_PORT}:80"

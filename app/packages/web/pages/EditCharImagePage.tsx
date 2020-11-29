@@ -28,6 +28,7 @@ const Content = observer(() => {
     unselect,
     move,
     setMode,
+    detectBoxes,
     del,
   } = editCharImage;
   return (
@@ -39,6 +40,9 @@ const Content = observer(() => {
           </button>
           <button className="button" onClick={() => changeSize(size * 0.9)}>
             <i className="fas fa-minus" />
+          </button>
+          <button className="button" onClick={detectBoxes}>
+            文字検出
           </button>
           <SvgCharPlot
             data={imageData}

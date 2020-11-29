@@ -12,6 +12,14 @@ export const Store = (sql: Sql<any>): CharImageStore => {
       createdAt: r.created_at.toISOString(),
     };
   };
+
+  const from = (r: CharImage): Row => {
+    return {
+      id: r.id,
+      data: r.data && Buffer.from(r.data, "base64") || null,
+      created_at: r.createdAt,
+    };
+  };
   const find = async (payload: {
     id?: string;
   }): Promise<CharImage | undefined | Error> => {
@@ -46,25 +54,30 @@ export const Store = (sql: Sql<any>): CharImageStore => {
       return err;
     }
   };
-
-  const insert = async (payload: CharImage): Promise<void | Error> => {
+  const update = async (payload: CharImage): Promise<void | Error> => {
     try {
       const { id, data, createdAt } = payload;
       await sql`
-      INSERT INTO images (
-        id,
-        data,
-        created_at
-      ) VALUES (
-        ${id},
-        ${data ? Buffer.from(data, "base64") : null},
-        ${createdAt}
-      )
+      UPDATE images 
+      SET 
+        ${sql(from(payload), "data", "created_at",)}
+      WHERE 
+        id=${payload.id} 
       `;
     } catch (err) {
       return err;
     }
   };
+
+  const insert = async (payload: CharImage): Promise<void | Error> => {
+    try {
+      await sql`
+      INSERT INTO images ${sql(from(payload), "id", "data", "created_at",)}`;
+    } catch (err) {
+      return err;
+    }
+  };
+
   const delete_ = async (payload: { id?: string }): Promise<void | Error> => {
     try {
       const { id } = payload;
@@ -86,6 +99,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
   return {
     find,
     filter,
+    update,
     delete: delete_,
     insert,
     clear,

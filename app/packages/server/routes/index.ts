@@ -9,6 +9,9 @@ export const App = (args: { store: Store; lock: Lock }) => {
   const { store, lock } = args;
   const app = fastify();
   const prefix = path.join("/", process.env.PREFIX || "", "/api/v1");
+  app.get(`${prefix}/detection-api`, {}, async (req, rep) => {
+    rep.send(process.env.DETECTION_API);
+  });
   app.register(fastifyStatic, {
     root: "/srv/packages/web/dist",
   });
