@@ -37,9 +37,9 @@ export const SvgCharPlot = (props: {
   let height = size;
   let width = size;
   if (aspect < 1.0) {
-    width = size * aspect;
-  } else {
     height = size * aspect;
+  } else {
+    width = size / aspect;
   }
   useEffect(() => {
     const img = imgRef.current;
@@ -49,9 +49,10 @@ export const SvgCharPlot = (props: {
     }
     img.src = `data:image;base64,${data}`;
     img.onload = () => {
+      console.log(img.height, img.width);
       setAspect(img.height / img.width);
     };
-  }, []);
+  }, [data]);
 
   const handleMove = (e) => {
     if (onMouseMove === undefined) {
@@ -67,12 +68,13 @@ export const SvgCharPlot = (props: {
     const y = clientY - top;
     onMouseMove({ x: x / width, y: y / height });
   };
+  console.log(aspect, height, width);
 
   return (
     <div style={{ position: "relative", minHeight: height, minWidth: width }}>
       <img
         ref={imgRef}
-        style={{ position: "absolute", width, height, userSelect: "none" }}
+        style={{ position: "absolute", userSelect: "none" }}
         height={height}
         width={width}
       />

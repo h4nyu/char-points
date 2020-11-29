@@ -12,6 +12,8 @@ services:
       - ./app:/srv
     environment:
       - DATABASE_URL=postgres://app:app@db/app
+      - NODE_ENV=development  
+      - DETECTION_API  
       - STORYBOOK_PORT
     depends_on:
       - migrate
@@ -23,6 +25,7 @@ services:
     command: wait-for-it db:5432 -- yarn srv start:dev
     environment:
       - DATABASE_URL=postgres://app:app@db/app
+      - DETECTION_API
       - NODE_ENV=development
     depends_on:
       - migrate

@@ -59,6 +59,7 @@ export type CreatePayload = {
 
 export type UpdatePayload = {
   id: string;
+  data?: string;
   points?: Point[];
   boxes?: Box[];
 };
@@ -122,13 +123,17 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
 
   const update = async (payload: UpdatePayload) => {
     return await lock.auto(async () => {
-      const { id, points, boxes } = payload;
+      const { id, points, boxes, data } = payload;
       const row = await store.charImage.find({ id });
       if (row instanceof Error) {
         return row;
       }
       if (row === undefined) {
         return new Error(ErrorKind.CharImageNotFound);
+      }
+      if(data !== undefined) {
+        let err = await store.charImage.update({...row, data}) 
+        if (err instanceof Error) { return err; }
       }
       if(points !== undefined){
         let err = await store.point.delete({ imageId: id });

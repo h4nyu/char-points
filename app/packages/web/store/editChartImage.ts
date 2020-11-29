@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { RootApi } from "@charpoints/api";
+import { RootApi, DetectionApi } from "@charpoints/api";
 import { ErrorStore } from "./error";
 import { Points, Point, CharImage, History, Level, InputMode, Box } from ".";
 import { ToastStore } from "./toast";
@@ -44,6 +44,7 @@ export type EditChartImage = {
   move: (pos: { x: number; y: number }) => void;
   del: (id: number) => void;
   changeSize: (size: number) => void;
+  detectBoxes: () => void;
   save: () => Promise<void>;
   init: (id: string) => void;
 };
@@ -51,12 +52,13 @@ export const EditChartImage = (root: {
   data: DataStore;
   history: History;
   api: RootApi;
+  detectionApi: DetectionApi;
   loading: LoadingStore;
   toast: ToastStore;
   error: ErrorStore;
 }): EditChartImage => {
   const state = observable(State());
-  const { history, data, api, loading, toast, error } = root;
+  const { history, data, api, loading, toast, error, detectionApi } = root;
   const init = async (id: string) => {
     history.push("/edit");
     const charImage = data.state.charImages.get(id);
@@ -162,6 +164,16 @@ export const EditChartImage = (root: {
     state.size = value;
   };
 
+  const detectBoxes = async () => {
+    const { imageData } = state
+    if(imageData === undefined){return}
+    const res = await detectionApi.detect({data: imageData})
+    if(res instanceof Error) { return error.notify(res) }
+    console.log(res)
+    state.boxes = res.boxes.map(b => ({...b, imageId: state.id}))
+    state.imageData = res.imageData
+  };
+
   const save = async () => {
     const payload = {
       id: state.id,
@@ -188,6 +200,7 @@ export const EditChartImage = (root: {
     setMode,
     move,
     changeSize,
+    detectBoxes,
     add,
     del,
     save,

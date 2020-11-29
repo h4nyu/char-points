@@ -9,7 +9,6 @@ export const PointList = (props: {
   onCloseClick?: (id: number) => void;
 }) => {
   const { points, selectedId, onMouseEnter, onMouseLeave, onCloseClick } = props;
-  console.log(selectedId)
   return (
     <table className="table is-fullwidth">
       <thead>
