@@ -42,7 +42,7 @@ const Content = observer(() => {
             <i className="fas fa-minus" />
           </button>
           <button className="button" onClick={detectBoxes}>
-            <i className="fas fa-minus" />
+            文字検出
           </button>
           <SvgCharPlot
             data={imageData}

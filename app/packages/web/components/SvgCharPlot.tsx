@@ -32,7 +32,7 @@ export const SvgCharPlot = (props: {
   const imgRef: RefObject<HTMLImageElement> = useRef(null);
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const size = props.size || 128;
-  const pointSize = size / 75;
+  const pointSize = size / 100;
   const [aspect, setAspect] = useState(1.0);
   let height = size;
   let width = size;
@@ -49,7 +49,6 @@ export const SvgCharPlot = (props: {
     }
     img.src = `data:image;base64,${data}`;
     img.onload = () => {
-      console.log(img.height, img.width);
       setAspect(img.height / img.width);
     };
   }, [data]);
@@ -68,7 +67,6 @@ export const SvgCharPlot = (props: {
     const y = clientY - top;
     onMouseMove({ x: x / width, y: y / height });
   };
-  console.log(aspect, height, width);
 
   return (
     <div style={{ position: "relative", minHeight: height, minWidth: width }}>
@@ -110,28 +108,28 @@ export const SvgCharPlot = (props: {
             <circle
               cx={b.x0 * width}
               cy={b.y0 * height}
-              r={pointSize/2}
+              r={pointSize/3}
               fill={selectedId === i && (mode === InputMode.Box || mode === InputMode.TL)  ? "yellow" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TL)}
             />
             <circle
               cx={b.x1 * width}
               cy={b.y0 * height}
-              r={pointSize/2}
+              r={pointSize/3}
               fill={selectedId === i && (mode === InputMode.Box || mode === InputMode.TR) ? "yellow" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TR)}
             />
             <circle
               cx={b.x0 * width}
               cy={b.y1 * height}
-              r={pointSize/2}
+              r={pointSize/3}
               fill={selectedId === i && (mode === InputMode.Box || mode === InputMode.BL) ? "yellow" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BL)}
             />
             <circle
               cx={b.x1 * width}
               cy={b.y1 * height}
-              r={pointSize/2}
+              r={pointSize/3}
               fill={selectedId === i && (mode === InputMode.Box || mode === InputMode.BR) ? "yellow" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BR)}
             />
