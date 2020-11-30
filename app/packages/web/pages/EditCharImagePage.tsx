@@ -84,7 +84,7 @@ const Content = observer(() => {
               mode === InputMode.Point && <PointList
                 points={points}
                 selectedIds={selectedIds}
-                onCloseClick={del}
+                onClick={e => toggleSelect(e, InputMode.Point)}
               />
             }
             {
