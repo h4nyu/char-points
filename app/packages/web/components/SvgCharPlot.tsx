@@ -101,8 +101,9 @@ export const SvgCharPlot = (props: {
               y={b.y0 * height} 
               width={(b.x1 - b.x0) * width}
               height={(b.y1 - b.y0) * height}
-              fill='transparent'
-              stroke={selectedId === i && mode === InputMode.Box  ? "yellow" : "red"}
+              fill= { selectedId === i && mode === InputMode.Box  ? "lightgreen" : ""}
+              fill-opacity={ selectedId === i && mode === InputMode.Box  ? 0.5 : 0}
+              stroke={selectedId === i && mode === InputMode.Box  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.Box)}
             />
             <circle
