@@ -92,7 +92,7 @@ export const SvgCharPlot = (props: {
             cx={p.x * width}
             cy={p.y * height}
             r={pointSize}
-            fill={mode === InputMode.Point && selectedIds?.includes(i) ? "yellow" : "red"}
+            fill={mode === InputMode.Point && selectedIds?.includes(i) ? "green" : "red"}
             onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.Point)}
             onClick={e => onClick && onClick(i, InputMode.Point)}
           />
@@ -105,8 +105,8 @@ export const SvgCharPlot = (props: {
               width={(b.x1 - b.x0) * width}
               height={(b.y1 - b.y0) * height}
               fill={ "green" }
-              stroke="red"
-              fillOpacity={selectedIds?.includes(i) ? 0.5 : 0.0 }
+              stroke={selectedIds?.includes(i) ? "green" : "red"}
+              fillOpacity={selectedIds?.includes(i) ? 0.3 : 0.0 }
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.Box)}
               onClick={e => onClick && onClick(i, InputMode.Box)}
             />
@@ -114,28 +114,28 @@ export const SvgCharPlot = (props: {
               cx={b.x0 * width}
               cy={b.y0 * height}
               r={pointSize/2}
-              fill={selectedIds?.includes(i) && (mode === InputMode.Box || mode === InputMode.TL)  ? "yellow" : "red"}
+              fill={selectedIds?.includes(i) && (mode === InputMode.Box || mode === InputMode.TL)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TL)}
             />
             <circle
               cx={b.x1 * width}
               cy={b.y0 * height}
               r={pointSize/2}
-              fill="red"
+              fill={selectedIds?.includes(i) && (mode === InputMode.Box || mode === InputMode.TL)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TR)}
             />
             <circle
               cx={b.x0 * width}
               cy={b.y1 * height}
               r={pointSize/2}
-              fill="red"
+              fill={selectedIds?.includes(i) && (mode === InputMode.Box || mode === InputMode.TL)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BL)}
             />
             <circle
               cx={b.x1 * width}
               cy={b.y1 * height}
               r={pointSize/2}
-              fill="red"
+              fill={selectedIds?.includes(i) && (mode === InputMode.Box || mode === InputMode.TL)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BR)}
             />
           </g>
