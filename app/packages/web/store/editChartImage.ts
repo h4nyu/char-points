@@ -108,6 +108,7 @@ export const EditChartImage = (root: {
     if(mode === InputMode.Point){
       state.points = points.update(draggingId, x => ({...x, ...pos}))
     }
+    console.log(mode)
     if(mode === InputMode.Box){
       state.boxes = boxes.update(draggingId, box => {
         const width = box.x1 - box.x0
@@ -136,17 +137,18 @@ export const EditChartImage = (root: {
       state.boxes = boxes.set(draggingId, {...box, x1:pos.x, y1:pos.y });
     }
     else if(mode === InputMode.BL){
-      const box = boxes[draggingId]
+      const box = boxes.get(draggingId)
+      if(box === undefined) {return}
       if(pos.x > box.x1){ return setMode(InputMode.BR) }
       if(pos.y < box.y0){ return setMode(InputMode.TL) }
-      boxes[draggingId] ={...box, x0:pos.x, y1:pos.y};
+      state.boxes = boxes.set(draggingId, {...box, x0:pos.x, y1:pos.y });
     }
     else if(mode === InputMode.TR){
-      const box = boxes[draggingId]
+      const box = boxes.get(draggingId)
+      if(box === undefined) {return}
       if(pos.x < box.x0){ return setMode(InputMode.TL) }
       if(pos.y > box.y1){ return setMode(InputMode.BR) }
-      boxes[draggingId] ={...box, x1:pos.x, y0:pos.y};
-      // state.boxes = [...boxes]
+      state.boxes = boxes.set(draggingId, {...box, x1:pos.x, y0:pos.y });
     }
   };
 
