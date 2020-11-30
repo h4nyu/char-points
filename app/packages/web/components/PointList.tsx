@@ -1,19 +1,18 @@
 import React from "react";
-import { Point } from "../store";
+import { Points } from "../store";
 
 export const PointList = (props: {
-  points: Point[];
-  selectedId?: number;
-  onMouseEnter?: (id: number) => void;
+  points: Points;
+  selectedIds?: string[];
+  onMouseEnter?: (id: string) => void;
   onMouseLeave?: () => void;
-  onCloseClick?: (id: number) => void;
+  onCloseClick?: (id: string) => void;
 }) => {
-  const { points, selectedId, onMouseEnter, onMouseLeave, onCloseClick } = props;
+  const { points, selectedIds, onMouseEnter, onMouseLeave, onCloseClick } = props;
   return (
     <table className="table is-fullwidth">
       <thead>
         <tr>
-          <th> id </th>
           <th> x </th>
           <th> y </th>
           {onCloseClick && <th> </th>}
@@ -23,11 +22,10 @@ export const PointList = (props: {
         {points.map((p, i) => (
           <tr
             key={i}
-            className={selectedId === i ? "is-selected" : ""}
+            className={selectedIds?.includes(i) ? "is-selected" : ""}
             onMouseEnter={() => onMouseEnter && onMouseEnter(i)}
             onMouseLeave={() => onMouseLeave && onMouseLeave()}
           >
-            <th>{i}</th>
             <th>{p.x.toFixed(3)}</th>
             <th>{p.y.toFixed(3)}</th>
             {onCloseClick && (
@@ -36,7 +34,7 @@ export const PointList = (props: {
               </th>
             )}
           </tr>
-        ))}
+        )).toList()}
       </tbody>
     </table>
   );

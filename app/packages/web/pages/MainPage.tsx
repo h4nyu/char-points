@@ -1,9 +1,12 @@
 import React from "react";
 import Header from "../components/Header";
 import { observer } from "mobx-react-lite";
+import { Map } from "immutable";
 import PageLayout from "../components/PageLayout";
 import store from "../store";
 import { List } from "immutable";
+import { keyBy } from "lodash";
+import { v4 as uuid } from "uuid";
 import { parseISO } from "date-fns";
 import SvgCharPlot from "../components/SvgCharPlot";
 import Upload from "../components/FileUpload";
@@ -26,8 +29,15 @@ const Content = observer(() => {
       >
         {charImages
           .toList()
+          .map( x => {
+            return {
+              ...x,
+              points: Map(keyBy(x.points || [], _ => uuid())),
+              boxes: Map(keyBy(x.boxes || [], _ => uuid())),
+            }
+          })
           .sortBy(x => -parseISO(x.createdAt))
-          .sortBy(x => x.points?.length)
+          .sortBy(x => x.points?.size)
           .map(x => (
             <div className="card m-1" key={x.id}>
               <div className="card-image">

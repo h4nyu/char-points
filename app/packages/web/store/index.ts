@@ -18,7 +18,8 @@ configure({
   enforceActions: "never",
 });
 export type CharImages = Map<string, CharImage>;
-export type Points = List<Point>;
+export type Points = Map<string, Point>;
+export type Boxes = Map<string, Box>;
 export enum Level {
   Info,
   Success,

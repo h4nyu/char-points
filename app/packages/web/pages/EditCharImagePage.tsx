@@ -17,15 +17,17 @@ const Content = observer(() => {
     boxes,
     size, 
     draggingId, 
+    selectedIds,
     imageData, 
     mode 
   } = editCharImage.state;
   const {
     save,
     changeSize,
+    startDrag,
+    endDrag,
     add,
-    select,
-    unselect,
+    toggleSelect,
     move,
     setMode,
     detectBoxes,
@@ -33,7 +35,15 @@ const Content = observer(() => {
   } = editCharImage;
   return (
     <>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex" }} 
+        onKeyDown={e => {
+          const {keyCode} = e
+          if(keyCode === 8){
+            del()
+          }
+        }}
+        tabIndex={0}
+      >
         <div>
           <button className="button" onClick={() => changeSize(size * 1.1)}>
             <i className="fas fa-plus" />
@@ -49,11 +59,12 @@ const Content = observer(() => {
             points={points}
             mode={mode}
             boxes={boxes}
-            selectedId={draggingId}
-            onStartDrag={select}
-            onEndDrag={unselect}
+            selectedIds={selectedIds}
+            onStartDrag={startDrag}
+            onEndDrag={endDrag}
             onMouseMove={move}
             onMouseDown={add}
+            onClick={toggleSelect}
             size={size}
           />
         </div>
@@ -72,9 +83,7 @@ const Content = observer(() => {
             {
               mode === InputMode.Point && <PointList
                 points={points}
-                selectedId={draggingId}
-                onMouseLeave={unselect}
-                onMouseEnter={i => select(i, InputMode.Point)}
+                selectedIds={selectedIds}
                 onCloseClick={del}
               />
             }
@@ -86,10 +95,8 @@ const Content = observer(() => {
               || mode === InputMode.BL)
               && <BoxList
                 boxes={boxes}
-                selectedId={draggingId}
-                onMouseLeave={unselect}
-                onMouseEnter={i => select(i, InputMode.Box)}
-                onCloseClick={del}
+                selectedIds={selectedIds}
+                onClick={e => toggleSelect(e, InputMode.Box)}
               />
             }
           </div>
