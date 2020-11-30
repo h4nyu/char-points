@@ -32,8 +32,8 @@ const Content = observer(() => {
           .map( x => {
             return {
               ...x,
-              points: Map(keyBy(x.points || [], _ => uuid())),
-              boxes: Map(keyBy(x.boxes || [], _ => uuid())),
+              points: Map((x.points || []).map((x,i) =>[`${i}`, x]) ),
+              boxes: Map((x.boxes || []).map((x,i) =>[`${i}`, x]) ),
             }
           })
           .sortBy(x => -parseISO(x.createdAt))
