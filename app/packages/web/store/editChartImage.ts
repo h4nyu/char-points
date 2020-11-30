@@ -108,7 +108,6 @@ export const EditChartImage = (root: {
     if(mode === InputMode.Point){
       state.points = points.update(draggingId, x => ({...x, ...pos}))
     }
-    console.log(mode)
     if(mode === InputMode.Box){
       state.boxes = boxes.update(draggingId, box => {
         const width = box.x1 - box.x0
@@ -173,11 +172,8 @@ export const EditChartImage = (root: {
 
   const del = () => {
     const { points, selectedIds, boxes, mode } = state;
-    if(mode === InputMode.Point){
-      state.points = points.filter((v, k) => !selectedIds.includes(k));
-    }else if(mode === InputMode.Box){
-      state.boxes = boxes.filter((v, k) => !selectedIds.includes(k));
-    }
+    state.points = points.filter((v, k) => !selectedIds.includes(k));
+    state.boxes = boxes.filter((v, k) => !selectedIds.includes(k));
     state.selectedIds = []
     state.draggingId = undefined;
   };

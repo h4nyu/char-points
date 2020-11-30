@@ -96,7 +96,7 @@ export const SvgCharPlot = (props: {
             onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.Point)}
             onClick={e => onClick && onClick(i, InputMode.Point)}
           />
-        ))}
+        )).toList()}
         {boxes?.map((b, i) => (
           <g key={i}>
             <rect 
@@ -114,32 +114,32 @@ export const SvgCharPlot = (props: {
               cx={b.x0 * width}
               cy={b.y0 * height}
               r={pointSize/2}
-              fill={selectedIds?.includes(i) && (mode === InputMode.Box || mode === InputMode.TL)  ? "green" : "red"}
+              fill={selectedIds?.includes(i)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TL)}
             />
             <circle
               cx={b.x1 * width}
               cy={b.y0 * height}
               r={pointSize/2}
-              fill={selectedIds?.includes(i) && (mode === InputMode.Box || mode === InputMode.TL)  ? "green" : "red"}
+              fill={selectedIds?.includes(i)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TR)}
             />
             <circle
               cx={b.x0 * width}
               cy={b.y1 * height}
               r={pointSize/2}
-              fill={selectedIds?.includes(i) && (mode === InputMode.Box || mode === InputMode.TL)  ? "green" : "red"}
+              fill={selectedIds?.includes(i)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BL)}
             />
             <circle
               cx={b.x1 * width}
               cy={b.y1 * height}
               r={pointSize/2}
-              fill={selectedIds?.includes(i) && (mode === InputMode.Box || mode === InputMode.TL)  ? "green" : "red"}
+              fill={selectedIds?.includes(i)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BR)}
             />
           </g>
-        ))}
+        )).toList()}
       </svg>
     </div>
   );
