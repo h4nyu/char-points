@@ -116,6 +116,7 @@ export const SvgCharPlot = (props: {
               r={pointSize/2}
               fill={selectedIds?.includes(i)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TL)}
+              onClick={e => onClick && onClick(i, InputMode.Box)}
             />
             <circle
               cx={b.x1 * width}
@@ -123,6 +124,7 @@ export const SvgCharPlot = (props: {
               r={pointSize/2}
               fill={selectedIds?.includes(i)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TR)}
+              onClick={e => onClick && onClick(i, InputMode.Box)}
             />
             <circle
               cx={b.x0 * width}
@@ -130,6 +132,7 @@ export const SvgCharPlot = (props: {
               r={pointSize/2}
               fill={selectedIds?.includes(i)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BL)}
+              onClick={e => onClick && onClick(i, InputMode.Box)}
             />
             <circle
               cx={b.x1 * width}
@@ -137,6 +140,7 @@ export const SvgCharPlot = (props: {
               r={pointSize/2}
               fill={selectedIds?.includes(i)  ? "green" : "red"}
               onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BR)}
+              onClick={e => onClick && onClick(i, InputMode.Box)}
             />
           </g>
         )).toList()}
