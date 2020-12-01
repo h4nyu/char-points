@@ -40,6 +40,7 @@ export const CharImageStore = (root: {
   const uploadLabelMe = async (f: File): Promise<CreatePayload | Error> => {
     const text = await readAsText(f);
     if (text instanceof Error) {
+      error.notify(text);
       return text;
     }
     const [charImage, points]  = fromLabelMe(JSON.parse(text));
@@ -82,6 +83,7 @@ export const CharImageStore = (root: {
         }
         const id = await api.charImage.create(payload);
         if (id instanceof Error) {
+          error.notify(id);
           continue;
         }
         await root.data.fetchCharImages({ ids: [id] });
