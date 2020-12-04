@@ -7,7 +7,7 @@ import fastifyStatic from "fastify-static";
 
 export const App = (args: { store: Store; lock: Lock }) => {
   const { store, lock } = args;
-  const app = fastify();
+  const app = fastify({bodyLimit: 10048576});
   const prefix = path.join("/", process.env.PREFIX || "", "/api/v1");
   app.get(`${prefix}/detection-api`, {}, async (req, rep) => {
     rep.send(process.env.DETECTION_API);

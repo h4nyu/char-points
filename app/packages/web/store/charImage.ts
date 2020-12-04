@@ -89,7 +89,6 @@ export const CharImageStore = (root: {
         await root.data.fetchCharImages({ ids: [id] });
       }
     });
-    toast.show("Success", Level.Success);
   };
 
   const select = (id: string) => {
