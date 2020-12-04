@@ -16,7 +16,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
   const from = (r: CharImage): Row => {
     return {
       id: r.id,
-      data: r.data && Buffer.from(r.data, "base64") || null,
+      data: (r.data && Buffer.from(r.data, "base64")) || null,
       created_at: r.createdAt,
     };
   };
@@ -60,7 +60,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
       await sql`
       UPDATE images 
       SET 
-        ${sql(from(payload), "data", "created_at",)}
+        ${sql(from(payload), "data", "created_at")}
       WHERE 
         id=${payload.id} 
       `;
@@ -72,7 +72,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
   const insert = async (payload: CharImage): Promise<void | Error> => {
     try {
       await sql`
-      INSERT INTO images ${sql(from(payload), "id", "data", "created_at",)}`;
+      INSERT INTO images ${sql(from(payload), "id", "data", "created_at")}`;
     } catch (err) {
       return err;
     }

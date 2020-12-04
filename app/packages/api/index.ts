@@ -33,7 +33,7 @@ export const RootApi = (): RootApi => {
   };
 
   const charImage = CharImageApi({ http, prefix: `${prefix}/char-image` });
-  const point = PointApi(http, `${prefix}/point`)
+  const point = PointApi(http, `${prefix}/point`);
 
   const setUrl = (url: string) => {
     http.defaults.baseURL = url;
@@ -47,18 +47,23 @@ export const RootApi = (): RootApi => {
 };
 
 export type DetectPayload = {
-  data: string
-}
-export type DetectionApi = { 
+  data: string;
+};
+export type DetectionApi = {
   setUrl: (url: string) => void;
-  detect: (payload: DetectPayload) => Promise<{
-    boxes: Box[];
-    scores: number[];
-    imageData: string;
-  }|Error>
-}
+  detect: (
+    payload: DetectPayload
+  ) => Promise<
+    | {
+        boxes: Box[];
+        scores: number[];
+        imageData: string;
+      }
+    | Error
+  >;
+};
 
-export const DetectionApi = ():DetectionApi => {
+export const DetectionApi = (): DetectionApi => {
   const http = axios.create();
   const setUrl = (url: string) => {
     http.defaults.baseURL = url;
@@ -66,10 +71,16 @@ export const DetectionApi = ():DetectionApi => {
   const detect = async (payload: DetectPayload) => {
     try {
       const res = await http.post("/api/upload-image", payload);
-      const { boxes, scores, image } = res.data
+      const { boxes, scores, image } = res.data;
       return {
-        boxes: boxes.map(b => {  
-          return {...Box(), x0: b[0] - b[2]/2, y0:b[1] - b[3]/2, x1: b[0]+b[2]/2, y1:b[1]+b[3]/2} 
+        boxes: boxes.map((b) => {
+          return {
+            ...Box(),
+            x0: b[0] - b[2] / 2,
+            y0: b[1] - b[3] / 2,
+            x1: b[0] + b[2] / 2,
+            y1: b[1] + b[3] / 2,
+          };
         }),
         scores,
         imageData: image,

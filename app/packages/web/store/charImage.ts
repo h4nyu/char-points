@@ -43,8 +43,8 @@ export const CharImageStore = (root: {
       error.notify(text);
       return text;
     }
-    const [charImage, points]  = fromLabelMe(JSON.parse(text));
-    const { data } = charImage
+    const [charImage, points] = fromLabelMe(JSON.parse(text));
+    const { data } = charImage;
     if (data === undefined) {
       return {
         data: "",

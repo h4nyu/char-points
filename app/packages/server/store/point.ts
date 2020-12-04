@@ -26,7 +26,7 @@ export const Store = (sql: Sql<any>): PointStore => {
       let rows: Row[] = [];
       if (imageId !== undefined) {
         rows = await sql`SELECT * FROM points WHERE image_id =${imageId}`;
-      }else {
+      } else {
         rows = await sql`SELECT * FROM points`;
       }
       return rows.map(to);

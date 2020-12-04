@@ -16,16 +16,18 @@ export const PointList = (props: {
         </tr>
       </thead>
       <tbody>
-        {points.map((p, i) => (
-          <tr
-            key={i}
-            className={selectedIds?.includes(i) ? "is-selected" : ""}
-            onClick={() => onClick && onClick(i)}
-          >
-            <th>{p.x.toFixed(3)}</th>
-            <th>{p.y.toFixed(3)}</th>
-          </tr>
-        )).toList()}
+        {points
+          .map((p, i) => (
+            <tr
+              key={i}
+              className={selectedIds?.includes(i) ? "is-selected" : ""}
+              onClick={() => onClick && onClick(i)}
+            >
+              <th>{p.x.toFixed(3)}</th>
+              <th>{p.y.toFixed(3)}</th>
+            </tr>
+          ))
+          .toList()}
       </tbody>
     </table>
   );

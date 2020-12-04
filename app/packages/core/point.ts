@@ -1,4 +1,4 @@
-import { Store } from "."
+import { Store } from ".";
 
 export type Point = {
   x: number;
@@ -15,16 +15,16 @@ export const Point = (): Point => {
     label: undefined,
   };
 };
-export type FilterPayload = { 
-  imageId?: string
-}
+export type FilterPayload = {
+  imageId?: string;
+};
 export type Service = {
   filter: (payload: FilterPayload) => Promise<Point[] | Error>;
-}
-export const Service = (args: { store:Store }):Service => {
-  const { store } = args
+};
+export const Service = (args: { store: Store }): Service => {
+  const { store } = args;
   const filter = async (payload: FilterPayload) => {
-    return await store.point.filter(payload)
-  }
-  return { filter }
-}
+    return await store.point.filter(payload);
+  };
+  return { filter };
+};

@@ -6,20 +6,21 @@ import store, { InputMode } from "../store";
 import SvgCharPlot from "../components/SvgCharPlot";
 import DeleteBtn from "../components/DeleteBtn";
 import PointList from "../components/PointList";
-import BoxList from "../components/BoxList"
+import BoxList from "../components/BoxList";
 import Upload from "../components/FileUpload";
 import { RouteComponentProps } from "react-router";
 import { useParams } from "react-router-dom";
 
 const { editCharImage } = store;
 const Content = observer(() => {
-  const { points, 
+  const {
+    points,
     boxes,
-    size, 
-    draggingId, 
+    size,
+    draggingId,
     selectedIds,
-    imageData, 
-    mode 
+    imageData,
+    mode,
   } = editCharImage.state;
   const {
     save,
@@ -35,11 +36,12 @@ const Content = observer(() => {
   } = editCharImage;
   return (
     <>
-      <div style={{ display: "flex" }} 
-        onKeyDown={e => {
-          const {keyCode} = e
-          if(keyCode === 8){
-            del()
+      <div
+        style={{ display: "flex" }}
+        onKeyDown={(e) => {
+          const { keyCode } = e;
+          if (keyCode === 8) {
+            del();
           }
         }}
         tabIndex={0}
@@ -68,37 +70,52 @@ const Content = observer(() => {
             size={size}
           />
         </div>
-        <div style={{height: size }}>
+        <div style={{ height: size }}>
           <div className="tabs is-boxed">
             <ul>
-              <li className={mode === InputMode.Point && "is-active" || undefined}>
+              <li
+                className={
+                  (mode === InputMode.Point && "is-active") || undefined
+                }
+              >
                 <a onClick={() => setMode(InputMode.Point)}>Points</a>
               </li>
-              <li className={[InputMode.Box, InputMode.TR, InputMode.TR, InputMode.BR, InputMode.BL,].includes(mode) && "is-active" || undefined}>
+              <li
+                className={
+                  ([
+                    InputMode.Box,
+                    InputMode.TR,
+                    InputMode.TR,
+                    InputMode.BR,
+                    InputMode.BL,
+                  ].includes(mode) &&
+                    "is-active") ||
+                  undefined
+                }
+              >
                 <a onClick={() => setMode(InputMode.Box)}>Boxes</a>
               </li>
             </ul>
           </div>
-          <div style={{ overflow: "scroll", maxHeight:size - 42 - 24 }}>
-            {
-              mode === InputMode.Point && <PointList
+          <div style={{ overflow: "scroll", maxHeight: size - 42 - 24 }}>
+            {mode === InputMode.Point && (
+              <PointList
                 points={points}
                 selectedIds={selectedIds}
-                onClick={e => toggleSelect(e, InputMode.Point)}
+                onClick={(e) => toggleSelect(e, InputMode.Point)}
               />
-            }
-            {
-              (mode === InputMode.Box 
-              || mode === InputMode.TR
-              || mode === InputMode.TL
-              || mode === InputMode.BR
-              || mode === InputMode.BL)
-              && <BoxList
+            )}
+            {(mode === InputMode.Box ||
+              mode === InputMode.TR ||
+              mode === InputMode.TL ||
+              mode === InputMode.BR ||
+              mode === InputMode.BL) && (
+              <BoxList
                 boxes={boxes}
                 selectedIds={selectedIds}
-                onClick={e => toggleSelect(e, InputMode.Box)}
+                onClick={(e) => toggleSelect(e, InputMode.Box)}
               />
-            }
+            )}
           </div>
         </div>
       </div>

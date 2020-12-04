@@ -73,11 +73,7 @@ export const CharPlot = (props: {
         justifyContent: "center",
       }}
     >
-      <canvas
-        ref={canvasRef}
-        onClick={handleClick}
-        draggable
-      />
+      <canvas ref={canvasRef} onClick={handleClick} draggable />
     </div>
   );
 };

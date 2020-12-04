@@ -1,13 +1,13 @@
-import { Store } from "."
+import { Store } from ".";
 
 export type Box = {
-  x0: number,
-  y0: number,
-  x1: number,
-  y1: number,
-  imageId: string,
-  label?: string
-}
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+  imageId: string;
+  label?: string;
+};
 
 export const Box = (): Box => {
   return {
@@ -17,5 +17,5 @@ export const Box = (): Box => {
     y1: 0.0,
     imageId: "",
     label: undefined,
-  }
+  };
 };

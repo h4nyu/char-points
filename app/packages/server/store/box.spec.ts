@@ -10,7 +10,7 @@ afterAll(async () => {
 
 describe("box", () => {
   const store = rootStore.box;
-  const row = { ...Box(), imageId: "aaa" }
+  const row = { ...Box(), imageId: "aaa" };
 
   beforeAll(async () => {
     await store.clear();

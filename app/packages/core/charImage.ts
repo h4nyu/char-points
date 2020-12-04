@@ -91,11 +91,15 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       return new Error(ErrorKind.CharImageNotFound);
     }
     const [points, boxes] = await Promise.all([
-      store.point.filter({imageId: image.id}), 
-      store.box.filter({imageId: image.id})
-    ])
-    if(points instanceof Error){ return points }
-    if(boxes instanceof Error){ return boxes }
+      store.point.filter({ imageId: image.id }),
+      store.box.filter({ imageId: image.id }),
+    ]);
+    if (points instanceof Error) {
+      return points;
+    }
+    if (boxes instanceof Error) {
+      return boxes;
+    }
     return {
       ...image,
       points,
@@ -131,21 +135,31 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       if (row === undefined) {
         return new Error(ErrorKind.CharImageNotFound);
       }
-      if(data !== undefined) {
-        let err = await store.charImage.update({...row, data}) 
-        if (err instanceof Error) { return err; }
+      if (data !== undefined) {
+        const err = await store.charImage.update({ ...row, data });
+        if (err instanceof Error) {
+          return err;
+        }
       }
-      if(points !== undefined){
+      if (points !== undefined) {
         let err = await store.point.delete({ imageId: id });
-        if (err instanceof Error) { return err; }
+        if (err instanceof Error) {
+          return err;
+        }
         err = await store.point.load(points.filter((x) => x.imageId === id));
-        if (err instanceof Error) { return err; }
+        if (err instanceof Error) {
+          return err;
+        }
       }
-      if(boxes !== undefined){
+      if (boxes !== undefined) {
         let err = await store.box.delete({ imageId: id });
-        if (err instanceof Error) { return err; }
+        if (err instanceof Error) {
+          return err;
+        }
         err = await store.box.load(boxes.filter((x) => x.imageId === id));
-        if (err instanceof Error) { return err; }
+        if (err instanceof Error) {
+          return err;
+        }
       }
       return id;
     });

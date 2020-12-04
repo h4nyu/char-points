@@ -29,19 +29,24 @@ const Content = observer(() => {
       >
         {charImages
           .toList()
-          .map( x => {
+          .map((x) => {
             return {
               ...x,
-              points: Map((x.points || []).map((x,i) =>[`${i}`, x]) ),
-              boxes: Map((x.boxes || []).map((x,i) =>[`${i}`, x]) ),
-            }
+              points: Map((x.points || []).map((x, i) => [`${i}`, x])),
+              boxes: Map((x.boxes || []).map((x, i) => [`${i}`, x])),
+            };
           })
-          .sortBy(x => -parseISO(x.createdAt))
-          .sortBy(x => x.points?.size)
-          .map(x => (
+          .sortBy((x) => -parseISO(x.createdAt))
+          .sortBy((x) => x.points?.size)
+          .map((x) => (
             <div className="card m-1" key={x.id}>
               <div className="card-image">
-                <SvgCharPlot data={x.data} points={x.points} boxes={x.boxes} size={128} />
+                <SvgCharPlot
+                  data={x.data}
+                  points={x.points}
+                  boxes={x.boxes}
+                  size={128}
+                />
               </div>
               <footer className="card-footer">
                 <button

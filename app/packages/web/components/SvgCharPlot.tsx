@@ -8,11 +8,11 @@ export const SvgCharPlot = (props: {
   boxes?: Boxes;
   size?: number;
   selectedIds?: string[];
-  onStartDrag?: (id: string, InputMode:InputMode) => void;
+  onStartDrag?: (id: string, InputMode: InputMode) => void;
   onEndDrag?: () => void;
   onMouseDown?: () => void;
   onMouseMove?: (pos: { x: number; y: number }) => void;
-  onClick?: (id: string, InputMode:InputMode) => void;
+  onClick?: (id: string, InputMode: InputMode) => void;
   onMouseLeave?: () => void;
 }) => {
   const {
@@ -71,7 +71,16 @@ export const SvgCharPlot = (props: {
   };
 
   return (
-    <div style={{ position: "relative", minHeight: size, minWidth: size, display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div
+      style={{
+        position: "relative",
+        minHeight: size,
+        minWidth: size,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <img
         ref={imgRef}
         style={{ position: "absolute", userSelect: "none" }}
@@ -86,64 +95,76 @@ export const SvgCharPlot = (props: {
         onMouseMove={handleMove}
         onMouseLeave={(e) => onEndDrag && onEndDrag()}
       >
-        {points?.map((p, i) => (
-          <circle
-            key={i}
-            cx={p.x * width}
-            cy={p.y * height}
-            r={pointSize}
-            fill={mode === InputMode.Point && selectedIds?.includes(i) ? "green" : "red"}
-            onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.Point)}
-            onClick={e => onClick && onClick(i, InputMode.Point)}
-          />
-        )).toList()}
-        {boxes?.map((b, i) => (
-          <g key={i}>
-            <rect 
-              x={b.x0 * width} 
-              y={b.y0 * height} 
-              width={(b.x1 - b.x0) * width}
-              height={(b.y1 - b.y0) * height}
-              fill={ "green" }
-              stroke={selectedIds?.includes(i) ? "green" : "red"}
-              fillOpacity={selectedIds?.includes(i) ? 0.3 : 0.0 }
-              onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.Box)}
-              onClick={e => onClick && onClick(i, InputMode.Box)}
-            />
+        {points
+          ?.map((p, i) => (
             <circle
-              cx={b.x0 * width}
-              cy={b.y0 * height}
-              r={pointSize/2}
-              fill={selectedIds?.includes(i)  ? "green" : "red"}
-              onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TL)}
-              onClick={e => onClick && onClick(i, InputMode.Box)}
+              key={i}
+              cx={p.x * width}
+              cy={p.y * height}
+              r={pointSize}
+              fill={
+                mode === InputMode.Point && selectedIds?.includes(i)
+                  ? "green"
+                  : "red"
+              }
+              onMouseDown={(e) =>
+                onStartDrag && onStartDrag(i, InputMode.Point)
+              }
+              onClick={(e) => onClick && onClick(i, InputMode.Point)}
             />
-            <circle
-              cx={b.x1 * width}
-              cy={b.y0 * height}
-              r={pointSize/2}
-              fill={selectedIds?.includes(i)  ? "green" : "red"}
-              onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TR)}
-              onClick={e => onClick && onClick(i, InputMode.Box)}
-            />
-            <circle
-              cx={b.x0 * width}
-              cy={b.y1 * height}
-              r={pointSize/2}
-              fill={selectedIds?.includes(i)  ? "green" : "red"}
-              onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BL)}
-              onClick={e => onClick && onClick(i, InputMode.Box)}
-            />
-            <circle
-              cx={b.x1 * width}
-              cy={b.y1 * height}
-              r={pointSize/2}
-              fill={selectedIds?.includes(i)  ? "green" : "red"}
-              onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BR)}
-              onClick={e => onClick && onClick(i, InputMode.Box)}
-            />
-          </g>
-        )).toList()}
+          ))
+          .toList()}
+        {boxes
+          ?.map((b, i) => (
+            <g key={i}>
+              <rect
+                x={b.x0 * width}
+                y={b.y0 * height}
+                width={(b.x1 - b.x0) * width}
+                height={(b.y1 - b.y0) * height}
+                fill={"green"}
+                stroke={selectedIds?.includes(i) ? "green" : "red"}
+                fillOpacity={selectedIds?.includes(i) ? 0.3 : 0.0}
+                onMouseDown={(e) =>
+                  onStartDrag && onStartDrag(i, InputMode.Box)
+                }
+                onClick={(e) => onClick && onClick(i, InputMode.Box)}
+              />
+              <circle
+                cx={b.x0 * width}
+                cy={b.y0 * height}
+                r={pointSize / 2}
+                fill={selectedIds?.includes(i) ? "green" : "red"}
+                onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TL)}
+                onClick={(e) => onClick && onClick(i, InputMode.Box)}
+              />
+              <circle
+                cx={b.x1 * width}
+                cy={b.y0 * height}
+                r={pointSize / 2}
+                fill={selectedIds?.includes(i) ? "green" : "red"}
+                onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TR)}
+                onClick={(e) => onClick && onClick(i, InputMode.Box)}
+              />
+              <circle
+                cx={b.x0 * width}
+                cy={b.y1 * height}
+                r={pointSize / 2}
+                fill={selectedIds?.includes(i) ? "green" : "red"}
+                onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BL)}
+                onClick={(e) => onClick && onClick(i, InputMode.Box)}
+              />
+              <circle
+                cx={b.x1 * width}
+                cy={b.y1 * height}
+                r={pointSize / 2}
+                fill={selectedIds?.includes(i) ? "green" : "red"}
+                onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BR)}
+                onClick={(e) => onClick && onClick(i, InputMode.Box)}
+              />
+            </g>
+          ))
+          .toList()}
       </svg>
     </div>
   );

@@ -7,18 +7,20 @@ export const BoxList = (props: {
   onClick?: (id: string) => void;
 }) => {
   const { boxes, selectedIds, onClick } = props;
-  const Row = (b:Box, i:string) => {
-    return <tr
-      key={i}
-      className={selectedIds?.includes(i) ? "is-selected" : ""}
-      onClick={() => onClick && onClick(i)}
-    >
-      <th>{b.x0.toFixed(3)}</th>
-      <th>{b.y0.toFixed(3)}</th>
-      <th>{b.x1.toFixed(3)}</th>
-      <th>{b.y1.toFixed(3)}</th>
-    </tr>
-  }
+  const Row = (b: Box, i: string) => {
+    return (
+      <tr
+        key={i}
+        className={selectedIds?.includes(i) ? "is-selected" : ""}
+        onClick={() => onClick && onClick(i)}
+      >
+        <th>{b.x0.toFixed(3)}</th>
+        <th>{b.y0.toFixed(3)}</th>
+        <th>{b.x1.toFixed(3)}</th>
+        <th>{b.y1.toFixed(3)}</th>
+      </tr>
+    );
+  };
   return (
     <table className="table is-fullwidth">
       <thead>
@@ -29,9 +31,7 @@ export const BoxList = (props: {
           <th> y1 </th>
         </tr>
       </thead>
-      <tbody>
-        {boxes.map(Row).toList()}
-      </tbody>
+      <tbody>{boxes.map(Row).toList()}</tbody>
     </table>
   );
 };

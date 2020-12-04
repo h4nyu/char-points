@@ -1,9 +1,6 @@
 import { AxiosInstance } from "axios";
 import { toError } from ".";
-import {
-  FilterPayload,
-  Service,
-} from "@charpoints/core/point";
+import { FilterPayload, Service } from "@charpoints/core/point";
 
 export type Api = Service;
 
@@ -21,4 +18,3 @@ export const Api = (http: AxiosInstance, prefix: string): Service => {
     filter,
   };
 };
-

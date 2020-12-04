@@ -1,7 +1,7 @@
 export { ErrorKind } from "./error";
 import { CharImage } from "./charImage";
 import { Point } from "./point";
-import { Box } from "./box"
+import { Box } from "./box";
 
 export type CharImageStore = {
   filter: (payload: { ids?: string[] }) => Promise<CharImage[] | Error>;

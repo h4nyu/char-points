@@ -5,13 +5,13 @@ import { BoxStore } from "@charpoints/core";
 export const Store = (sql: Sql<any>): BoxStore => {
   const to = (r: Row): Box => {
     return {
-      x0: r.x0, 
-      y0: r.y0, 
-      x1: r.x1, 
+      x0: r.x0,
+      y0: r.y0,
+      x1: r.x1,
       y1: r.y1,
       imageId: r.image_id,
-      label: r.label || undefined
-    }
+      label: r.label || undefined,
+    };
   };
 
   const from = (b: Box): Row => {
@@ -30,7 +30,7 @@ export const Store = (sql: Sql<any>): BoxStore => {
       let rows: Row[] = [];
       if (imageId !== undefined) {
         rows = await sql`SELECT * FROM boxes WHERE image_id =${imageId}`;
-      }else {
+      } else {
         rows = await sql`SELECT * FROM boxes`;
       }
       return rows.map(to);
@@ -45,7 +45,15 @@ export const Store = (sql: Sql<any>): BoxStore => {
         return;
       }
       const rows = payload.map(from);
-      await sql` INSERT INTO boxes ${sql(rows, "x0", "y0", "x1", "y1", "image_id", "label")}
+      await sql` INSERT INTO boxes ${sql(
+        rows,
+        "x0",
+        "y0",
+        "x1",
+        "y1",
+        "image_id",
+        "label"
+      )}
       `;
     } catch (err) {
       return err;
@@ -77,4 +85,4 @@ export const Store = (sql: Sql<any>): BoxStore => {
     clear,
     delete: delete_,
   };
-}
+};

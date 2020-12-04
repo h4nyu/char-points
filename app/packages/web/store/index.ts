@@ -38,8 +38,8 @@ export enum InputMode {
   TL = "TL",
   TR = "TR",
   BL = "BL",
-  BR = "BR"
-};
+  BR = "BR",
+}
 
 export type RootStore = {
   data: DataStore;
@@ -54,7 +54,7 @@ export type RootStore = {
 };
 export const RootStore = (): RootStore => {
   const api = RootApi();
-  const detectionApi = DetectionApi()
+  const detectionApi = DetectionApi();
   const loading = LoadingStore();
   const toast = ToastStore();
   const error = ErrorStore({ toast });
@@ -79,9 +79,11 @@ export const RootStore = (): RootStore => {
   });
   const init = async () => {
     await data.init();
-    const url = await api.detectionUrl()
-    if(url instanceof Error) { return }
-    detectionApi.setUrl(url)
+    const url = await api.detectionUrl();
+    if (url instanceof Error) {
+      return;
+    }
+    detectionApi.setUrl(url);
     toast.show("Success", Level.Success);
   };
   return {

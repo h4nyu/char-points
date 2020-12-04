@@ -29,8 +29,8 @@ describe("image", () => {
     expect(res).toEqual(row);
   });
   test("update", async () => {
-    console.log(row.data)
-    row.data =  Buffer.from("aaaaa").toString("base64")
+    console.log(row.data);
+    row.data = Buffer.from("aaaaa").toString("base64");
     const err = await store.update(row);
     if (err instanceof Error) {
       throw err;
