@@ -62,8 +62,8 @@ const Content = observer(() => {
               style={{
                 cursor:"pointer", 
                 position: "relative",
-                width:128, height:128,
-                lineHeight: 128
+                width:128, 
+                height:128,
               }}
               onClick={() => init(x.id)}
             >
