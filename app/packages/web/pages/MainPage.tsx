@@ -14,7 +14,7 @@ import Upload from "../components/FileUpload";
 
 const Content = observer(() => {
   const { history } = store;
-  const [ mode, setMode ] = useState("Point")
+  const [ mode, setMode ] = useState("Empty")
   const { charImages } = store.data.state;
   const { deleteChartImage } = store.data;
   const { init } = store.editCharImage;
