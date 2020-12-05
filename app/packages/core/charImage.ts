@@ -9,6 +9,8 @@ export type CharImage = {
   data?: string; // base64 encoded string
   points?: Point[];
   boxes?: Box[];
+  hasBox?: boolean;
+  hasPoint?: boolean;
   createdAt: string;
 };
 
@@ -53,8 +55,6 @@ export type FilterPayload = {
 };
 export type CreatePayload = {
   data: string; //base64
-  points?: Point[];
-  boxes?: Box[];
 };
 
 export type UpdatePayload = {
@@ -109,7 +109,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
 
   const create = async (payload: CreatePayload) => {
     return await lock.auto(async () => {
-      const { data, points } = payload;
+      const { data } = payload;
       const row = {
         ...CharImage(),
         data,
@@ -117,9 +117,6 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       let err = await store.charImage.insert(row);
       if (err instanceof Error) {
         return err;
-      }
-      if (points) {
-        err = await store.point.load(points);
       }
       return row.id;
     });

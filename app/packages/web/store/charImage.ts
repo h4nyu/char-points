@@ -37,25 +37,6 @@ export const CharImageStore = (root: {
   const { api, data, toast, loading, error } = root;
   const state = observable(State());
 
-  const uploadLabelMe = async (f: File): Promise<CreatePayload | Error> => {
-    const text = await readAsText(f);
-    if (text instanceof Error) {
-      error.notify(text);
-      return text;
-    }
-    const [charImage, points] = fromLabelMe(JSON.parse(text));
-    const { data } = charImage;
-    if (data === undefined) {
-      return {
-        data: "",
-      };
-    }
-    return {
-      data,
-      points,
-    };
-  };
-
   const uploadImage = async (f: File): Promise<CreatePayload | Error> => {
     const data = await readAsBase64(f);
     if (data instanceof Error) {
@@ -71,9 +52,6 @@ export const CharImageStore = (root: {
     await loading.auto(async () => {
       for (const f of files) {
         let payload: CreatePayload | Error = new Error("UnsupportedFormat");
-        if (f.type === "application/json") {
-          payload = await uploadLabelMe(f);
-        }
         if (f.type.includes("image")) {
           payload = await uploadImage(f);
         }

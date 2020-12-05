@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import Tag from "../components/Tag"
 import { observer } from "mobx-react-lite";
@@ -14,18 +14,26 @@ import Upload from "../components/FileUpload";
 
 const Content = observer(() => {
   const { history } = store;
+  const [ mode, setMode ] = useState("Point")
   const { charImages } = store.data.state;
   const { deleteChartImage } = store.data;
   const { init } = store.editCharImage;
   const { uploadFiles } = store.charImage;
   return (
-    <>
-      <Upload accept={"application/json, image/*"} onChange={uploadFiles} />
+    <div 
+      style={{
+        display: 'grid',
+        gridTemplateRows: "50px 1fr 110px",
+        width: "100%",
+        height: "100%"
+      }}
+    >
       <div
         style={{
           display: "flex",
-          flexWrap: "wrap",
-          overflow: "auto",
+          flexFlow: "row wrap",
+          alignContent: "flex-start",
+          gridRow: "2"
         }}
       >
         {charImages
@@ -37,30 +45,68 @@ const Content = observer(() => {
               boxes: Map((x.boxes || []).map((x, i) => [`${i}`, x])),
             };
           })
+          .filter(x => {
+            if(mode === "Point"){
+              return x.points.size > 0
+            }else if(mode === "Box"){
+              return x.boxes.size > 0
+            }else {
+              return x.boxes.size === 0 || x.points.size === 0
+            }
+          })
           .sortBy((x) => -parseISO(x.createdAt))
           .sortBy((x) => x.points.size + x.boxes.size  )
           .map((x) => (
-            <div 
-              className="card m-1" 
+            <div className="card m-1"
               key={x.id}
-              style={{cursor:"pointer"}}
+              style={{
+                cursor:"pointer", 
+                position: "relative",
+                width:128, height:128,
+                lineHeight: 128
+              }}
               onClick={() => init(x.id)}
             >
-              <div className="card-image"
-              >
+              <div style={{ position: "absolute" }}>
                 <SvgCharPlot
                   data={x.data}
                   size={128}
                 />
               </div>
-              <footer className="card-footer">
+              <div style={{ position: "absolute"}}>
                 {x.points.size > 0 && <Tag value="Point"/>}
                 {x.boxes.size > 0 && <Tag value="Box"/>}
-              </footer>
+              </div>
             </div>
           ))}
       </div>
-    </>
+
+      <div
+        style={{
+          gridRow: "1"
+        }}
+      >
+        <div className="tabs is-toggle is-fullwidth" >
+          <ul>
+            <li className={ mode === "Empty" && "is-active" || undefined } >
+              <a onClick={() => setMode("Empty")}>Empty</a>
+            </li>
+            <li className={ mode === "Box" && "is-active" || undefined } >
+              <a onClick={() => setMode("Box")}>Box</a>
+            </li>
+            <li className={ mode === "Point" && "is-active" || undefined } >
+              <a onClick={() => setMode("Point")}>Points</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div 
+        style={{gridRow:"3"}}
+      >
+        <Upload accept={"application/json, image/*"} onChange={uploadFiles} />
+      </div>
+    </div>
   );
 });
 
