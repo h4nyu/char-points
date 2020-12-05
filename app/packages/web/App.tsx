@@ -6,13 +6,6 @@ import Toast from "./connectors/Toast";
 const MainPage = lazy(() => import("./pages/MainPage"));
 const EditChartImagePage = lazy(() => import("./pages/EditCharImagePage"));
 
-export const routes = [
-  {
-    path: "/",
-    Component: MainPage,
-  },
-];
-
 export default function App() {
   React.useEffect(() => {
     rootStore.init();
