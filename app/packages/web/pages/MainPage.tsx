@@ -51,7 +51,7 @@ const Content = observer(() => {
             }else if(mode === "Box"){
               return x.boxes.size > 0
             }else {
-              return x.boxes.size === 0 || x.points.size === 0
+              return x.boxes.size === 0 && x.points.size === 0
             }
           })
           .sortBy((x) => -parseISO(x.createdAt))
