@@ -72,6 +72,8 @@ const Content = observer(() => {
           gridRow: "2",
           gridColumn: "1",
           overflow: "scroll",
+          alignItems: "center",
+          justifyContent: "center",
         }}
         tabIndex={0}
       >
