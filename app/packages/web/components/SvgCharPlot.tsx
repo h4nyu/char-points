@@ -123,7 +123,6 @@ export const SvgCharPlot = (props: {
                 fill="green"
                 fillOpacity={selectedId === i ? 0.3 : 0.0}
                 stroke={selectedId === i ? "green" : "red"}
-                strokeWidth={pointSize / 2}
                 onClick={(e) =>{
                   e.stopPropagation(); 
                   onSelect && onSelect(i, InputMode.Box)
