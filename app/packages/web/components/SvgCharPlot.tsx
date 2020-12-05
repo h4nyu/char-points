@@ -30,7 +30,7 @@ export const SvgCharPlot = (props: {
   const imgRef: RefObject<HTMLImageElement> = useRef(null);
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const size = props.size || 128;
-  const pointSize = 3;
+  const pointSize = size / 256;
   const [aspect, setAspect] = useState(1.0);
   let height = size;
   let width = size;
@@ -100,6 +100,7 @@ export const SvgCharPlot = (props: {
               cx={p.x * width}
               cy={p.y * height}
               r={pointSize}
+              stroke="none"
               fill={
                 mode === InputMode.Point && selectedId === i
                   ? "green"
@@ -132,6 +133,7 @@ export const SvgCharPlot = (props: {
                 cx={b.x0 * width}
                 cy={b.y0 * height}
                 r={pointSize}
+                stroke="none"
                 fill={selectedId === i ? "green" : "red"}
                 onClick={(e) => {
                   e.stopPropagation(); 
@@ -143,6 +145,7 @@ export const SvgCharPlot = (props: {
                 cy={b.y0 * height}
                 r={pointSize}
                 fill={selectedId === i ? "green" : "red"}
+                stroke="none"
                 onClick={(e) => {
                   e.stopPropagation(); 
                   onSelect && onSelect(i, InputMode.TR)
@@ -153,6 +156,7 @@ export const SvgCharPlot = (props: {
                 cy={b.y1 * height}
                 r={pointSize}
                 fill={selectedId === i ? "green" : "red"}
+                stroke="none"
                 onClick={(e) => {
                   e.stopPropagation(); 
                   onSelect && onSelect(i, InputMode.BL)
@@ -162,6 +166,7 @@ export const SvgCharPlot = (props: {
                 cx={b.x1 * width}
                 cy={b.y1 * height}
                 r={pointSize}
+                stroke="none"
                 fill={selectedId === i ? "green" : "red"}
                 onClick={(e) => {
                   e.stopPropagation(); 
