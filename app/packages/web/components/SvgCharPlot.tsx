@@ -30,7 +30,7 @@ export const SvgCharPlot = (props: {
   const imgRef: RefObject<HTMLImageElement> = useRef(null);
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const size = props.size || 128;
-  const pointSize = 2 / size;
+  const pointSize = 3;
   const [aspect, setAspect] = useState(1.0);
   let height = size;
   let width = size;
@@ -120,9 +120,9 @@ export const SvgCharPlot = (props: {
                 y={b.y0 * height}
                 width={(b.x1 - b.x0) * width || (2 / width)}
                 height={(b.y1 - b.y0) * height ||  (2 / height)}
-                fill="green"
-                fillOpacity={selectedId === i ? 0.3 : 0.0}
+                fill="none"
                 stroke={selectedId === i ? "green" : "red"}
+                strokeWidth={pointSize}
                 onClick={(e) =>{
                   e.stopPropagation(); 
                   onSelect && onSelect(i, InputMode.Box)
@@ -131,8 +131,8 @@ export const SvgCharPlot = (props: {
               <circle
                 cx={b.x0 * width}
                 cy={b.y0 * height}
-                r={pointSize / 2}
-                fillOpacity="0.0"
+                r={pointSize}
+                fill={selectedId === i ? "green" : "red"}
                 onClick={(e) => {
                   e.stopPropagation(); 
                   onSelect && onSelect(i, InputMode.TL)
@@ -141,8 +141,8 @@ export const SvgCharPlot = (props: {
               <circle
                 cx={b.x1 * width}
                 cy={b.y0 * height}
-                r={pointSize / 2}
-                fillOpacity="0.0"
+                r={pointSize}
+                fill={selectedId === i ? "green" : "red"}
                 onClick={(e) => {
                   e.stopPropagation(); 
                   onSelect && onSelect(i, InputMode.TR)
@@ -151,8 +151,8 @@ export const SvgCharPlot = (props: {
               <circle
                 cx={b.x0 * width}
                 cy={b.y1 * height}
-                r={pointSize / 2}
-                fillOpacity="0.0"
+                r={pointSize}
+                fill={selectedId === i ? "green" : "red"}
                 onClick={(e) => {
                   e.stopPropagation(); 
                   onSelect && onSelect(i, InputMode.BL)
@@ -161,8 +161,8 @@ export const SvgCharPlot = (props: {
               <circle
                 cx={b.x1 * width}
                 cy={b.y1 * height}
-                r={pointSize / 2}
-                fillOpacity="0.0"
+                r={pointSize}
+                fill={selectedId === i ? "green" : "red"}
                 onClick={(e) => {
                   e.stopPropagation(); 
                   onSelect && onSelect(i, InputMode.BR)
