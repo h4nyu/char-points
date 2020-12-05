@@ -23,8 +23,8 @@ export const PointList = (props: {
               className={selectedId === i ? "is-selected" : ""}
               onClick={() => onClick && onClick(i)}
             >
-              <th>{p.x.toFixed(3)}</th>
-              <th>{p.y.toFixed(3)}</th>
+              <th>{p.x.toFixed(2)}</th>
+              <th>{p.y.toFixed(2)}</th>
             </tr>
           ))
           .toList()}

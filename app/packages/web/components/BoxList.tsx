@@ -14,10 +14,10 @@ export const BoxList = (props: {
         className={selectedId === i ? "is-selected" : ""}
         onClick={() => onClick && onClick(i)}
       >
-        <th>{b.x0.toFixed(3)}</th>
-        <th>{b.y0.toFixed(3)}</th>
-        <th>{b.x1.toFixed(3)}</th>
-        <th>{b.y1.toFixed(3)}</th>
+        <th>{b.x0.toFixed(2)}</th>
+        <th>{b.y0.toFixed(2)}</th>
+        <th>{b.x1.toFixed(2)}</th>
+        <th>{b.y1.toFixed(2)}</th>
       </tr>
     );
   };
