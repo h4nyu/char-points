@@ -38,7 +38,7 @@ const Content = observer(() => {
     <div style={{
       display: 'grid',
       gridTemplateRows: "50px 1fr 50px",
-      gridTemplateColumns: "1fr 256px",
+      gridTemplateColumns: "1fr 1fr",
       width: "100%",
       height: "100%"
     }}>
@@ -70,7 +70,7 @@ const Content = observer(() => {
         style={{
           display: "flex",
           gridRow: "2",
-          gridColumn: "1",
+          gridColumn: "1 / span 2",
           overflow: "scroll",
         }}
         tabIndex={0}
@@ -96,7 +96,7 @@ const Content = observer(() => {
         }}
       >
 
-        <div className="tabs is-boxed" >
+        <div className="tabs is-toggle" >
           <ul>
             <li
             className={
@@ -123,33 +123,6 @@ const Content = observer(() => {
           </ul>
         </div>
       </div>
-
-      <div style={{ 
-        gridRow:"2",
-        gridColumn:"2",
-      }}>
-        <div style={{ overflow: "scroll", maxHeight: size - 42 - 24 }}>
-          {mode === InputMode.Point && (
-            <PointList
-              points={points}
-              selectedId={draggingId}
-              onClick={(e) => toggleDrag(e, InputMode.Point)}
-            />
-          )}
-          {(mode === InputMode.Box ||
-            mode === InputMode.TR ||
-            mode === InputMode.TL ||
-            mode === InputMode.BR ||
-            mode === InputMode.BL) && (
-              <BoxList
-                boxes={boxes}
-                selectedId={draggingId}
-                onClick={(e) => toggleDrag(e, InputMode.Box)}
-              />
-          )}
-        </div>
-      </div>
-
       <div className="buttons"
         style={{
           gridRow: "3",
