@@ -33,7 +33,8 @@ const Content = observer(() => {
           display: "flex",
           flexFlow: "row wrap",
           alignContent: "flex-start",
-          gridRow: "2"
+          gridRow: "2",
+          overflow: "scroll"
         }}
       >
         {charImages
