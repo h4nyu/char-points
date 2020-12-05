@@ -25,7 +25,6 @@ export type State = {
   mode: InputMode;
   imageData?: string;
   draggingId?: string;
-  selectedIds: string[];
   size: number;
   pos: {
     x: number;
@@ -40,7 +39,6 @@ export const State = (): State => {
     mode: InputMode.Point,
     imageData: undefined,
     draggingId: undefined,
-    selectedIds: [],
     size: 512,
     pos: {
       x: 0.5,
@@ -51,9 +49,7 @@ export const State = (): State => {
 
 export type EditChartImage = {
   state: State;
-  startDrag: (id: string, mode: InputMode) => void;
-  endDrag: () => void;
-  toggleSelect: (pointId: string, mode: InputMode) => void;
+  toggleDrag: (id: string, mode: InputMode) => void;
   setMode: (mode: InputMode) => void;
   add: () => void;
   move: (pos: { x: number; y: number }) => void;
@@ -90,22 +86,14 @@ export const EditChartImage = (root: {
     state.mode = mode;
   };
 
-  const endDrag = () => {
-    state.draggingId = undefined;
-  };
-
-  const startDrag = (id: string, mode: InputMode) => {
-    state.draggingId = id;
-    setMode(mode);
-  };
-
-  const toggleSelect = (id: string, mode: InputMode) => {
-    const { selectedIds } = state;
-    if (selectedIds.includes(id)) {
-      state.selectedIds = selectedIds.filter((x) => x !== id);
+  const toggleDrag = (id: string, mode: InputMode) => {
+    const { draggingId } = state;
+    if (draggingId === id) {
+      state.draggingId = undefined;
     } else {
-      state.selectedIds = [...selectedIds, id];
+      state.draggingId = id;
     }
+    setMode(mode);
   };
 
   const move = (pos: { x: number; y: number }) => {
@@ -116,19 +104,6 @@ export const EditChartImage = (root: {
     }
     if (mode === InputMode.Point) {
       state.points = points.update(draggingId, (x) => ({ ...x, ...pos }));
-    }
-    if (mode === InputMode.Box) {
-      state.boxes = boxes.update(draggingId, (box) => {
-        const width = box.x1 - box.x0;
-        const height = box.y1 - box.y0;
-        return {
-          ...box,
-          x0: pos.x - width / 2,
-          y0: pos.y - height / 2,
-          x1: pos.x + width / 2,
-          y1: pos.y + height / 2,
-        };
-      });
     } else if (mode === InputMode.TL) {
       const box = boxes.get(draggingId);
       if (box === undefined) {
@@ -181,11 +156,12 @@ export const EditChartImage = (root: {
   };
 
   const add = () => {
-    const { draggingId, mode, pos, boxes, points, id } = state;
-    if (draggingId !== undefined) {
+    console.log('add',)
+    const { draggingId, mode, pos, boxes, points, id, } = state;
+    if (state.draggingId = undefined) {
+      state.draggingId = undefined;
       return;
     }
-
     const newId = uuid();
     if (mode === InputMode.Point) {
       state.points = points.set(newId, { ...Point(), ...pos, imageId: id });
@@ -208,14 +184,13 @@ export const EditChartImage = (root: {
       });
       setMode(InputMode.BR);
     }
-    state.draggingId = newId;
+    state.draggingId = newId
   };
 
   const del = () => {
-    const { points, selectedIds, boxes, mode } = state;
-    state.points = points.filter((v, k) => !selectedIds.includes(k));
-    state.boxes = boxes.filter((v, k) => !selectedIds.includes(k));
-    state.selectedIds = [];
+    const { points, boxes, mode, draggingId } = state;
+    state.points = points.filter((v, k) => k !== draggingId);
+    state.boxes = boxes.filter((v, k) => k !== draggingId);
     state.draggingId = undefined;
   };
 
@@ -262,10 +237,8 @@ export const EditChartImage = (root: {
 
   return {
     state,
-    toggleSelect,
     setMode,
-    startDrag,
-    endDrag,
+    toggleDrag,
     move,
     changeSize,
     detectBoxes,

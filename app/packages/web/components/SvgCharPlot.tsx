@@ -7,26 +7,22 @@ export const SvgCharPlot = (props: {
   points?: Points;
   boxes?: Boxes;
   size?: number;
-  selectedIds?: string[];
-  onStartDrag?: (id: string, InputMode: InputMode) => void;
-  onEndDrag?: () => void;
-  onMouseDown?: () => void;
-  onMouseMove?: (pos: { x: number; y: number }) => void;
-  onClick?: (id: string, InputMode: InputMode) => void;
-  onMouseLeave?: () => void;
+  selectedId?: string;
+  onAdd?: () => void;
+  onMove?: (pos: { x: number; y: number }) => void;
+  onSelect?: (id: string, InputMode: InputMode) => void;
+  onLeave?: () => void
 }) => {
   const {
     data,
     mode,
-    onStartDrag,
-    onEndDrag,
-    onMouseMove,
+    onAdd,
+    onMove,
+    selectedId,
     points,
     boxes,
-    selectedIds,
-    onMouseLeave,
-    onMouseDown,
-    onClick,
+    onSelect,
+    onLeave,
   } = props;
   if (data === undefined) {
     return null;
@@ -56,7 +52,7 @@ export const SvgCharPlot = (props: {
   }, [data]);
 
   const handleMove = (e) => {
-    if (onMouseMove === undefined) {
+    if (onMove === undefined) {
       return;
     }
     const svg = svgRef.current;
@@ -67,7 +63,7 @@ export const SvgCharPlot = (props: {
     const { clientX, clientY } = e;
     const x = clientX - left;
     const y = clientY - top;
-    onMouseMove({ x: x / width, y: y / height });
+    onMove({ x: x / width, y: y / height });
   };
 
   return (
@@ -90,10 +86,12 @@ export const SvgCharPlot = (props: {
       <svg
         ref={svgRef}
         style={{ position: "absolute", width, height, userSelect: "none" }}
-        onMouseUp={(e) => onEndDrag && onEndDrag()}
-        onMouseDown={(e) => onMouseDown && onMouseDown()}
         onMouseMove={handleMove}
-        onMouseLeave={(e) => onEndDrag && onEndDrag()}
+        onMouseLeave={onLeave}
+        onClick={(e) => {  
+          e.stopPropagation(); 
+          onAdd && onAdd()
+        }}
       >
         {points
           ?.map((p, i) => (
@@ -103,14 +101,14 @@ export const SvgCharPlot = (props: {
               cy={p.y * height}
               r={pointSize}
               fill={
-                mode === InputMode.Point && selectedIds?.includes(i)
+                mode === InputMode.Point && selectedId === i
                   ? "green"
                   : "red"
               }
-              onMouseDown={(e) =>
-                onStartDrag && onStartDrag(i, InputMode.Point)
-              }
-              onClick={(e) => onClick && onClick(i, InputMode.Point)}
+              onClick={(e) =>{
+                e.stopPropagation(); 
+                onSelect && onSelect(i, InputMode.Point)
+              }}
             />
           ))
           .toList()}
@@ -120,47 +118,56 @@ export const SvgCharPlot = (props: {
               <rect
                 x={b.x0 * width}
                 y={b.y0 * height}
-                width={(b.x1 - b.x0) * width}
-                height={(b.y1 - b.y0) * height}
-                fill={"green"}
-                stroke={selectedIds?.includes(i) ? "green" : "red"}
-                fillOpacity={selectedIds?.includes(i) ? 0.3 : 0.0}
-                onMouseDown={(e) =>
-                  onStartDrag && onStartDrag(i, InputMode.Box)
-                }
-                onClick={(e) => onClick && onClick(i, InputMode.Box)}
+                width={(b.x1 - b.x0) * width || (2 / width)}
+                height={(b.y1 - b.y0) * height ||  (2 / height)}
+                fill="green"
+                fillOpacity={selectedId === i ? 0.3 : 0.0}
+                stroke={selectedId === i ? "green" : "red"}
+                strokeWidth={pointSize / 2}
+                onClick={(e) =>{
+                  e.stopPropagation(); 
+                  onSelect && onSelect(i, InputMode.Box)
+                }}
               />
               <circle
                 cx={b.x0 * width}
                 cy={b.y0 * height}
                 r={pointSize / 2}
-                fill={selectedIds?.includes(i) ? "green" : "red"}
-                onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TL)}
-                onClick={(e) => onClick && onClick(i, InputMode.Box)}
+                fillOpacity="0.0"
+                onClick={(e) => {
+                  e.stopPropagation(); 
+                  onSelect && onSelect(i, InputMode.TL)
+                }}
               />
               <circle
                 cx={b.x1 * width}
                 cy={b.y0 * height}
                 r={pointSize / 2}
-                fill={selectedIds?.includes(i) ? "green" : "red"}
-                onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.TR)}
-                onClick={(e) => onClick && onClick(i, InputMode.Box)}
+                fillOpacity="0.0"
+                onClick={(e) => {
+                  e.stopPropagation(); 
+                  onSelect && onSelect(i, InputMode.TR)
+                }}
               />
               <circle
                 cx={b.x0 * width}
                 cy={b.y1 * height}
                 r={pointSize / 2}
-                fill={selectedIds?.includes(i) ? "green" : "red"}
-                onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BL)}
-                onClick={(e) => onClick && onClick(i, InputMode.Box)}
+                fillOpacity="0.0"
+                onClick={(e) => {
+                  e.stopPropagation(); 
+                  onSelect && onSelect(i, InputMode.BL)
+                }}
               />
               <circle
                 cx={b.x1 * width}
                 cy={b.y1 * height}
                 r={pointSize / 2}
-                fill={selectedIds?.includes(i) ? "green" : "red"}
-                onMouseDown={(e) => onStartDrag && onStartDrag(i, InputMode.BR)}
-                onClick={(e) => onClick && onClick(i, InputMode.Box)}
+                fillOpacity="0.0"
+                onClick={(e) => {
+                  e.stopPropagation(); 
+                  onSelect && onSelect(i, InputMode.BR)
+                }}
               />
             </g>
           ))

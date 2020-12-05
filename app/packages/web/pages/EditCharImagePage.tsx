@@ -18,17 +18,14 @@ const Content = observer(() => {
     boxes,
     size,
     draggingId,
-    selectedIds,
     imageData,
     mode,
   } = editCharImage.state;
   const {
     save,
     changeSize,
-    startDrag,
-    endDrag,
     add,
-    toggleSelect,
+    toggleDrag,
     move,
     setMode,
     detectBoxes,
@@ -61,12 +58,11 @@ const Content = observer(() => {
             points={points}
             mode={mode}
             boxes={boxes}
-            selectedIds={selectedIds}
-            onStartDrag={startDrag}
-            onEndDrag={endDrag}
-            onMouseMove={move}
-            onMouseDown={add}
-            onClick={toggleSelect}
+            selectedId={draggingId}
+            onMove={move}
+            onAdd={add}
+            onSelect={toggleDrag}
+            onLeave={del}
             size={size}
           />
         </div>
@@ -101,8 +97,8 @@ const Content = observer(() => {
             {mode === InputMode.Point && (
               <PointList
                 points={points}
-                selectedIds={selectedIds}
-                onClick={(e) => toggleSelect(e, InputMode.Point)}
+                selectedId={draggingId}
+                onClick={(e) => toggleDrag(e, InputMode.Point)}
               />
             )}
             {(mode === InputMode.Box ||
@@ -112,8 +108,8 @@ const Content = observer(() => {
               mode === InputMode.BL) && (
               <BoxList
                 boxes={boxes}
-                selectedIds={selectedIds}
-                onClick={(e) => toggleSelect(e, InputMode.Box)}
+                selectedId={draggingId}
+                onClick={(e) => toggleDrag(e, InputMode.Box)}
               />
             )}
           </div>

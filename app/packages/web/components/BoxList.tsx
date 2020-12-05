@@ -3,15 +3,15 @@ import { Boxes, Box } from "../store";
 
 export const BoxList = (props: {
   boxes: Boxes;
-  selectedIds?: string[];
+  selectedId?: string;
   onClick?: (id: string) => void;
 }) => {
-  const { boxes, selectedIds, onClick } = props;
+  const { boxes, selectedId, onClick } = props;
   const Row = (b: Box, i: string) => {
     return (
       <tr
         key={i}
-        className={selectedIds?.includes(i) ? "is-selected" : ""}
+        className={selectedId === i ? "is-selected" : ""}
         onClick={() => onClick && onClick(i)}
       >
         <th>{b.x0.toFixed(3)}</th>

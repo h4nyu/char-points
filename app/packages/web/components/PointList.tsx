@@ -3,10 +3,10 @@ import { Points } from "../store";
 
 export const PointList = (props: {
   points: Points;
-  selectedIds?: string[];
+  selectedId?: string;
   onClick?: (id: string) => void;
 }) => {
-  const { points, selectedIds, onClick } = props;
+  const { points, selectedId, onClick } = props;
   return (
     <table className="table is-fullwidth">
       <thead>
@@ -20,7 +20,7 @@ export const PointList = (props: {
           .map((p, i) => (
             <tr
               key={i}
-              className={selectedIds?.includes(i) ? "is-selected" : ""}
+              className={selectedId === i ? "is-selected" : ""}
               onClick={() => onClick && onClick(i)}
             >
               <th>{p.x.toFixed(3)}</th>
