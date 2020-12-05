@@ -9,11 +9,12 @@ import PointList from "../components/PointList";
 import BoxList from "../components/BoxList";
 import Upload from "../components/FileUpload";
 import { RouteComponentProps } from "react-router";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 const { editCharImage } = store;
 const Content = observer(() => {
   const {
+    id,
     points,
     boxes,
     size,
@@ -31,6 +32,8 @@ const Content = observer(() => {
     detectBoxes,
     del,
   } = editCharImage;
+  const { deleteChartImage } = store.data;
+  const history = useHistory()
   return (
     <>
       <div
@@ -118,6 +121,12 @@ const Content = observer(() => {
 
       <button className="button is-info is-light" onClick={save}>
         save
+      </button>
+      <button className="button is-danger is-light" onClick={() => {
+        deleteChartImage(id)
+        history.goBack()
+      }}>
+        delete
       </button>
     </>
   );

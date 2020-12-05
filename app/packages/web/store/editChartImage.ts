@@ -71,6 +71,7 @@ export const EditChartImage = (root: {
   const state = observable(State());
   const { history, data, api, loading, toast, error, detectionApi } = root;
   const init = async (id: string) => {
+    console.log("aaa")
     history.push("/edit");
     const charImage = data.state.charImages.get(id);
     if (charImage === undefined) {

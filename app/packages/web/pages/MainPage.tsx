@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "../components/Header";
+import Tag from "../components/Tag"
 import { observer } from "mobx-react-lite";
 import { Map } from "immutable";
 import PageLayout from "../components/PageLayout";
@@ -37,30 +38,24 @@ const Content = observer(() => {
             };
           })
           .sortBy((x) => -parseISO(x.createdAt))
-          .sortBy((x) => x.points?.size)
+          .sortBy((x) => x.points.size + x.boxes.size  )
           .map((x) => (
-            <div className="card m-1" key={x.id}>
-              <div className="card-image">
+            <div 
+              className="card m-1" 
+              key={x.id}
+              style={{cursor:"pointer"}}
+              onClick={() => init(x.id)}
+            >
+              <div className="card-image"
+              >
                 <SvgCharPlot
                   data={x.data}
-                  points={x.points}
-                  boxes={x.boxes}
                   size={128}
                 />
               </div>
               <footer className="card-footer">
-                <button
-                  className="card-footer-item button"
-                  onClick={() => init(x.id)}
-                >
-                  <i className="fas fa-edit"></i>
-                </button>
-                <button
-                  className="card-footer-item button"
-                  onClick={() => deleteChartImage(x.id)}
-                >
-                  <i className="fas fa-trash"></i>
-                </button>
+                {x.points.size > 0 && <Tag value="Point"/>}
+                {x.boxes.size > 0 && <Tag value="Box"/>}
               </footer>
             </div>
           ))}

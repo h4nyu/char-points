@@ -30,7 +30,7 @@ export const SvgCharPlot = (props: {
   const imgRef: RefObject<HTMLImageElement> = useRef(null);
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const size = props.size || 128;
-  const pointSize = size / 256;
+  const pointSize = 3;
   const [aspect, setAspect] = useState(1.0);
   let height = size;
   let width = size;
@@ -89,7 +89,6 @@ export const SvgCharPlot = (props: {
         onMouseMove={handleMove}
         onMouseLeave={onLeave}
         onClick={(e) => {  
-          e.stopPropagation(); 
           onAdd && onAdd()
         }}
       >
@@ -169,8 +168,8 @@ export const SvgCharPlot = (props: {
                 stroke="none"
                 fill={selectedId === i ? "green" : "red"}
                 onClick={(e) => {
-                  e.stopPropagation(); 
                   onSelect && onSelect(i, InputMode.BR)
+                  e.stopPropagation(); 
                 }}
               />
             </g>
