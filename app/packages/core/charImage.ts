@@ -132,12 +132,6 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       if (row === undefined) {
         return new Error(ErrorKind.CharImageNotFound);
       }
-      if (data !== undefined) {
-        const err = await store.charImage.update({ ...row, data });
-        if (err instanceof Error) {
-          return err;
-        }
-      }
       if (points !== undefined) {
         let err = await store.point.delete({ imageId: id });
         if (err instanceof Error) {
@@ -157,6 +151,17 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
         if (err instanceof Error) {
           return err;
         }
+      }
+
+      const next = {
+        ...row,
+        data: data || row.data,
+        hasPoint: points && points.length > 0 || undefined,
+        hasBox: boxes && boxes.length > 0 || undefined,
+      }
+      const err = await store.charImage.update(next);
+      if (err instanceof Error) {
+        return err;
       }
       return id;
     });

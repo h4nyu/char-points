@@ -9,6 +9,8 @@ export const Store = (sql: Sql<any>): CharImageStore => {
     return {
       id: r.id,
       data: (r.data && r.data.toString("base64")) || undefined,
+      hasPoint: r.has_point || undefined,
+      hasBox: r.has_box || undefined,
       createdAt: r.created_at.toISOString(),
     };
   };
@@ -17,6 +19,8 @@ export const Store = (sql: Sql<any>): CharImageStore => {
     return {
       id: r.id,
       data: (r.data && Buffer.from(r.data, "base64")) || null,
+      has_point: r.hasPoint || null,
+      has_box: r.hasBox || null,
       created_at: r.createdAt,
     };
   };
@@ -45,9 +49,9 @@ export const Store = (sql: Sql<any>): CharImageStore => {
       const { ids } = payload;
       let rows = [];
       if (ids !== undefined && ids.length > 0) {
-        rows = await sql`SELECT id, created_at FROM images WHERE id IN (${ids})`;
+        rows = await sql`SELECT id, created_at, has_point, has_box FROM images WHERE id IN (${ids})`;
       } else {
-        rows = await sql`SELECT id, created_at FROM images`;
+        rows = await sql`SELECT id, created_at, has_point, has_box FROM images`;
       }
       return rows.map(to);
     } catch (err) {
@@ -60,7 +64,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
       await sql`
       UPDATE images 
       SET 
-        ${sql(from(payload), "data", "created_at")}
+        ${sql(from(payload), "data", "created_at", "has_point", "has_box")}
       WHERE 
         id=${payload.id} 
       `;
@@ -72,7 +76,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
   const insert = async (payload: CharImage): Promise<void | Error> => {
     try {
       await sql`
-      INSERT INTO images ${sql(from(payload), "id", "data", "created_at")}`;
+      INSERT INTO images ${sql(from(payload), "id", "data", "created_at", "has_box", "has_point")}`;
     } catch (err) {
       return err;
     }

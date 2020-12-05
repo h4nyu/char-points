@@ -48,11 +48,11 @@ const Content = observer(() => {
           })
           .filter(x => {
             if(mode === "Point"){
-              return x.points.size > 0
+              return x.hasPoint
             }else if(mode === "Box"){
-              return x.boxes.size > 0
+              return x.hasBox
             }else {
-              return x.boxes.size === 0 && x.points.size === 0
+              return !x.hasBox && !x.hasPoint
             }
           })
           .sortBy((x) => -parseISO(x.createdAt))
@@ -96,7 +96,7 @@ const Content = observer(() => {
               <a onClick={() => setMode("Box")}>Box</a>
             </li>
             <li className={ mode === "Point" && "is-active" || undefined } >
-              <a onClick={() => setMode("Point")}>Points</a>
+              <a onClick={() => setMode("Point")}>Point</a>
             </li>
           </ul>
         </div>

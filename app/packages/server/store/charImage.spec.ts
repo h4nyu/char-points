@@ -11,6 +11,8 @@ describe("image", () => {
   const store = rootStore.charImage;
   const row = {
     ...CharImage(),
+    hasPoint: true,
+    hasBox: true,
   };
   beforeAll(async () => {
     await store.clear();
