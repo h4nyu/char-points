@@ -4,7 +4,11 @@ import { Point } from "./point";
 import { Box } from "./box";
 
 export type CharImageStore = {
-  filter: (payload: { ids?: string[] }) => Promise<CharImage[] | Error>;
+  filter: (payload: {
+    ids?: string[];
+    hasBox?: boolean;
+    hasPoint?: boolean;
+  }) => Promise<CharImage[] | Error>;
   find: (payload: { id?: string }) => Promise<CharImage | undefined | Error>;
   update: (payload: CharImage) => Promise<void | Error>;
   insert: (payload: CharImage) => Promise<void | Error>;

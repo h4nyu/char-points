@@ -33,19 +33,22 @@ const Content = observer(() => {
     del,
   } = editCharImage;
   const { deleteChartImage } = store.data;
-  const history = useHistory()
+  const history = useHistory();
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateRows: "50px 1fr 50px",
-      gridTemplateColumns: "1fr 1fr",
-      width: "100%",
-      height: "100%"
-    }}>
-      <div className="buttons"
+    <div
+      style={{
+        display: "grid",
+        gridTemplateRows: "50px 1fr 50px",
+        gridTemplateColumns: "1fr 1fr",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <div
+        className="buttons"
         style={{
           gridRow: "1",
-          gridColumn: "1"
+          gridColumn: "1",
         }}
       >
         <button className="button" onClick={() => changeSize(size * 1.1)}>
@@ -90,40 +93,38 @@ const Content = observer(() => {
       </div>
 
       <div
-        style={{ 
+        style={{
           gridColumn: "2",
           gridRow: "1",
         }}
       >
-
-        <div className="tabs is-toggle" >
+        <div className="tabs is-toggle">
           <ul>
             <li
-            className={
-              (mode === InputMode.Point && "is-active") || undefined
-            }
+              className={(mode === InputMode.Point && "is-active") || undefined}
             >
-            <a onClick={() => setMode(InputMode.Point)}>Points</a>
+              <a onClick={() => setMode(InputMode.Point)}>Points</a>
             </li>
-          <li
-            className={
-              ([
-              InputMode.Box,
-              InputMode.TR,
-              InputMode.TR,
-              InputMode.BR,
-              InputMode.BL,
-            ].includes(mode) &&
-              "is-active") ||
-              undefined
-            }
-          >
-            <a onClick={() => setMode(InputMode.Box)}>Boxes</a>
-          </li>
+            <li
+              className={
+                ([
+                  InputMode.Box,
+                  InputMode.TR,
+                  InputMode.TR,
+                  InputMode.BR,
+                  InputMode.BL,
+                ].includes(mode) &&
+                  "is-active") ||
+                undefined
+              }
+            >
+              <a onClick={() => setMode(InputMode.Box)}>Boxes</a>
+            </li>
           </ul>
         </div>
       </div>
-      <div className="buttons"
+      <div
+        className="buttons"
         style={{
           gridRow: "3",
           gridColumn: "1",
@@ -132,10 +133,13 @@ const Content = observer(() => {
         <button className="button is-info is-light" onClick={save}>
           save
         </button>
-        <button className="button is-danger is-light" onClick={() => {
-          deleteChartImage(id)
-          history.goBack()
-        }}>
+        <button
+          className="button is-danger is-light"
+          onClick={() => {
+            deleteChartImage(id);
+            history.goBack();
+          }}
+        >
           delete
         </button>
       </div>

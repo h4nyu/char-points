@@ -6,6 +6,4 @@ export default {
   component: Component,
 };
 
-export const Primary = (args) => (
-  <Component {...args} />
-);
+export const Primary = (args) => <Component {...args} />;

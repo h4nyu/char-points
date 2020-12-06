@@ -71,7 +71,7 @@ export const EditChartImage = (root: {
   const state = observable(State());
   const { history, data, api, loading, toast, error, detectionApi } = root;
   const init = async (id: string) => {
-    console.log("aaa")
+    console.log("aaa");
     history.push("/edit");
     const charImage = data.state.charImages.get(id);
     if (charImage === undefined) {
@@ -157,9 +157,9 @@ export const EditChartImage = (root: {
   };
 
   const add = () => {
-    console.log('add',)
-    const { draggingId, mode, pos, boxes, points, id, } = state;
-    if (state.draggingId = undefined) {
+    console.log("add");
+    const { draggingId, mode, pos, boxes, points, id } = state;
+    if ((state.draggingId = undefined)) {
       state.draggingId = undefined;
       return;
     }
@@ -185,7 +185,7 @@ export const EditChartImage = (root: {
       });
       setMode(InputMode.BR);
     }
-    state.draggingId = newId
+    state.draggingId = newId;
   };
 
   const del = () => {

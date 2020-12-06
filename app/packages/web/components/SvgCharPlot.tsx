@@ -11,7 +11,7 @@ export const SvgCharPlot = (props: {
   onAdd?: () => void;
   onMove?: (pos: { x: number; y: number }) => void;
   onSelect?: (id: string, InputMode: InputMode) => void;
-  onLeave?: () => void
+  onLeave?: () => void;
 }) => {
   const {
     data,
@@ -88,8 +88,8 @@ export const SvgCharPlot = (props: {
         style={{ position: "absolute", width, height, userSelect: "none" }}
         onMouseMove={handleMove}
         onMouseLeave={onLeave}
-        onClick={(e) => {  
-          onAdd && onAdd()
+        onClick={(e) => {
+          onAdd && onAdd();
         }}
       >
         {points
@@ -101,13 +101,11 @@ export const SvgCharPlot = (props: {
               r={pointSize}
               stroke="none"
               fill={
-                mode === InputMode.Point && selectedId === i
-                  ? "green"
-                  : "red"
+                mode === InputMode.Point && selectedId === i ? "green" : "red"
               }
-              onClick={(e) =>{
-                e.stopPropagation(); 
-                onSelect && onSelect(i, InputMode.Point)
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect && onSelect(i, InputMode.Point);
               }}
             />
           ))
@@ -118,14 +116,14 @@ export const SvgCharPlot = (props: {
               <rect
                 x={b.x0 * width}
                 y={b.y0 * height}
-                width={(b.x1 - b.x0) * width || (2 / width)}
-                height={(b.y1 - b.y0) * height ||  (2 / height)}
+                width={(b.x1 - b.x0) * width || 2 / width}
+                height={(b.y1 - b.y0) * height || 2 / height}
                 fill="none"
                 stroke={selectedId === i ? "green" : "red"}
                 strokeWidth={pointSize / 2}
-                onClick={(e) =>{
-                  e.stopPropagation(); 
-                  onSelect && onSelect(i, InputMode.Box)
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect && onSelect(i, InputMode.Box);
                 }}
               />
               <circle
@@ -135,8 +133,8 @@ export const SvgCharPlot = (props: {
                 stroke="none"
                 fill={selectedId === i ? "green" : "red"}
                 onClick={(e) => {
-                  e.stopPropagation(); 
-                  onSelect && onSelect(i, InputMode.TL)
+                  e.stopPropagation();
+                  onSelect && onSelect(i, InputMode.TL);
                 }}
               />
               <circle
@@ -146,8 +144,8 @@ export const SvgCharPlot = (props: {
                 fill={selectedId === i ? "green" : "red"}
                 stroke="none"
                 onClick={(e) => {
-                  e.stopPropagation(); 
-                  onSelect && onSelect(i, InputMode.TR)
+                  e.stopPropagation();
+                  onSelect && onSelect(i, InputMode.TR);
                 }}
               />
               <circle
@@ -157,8 +155,8 @@ export const SvgCharPlot = (props: {
                 fill={selectedId === i ? "green" : "red"}
                 stroke="none"
                 onClick={(e) => {
-                  e.stopPropagation(); 
-                  onSelect && onSelect(i, InputMode.BL)
+                  e.stopPropagation();
+                  onSelect && onSelect(i, InputMode.BL);
                 }}
               />
               <circle
@@ -168,8 +166,8 @@ export const SvgCharPlot = (props: {
                 stroke="none"
                 fill={selectedId === i ? "green" : "red"}
                 onClick={(e) => {
-                  onSelect && onSelect(i, InputMode.BR)
-                  e.stopPropagation(); 
+                  onSelect && onSelect(i, InputMode.BR);
+                  e.stopPropagation();
                 }}
               />
             </g>

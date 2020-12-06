@@ -50,6 +50,13 @@ describe("image", () => {
     }
     expect(rows).toMatchObject([{ ...row, data: undefined }]);
   });
+  test("filter-hasBox", async () => {
+    const rows = await store.filter({hasBox:true});
+    if (rows instanceof Error) {
+      throw rows;
+    }
+    expect(rows).toMatchObject([{ ...row, data: undefined }]);
+  });
   test("delete", async () => {
     const err = await store.delete({ id: row.id });
     if (err instanceof Error) {

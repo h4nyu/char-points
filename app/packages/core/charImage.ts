@@ -52,7 +52,10 @@ export const CharImage = (): CharImage => {
 
 export type FilterPayload = {
   ids?: string[];
+  hasPoint?: boolean;
+  hasBox?: boolean;
 };
+
 export type CreatePayload = {
   data: string; //base64
 };
@@ -114,7 +117,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
         ...CharImage(),
         data,
       };
-      let err = await store.charImage.insert(row);
+      const err = await store.charImage.insert(row);
       if (err instanceof Error) {
         return err;
       }
@@ -156,9 +159,9 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       const next = {
         ...row,
         data: data || row.data,
-        hasPoint: points && points.length > 0 || undefined,
-        hasBox: boxes && boxes.length > 0 || undefined,
-      }
+        hasPoint: (points && points.length > 0) || undefined,
+        hasBox: (boxes && boxes.length > 0) || undefined,
+      };
       const err = await store.charImage.update(next);
       if (err instanceof Error) {
         return err;
