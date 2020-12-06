@@ -19,6 +19,25 @@ const Content = observer(() => {
   const { deleteChartImage } = store.data;
   const { init } = store.editCharImage;
   const { uploadFiles } = store.charImage;
+  const rows = charImages
+  .toList()
+  .map((x) => {
+    return {
+      ...x,
+      points: Map((x.points || []).map((x, i) => [`${i}`, x])),
+      boxes: Map((x.boxes || []).map((x, i) => [`${i}`, x])),
+    };
+  })
+  .filter((x) => {
+    if (mode === "Point") {
+      return x.hasPoint;
+    } else if (mode === "Box") {
+      return x.hasBox;
+    } else {
+      return !x.hasBox && !x.hasPoint;
+    }
+  })
+  .sortBy((x) => -parseISO(x.createdAt))
   return (
     <div
       style={{
@@ -37,27 +56,8 @@ const Content = observer(() => {
           overflow: "scroll",
         }}
       >
-        {charImages
-          .toList()
-          .map((x) => {
-            return {
-              ...x,
-              points: Map((x.points || []).map((x, i) => [`${i}`, x])),
-              boxes: Map((x.boxes || []).map((x, i) => [`${i}`, x])),
-            };
-          })
-          .filter((x) => {
-            if (mode === "Point") {
-              return x.hasPoint;
-            } else if (mode === "Box") {
-              return x.hasBox;
-            } else {
-              return !x.hasBox && !x.hasPoint;
-            }
-          })
-          .sortBy((x) => -parseISO(x.createdAt))
-          .sortBy((x) => x.points.size + x.boxes.size)
-          .map((x) => (
+        {
+          rows.map((x) => (
             <div
               className="card m-1"
               key={x.id}
