@@ -12,7 +12,7 @@ export default {
 };
 
 const [charImage, points] = fromLabelMe(labelMeData);
-const { editCharImage, data } = store;
+const { editor, data } = store;
 data.state.charImages = data.state.charImages.set(charImage.id, charImage);
-editCharImage.init(charImage.id);
+editor.init(charImage.id);
 export const Primary = (args) => <Page />;

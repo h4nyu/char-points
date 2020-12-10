@@ -5,7 +5,7 @@ import { ToastStore } from "./toast";
 import { RootApi, DetectionApi } from "@charpoints/api";
 import { ErrorStore } from "./error";
 import { Map, List } from "immutable";
-import { EditChartImage } from "./editChartImage";
+import { Editor } from "./editor";
 import { createHashHistory } from "history";
 import { CharImage } from "@charpoints/core/charImage";
 export { CharImage } from "@charpoints/core/charImage";
@@ -13,6 +13,7 @@ export { Point } from "@charpoints/core/point";
 import { Point } from "@charpoints/core/point";
 export { Box } from "@charpoints/core/box";
 import { Box } from "@charpoints/core/box";
+import { Board } from "./board";
 import { configure } from "mobx";
 configure({
   enforceActions: "never",
@@ -47,9 +48,10 @@ export type RootStore = {
   toast: ToastStore;
   charImage: CharImageStore;
   history: History;
-  editCharImage: EditChartImage;
+  editor: Editor;
   api: RootApi;
   detectionApi: DetectionApi;
+  board: Board,
   init: () => Promise<void>;
 };
 export const RootStore = (): RootStore => {
@@ -61,7 +63,7 @@ export const RootStore = (): RootStore => {
   const history = createHashHistory();
 
   const data = DataStore({ api, loading, error });
-  const editCharImage = EditChartImage({
+  const editor = Editor({
     data,
     history,
     api,
@@ -86,6 +88,7 @@ export const RootStore = (): RootStore => {
     detectionApi.setUrl(url);
     toast.show("Success", Level.Success);
   };
+  const board = Board()
   return {
     api,
     detectionApi,
@@ -95,7 +98,8 @@ export const RootStore = (): RootStore => {
     charImage,
     init,
     history,
-    editCharImage,
+    editor,
+    board,
   };
 };
 

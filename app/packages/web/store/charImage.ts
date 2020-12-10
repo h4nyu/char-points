@@ -107,5 +107,5 @@ export const CharImageStore = (root: {
     unSelectAll,
     uploadFiles,
     delete: delete_,
-  };
+ };
 };

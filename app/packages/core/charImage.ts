@@ -4,6 +4,11 @@ import { Box } from "./box";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
 
+export enum State {
+  Done = "Done",
+  Todo = "Todo",
+}
+
 export type CharImage = {
   id: string; // Uuid
   data?: string; // base64 encoded string
@@ -11,6 +16,7 @@ export type CharImage = {
   boxes?: Box[];
   hasBox?: boolean;
   hasPoint?: boolean;
+  state: State;
   createdAt: string;
 };
 
@@ -46,6 +52,7 @@ export const fromLabelMe = (prev: any): [CharImage, Point[]] => {
 export const CharImage = (): CharImage => {
   return {
     id: uuid(),
+    state: State.Todo,
     createdAt: dayjs().toISOString(),
   };
 };
@@ -54,6 +61,7 @@ export type FilterPayload = {
   ids?: string[];
   hasPoint?: boolean;
   hasBox?: boolean;
+  state?: State;
 };
 
 export type CreatePayload = {
@@ -62,6 +70,7 @@ export type CreatePayload = {
 
 export type UpdatePayload = {
   id: string;
+  state: State;
   data?: string;
   points?: Point[];
   boxes?: Box[];
@@ -159,6 +168,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       const next = {
         ...row,
         data: data || row.data,
+        state: payload.state,
         hasPoint: (points && points.length > 0) || undefined,
         hasBox: (boxes && boxes.length > 0) || undefined,
       };

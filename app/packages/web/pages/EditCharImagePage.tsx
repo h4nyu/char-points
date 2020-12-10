@@ -1,6 +1,8 @@
 import React from "react";
 import Header from "../components/Header";
 import { observer } from "mobx-react-lite";
+import { State as ImageState } from "@charpoints/core/charImage";
+   
 import PageLayout from "../components/PageLayout";
 import store, { InputMode } from "../store";
 import SvgCharPlot from "../components/SvgCharPlot";
@@ -11,7 +13,7 @@ import Upload from "../components/FileUpload";
 import { RouteComponentProps } from "react-router";
 import { useParams, useHistory } from "react-router-dom";
 
-const { editCharImage } = store;
+const { editor } = store;
 const Content = observer(() => {
   const {
     id,
@@ -21,7 +23,7 @@ const Content = observer(() => {
     draggingId,
     imageData,
     mode,
-  } = editCharImage.state;
+  } = editor.state;
   const {
     save,
     changeSize,
@@ -30,8 +32,10 @@ const Content = observer(() => {
     move,
     setMode,
     detectBoxes,
+    next,
     del,
-  } = editCharImage;
+    clear,
+  } = editor;
   const { deleteChartImage } = store.data;
   const history = useHistory();
   return (
@@ -59,6 +63,9 @@ const Content = observer(() => {
         </button>
         <button className="button" onClick={detectBoxes}>
           文字検出
+        </button>
+        <button className="button is-danger is-light" onClick={clear}>
+          Clear
         </button>
       </div>
 
@@ -130,8 +137,11 @@ const Content = observer(() => {
           gridColumn: "1",
         }}
       >
-        <button className="button is-info is-light" onClick={save}>
-          save
+        <button className="button is-info is-light" onClick={() => save(ImageState.Done)}>
+          Done
+        </button>
+        <button className="button is-warning is-light" onClick={() => save(ImageState.Todo)}>
+          Todo
         </button>
         <button
           className="button is-danger is-light"
@@ -140,7 +150,11 @@ const Content = observer(() => {
             history.goBack();
           }}
         >
-          delete
+          Delete
+        </button>
+
+        <button className="button is-info is-light" onClick={next}>
+          Next
         </button>
       </div>
     </div>

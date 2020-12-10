@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import Tag from "../components/Tag";
+import { State } from "@charpoints/core/charImage";
 import { observer } from "mobx-react-lite";
 import { Map } from "immutable";
 import PageLayout from "../components/PageLayout";
@@ -13,31 +14,23 @@ import SvgCharPlot from "../components/SvgCharPlot";
 import Upload from "../components/FileUpload";
 
 const Content = observer(() => {
-  const { history } = store;
-  const [mode, setMode] = useState("Empty");
+  const { history, board } = store;
+  const { setState } = board;
+  const { hasPoint, hasBox, state } = board.state
   const { charImages } = store.data.state;
-  const { deleteChartImage } = store.data;
-  const { init } = store.editCharImage;
+  const { init } = store.editor;
   const { uploadFiles } = store.charImage;
   const rows = charImages
-  .toList()
-  .map((x) => {
-    return {
-      ...x,
-      points: Map((x.points || []).map((x, i) => [`${i}`, x])),
-      boxes: Map((x.boxes || []).map((x, i) => [`${i}`, x])),
-    };
-  })
-  .filter((x) => {
-    if (mode === "Point") {
-      return x.hasPoint;
-    } else if (mode === "Box") {
-      return x.hasBox;
-    } else {
-      return !x.hasBox && !x.hasPoint;
-    }
-  })
-  .sortBy((x) => -parseISO(x.createdAt))
+    .toList()
+    .filter((x) => {
+      console.log(x.state)
+      console.log(state)
+      console.log(
+        x.state === state , x.hasPoint === hasPoint , x.hasBox === hasBox
+      )
+      return x.state === state || x.hasPoint === hasPoint || x.hasBox === hasBox 
+    })
+    .sortBy((x) => -parseISO(x.createdAt));
   return (
     <div
       style={{
@@ -56,28 +49,28 @@ const Content = observer(() => {
           overflow: "scroll",
         }}
       >
-        {
-          rows.map((x) => (
-            <div
-              className="card m-1"
-              key={x.id}
-              style={{
-                cursor: "pointer",
-                position: "relative",
-                width: 128,
-                height: 128,
-              }}
-              onClick={() => init(x.id)}
-            >
-              <div style={{ position: "absolute" }}>
-                <SvgCharPlot data={x.data} size={128} />
-              </div>
-              <div style={{ position: "absolute" }}>
-                {x.points.size > 0 && <Tag value="Point" />}
-                {x.boxes.size > 0 && <Tag value="Box" />}
-              </div>
+        {rows.map((x) => (
+          <div
+            className="card m-1"
+            key={x.id}
+            style={{
+              cursor: "pointer",
+              position: "relative",
+              width: 128,
+              height: 128,
+            }}
+            onClick={() => init(x.id)}
+          >
+            <div style={{ position: "absolute" }}>
+              <SvgCharPlot data={x.data} size={128} />
             </div>
-          ))}
+            <div style={{ position: "absolute" }}>
+              {x.hasPoint && <Tag value="Point" />}
+              {x.hasBox && <Tag value="Box" />}
+              {x.state && <Tag value={x.state} />}
+            </div>
+          </div>
+        ))}
       </div>
 
       <div
@@ -85,16 +78,13 @@ const Content = observer(() => {
           gridRow: "1",
         }}
       >
-        <div className="tabs is-toggle is-fullwidth">
+        <div className="tabs is-boxed">
           <ul>
-            <li className={(mode === "Empty" && "is-active") || undefined}>
-              <a onClick={() => setMode("Empty")}>Empty</a>
+            <li className={state === State.Todo && "is-active" || ""} onClick={() => setState(State.Todo)}>
+              <a> Todo </a>
             </li>
-            <li className={(mode === "Box" && "is-active") || undefined}>
-              <a onClick={() => setMode("Box")}>Box</a>
-            </li>
-            <li className={(mode === "Point" && "is-active") || undefined}>
-              <a onClick={() => setMode("Point")}>Point</a>
+            <li className={state === State.Done && "is-active" || ""} onClick={() => setState(State.Done)}>
+              <a> Done </a>
             </li>
           </ul>
         </div>

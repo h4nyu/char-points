@@ -1,6 +1,6 @@
 import { Store } from ".";
 import fs from "fs";
-import { CharImage } from "@charpoints/core/charImage";
+import { CharImage, State } from "@charpoints/core/charImage";
 const rootStore = Store({ url: process.env.DATABASE_URL || "" });
 
 afterAll(async () => {
@@ -31,8 +31,8 @@ describe("image", () => {
     expect(res).toEqual(row);
   });
   test("update", async () => {
-    console.log(row.data);
     row.data = Buffer.from("aaaaa").toString("base64");
+    row.state = State.Done;
     const err = await store.update(row);
     if (err instanceof Error) {
       throw err;
@@ -51,7 +51,7 @@ describe("image", () => {
     expect(rows).toMatchObject([{ ...row, data: undefined }]);
   });
   test("filter-hasBox", async () => {
-    const rows = await store.filter({hasBox:true});
+    const rows = await store.filter({ hasBox: true });
     if (rows instanceof Error) {
       throw rows;
     }

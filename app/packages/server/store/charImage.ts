@@ -1,5 +1,5 @@
 import { Row, Sql } from "postgres";
-import { CharImage } from "@charpoints/core/charImage";
+import { CharImage, State } from "@charpoints/core/charImage";
 import { CharImageStore } from "@charpoints/core";
 
 import { first } from "lodash";
@@ -11,6 +11,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
       data: (r.data && r.data.toString("base64")) || undefined,
       hasPoint: r.has_point || undefined,
       hasBox: r.has_box || undefined,
+      state: r.state,
       createdAt: r.created_at.toISOString(),
     };
   };
@@ -21,6 +22,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
       data: (r.data && Buffer.from(r.data, "base64")) || null,
       has_point: r.hasPoint || null,
       has_box: r.hasBox || null,
+      state: r.state,
       created_at: r.createdAt,
     };
   };
@@ -46,20 +48,23 @@ export const Store = (sql: Sql<any>): CharImageStore => {
     ids?: string[];
     hasPoint?: boolean;
     hasBox?: boolean;
+    state?:State,
   }): Promise<CharImage[] | Error> => {
     try {
-      const { ids, hasBox, hasPoint } = payload;
+      const { ids, hasBox, hasPoint, state } = payload;
       let rows = [];
       if (ids !== undefined && ids.length > 0) {
-        rows = await sql`SELECT id, created_at, has_point, has_box FROM images WHERE id IN (${ids})`;
+        rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE id IN (${ids})`;
       } else if (hasBox !== undefined && hasPoint !== undefined) {
-        rows = await sql`SELECT id, created_at, has_point, has_box FROM images WHERE has_box = ${hasBox} AND has_point = ${hasPoint}`;
+        rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE has_box = ${hasBox} AND has_point = ${hasPoint}`;
       } else if (hasBox !== undefined) {
-        rows = await sql`SELECT id, created_at, has_point, has_box FROM images WHERE has_box = ${hasBox}`;
+        rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE has_box = ${hasBox}`;
       } else if (hasPoint !== undefined) {
-        rows = await sql`SELECT id, created_at, has_point, has_box FROM images WHERE has_point = ${hasPoint}`;
+        rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE has_point = ${hasPoint}`;
+      } else if (state !== undefined) {
+        rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE state = ${state}`;
       } else {
-        rows = await sql`SELECT id, created_at, has_point, has_box FROM images`;
+        rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images`;
       }
       return rows.map(to);
     } catch (err) {
@@ -72,7 +77,14 @@ export const Store = (sql: Sql<any>): CharImageStore => {
       await sql`
       UPDATE images 
       SET 
-        ${sql(from(payload), "data", "created_at", "has_point", "has_box")}
+        ${sql(
+          from(payload),
+          "data",
+          "created_at",
+          "state",
+          "has_point",
+          "has_box"
+        )}
       WHERE 
         id=${payload.id} 
       `;
@@ -89,6 +101,7 @@ export const Store = (sql: Sql<any>): CharImageStore => {
         "id",
         "data",
         "created_at",
+        "state",
         "has_box",
         "has_point"
       )}`;

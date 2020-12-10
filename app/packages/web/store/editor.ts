@@ -1,6 +1,7 @@
 import { observable } from "mobx";
 import { RootApi, DetectionApi } from "@charpoints/api";
 import { ErrorStore } from "./error";
+import { State as ImageState } from "@charpoints/core/charImage";
 import {
   Point,
   Points,
@@ -47,7 +48,7 @@ export const State = (): State => {
   };
 };
 
-export type EditChartImage = {
+export type Editor = {
   state: State;
   toggleDrag: (id: string, mode: InputMode) => void;
   setMode: (mode: InputMode) => void;
@@ -56,10 +57,12 @@ export type EditChartImage = {
   del: () => void;
   changeSize: (size: number) => void;
   detectBoxes: () => void;
-  save: () => Promise<void>;
+  save: (imageState:ImageState) => Promise<void>;
   init: (id: string) => void;
+  next: () => void;
+  clear: () => void;
 };
-export const EditChartImage = (root: {
+export const Editor = (root: {
   data: DataStore;
   history: History;
   api: RootApi;
@@ -67,11 +70,11 @@ export const EditChartImage = (root: {
   loading: LoadingStore;
   toast: ToastStore;
   error: ErrorStore;
-}): EditChartImage => {
+}): Editor => {
   const state = observable(State());
   const { history, data, api, loading, toast, error, detectionApi } = root;
   const init = async (id: string) => {
-    console.log("aaa");
+    data.fetchCharImages({ ids: [id] });
     history.push("/edit");
     const charImage = data.state.charImages.get(id);
     if (charImage === undefined) {
@@ -82,6 +85,15 @@ export const EditChartImage = (root: {
     state.id = charImage.id;
     state.imageData = charImage.data;
   };
+  const clear = () => {
+    state.points = Map();
+    state.boxes = Map();
+  }
+  const next = () => {
+    const item = data.state.charImages.filter(x => x.state ==　ImageState.Todo).find(x => x.id !== state.id)
+    if(item === undefined) { return }
+    init(item.id)
+  }
 
   const setMode = (mode: InputMode) => {
     state.mode = mode;
@@ -217,12 +229,13 @@ export const EditChartImage = (root: {
     state.imageData = res.imageData;
   };
 
-  const save = async () => {
+  const save = async (imageState:ImageState) => {
     const payload = {
       id: state.id,
       points: state.points.toList().toJS(),
       data: state.imageData,
       boxes: state.boxes.toList().toJS(),
+      state: imageState,
     };
     await loading.auto(async () => {
       const id = await api.charImage.update(payload);
@@ -230,10 +243,10 @@ export const EditChartImage = (root: {
         error.notify(id);
         return;
       }
-      data.fetchCharImages({ ids: [id] });
+      toast.show("Success", Level.Success);
+      await data.fetchCharImages({ ids: [id] });
+      history.goBack();
     });
-    toast.show("Success", Level.Success);
-    history.goBack();
   };
 
   return {
@@ -247,5 +260,7 @@ export const EditChartImage = (root: {
     del,
     save,
     init,
+    next,
+    clear,
   };
 };

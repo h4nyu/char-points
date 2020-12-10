@@ -1,6 +1,6 @@
 {
   "name": "@charpoints/web",
-  "version": "0.0.2-rc3",
+  "version": "0.0.3-rc0",
   "main": "index.js",
   "license": "MIT",
   "private": true,
@@ -45,7 +45,7 @@
     "react-dom": "^16.14.0",
     "react-dropzone": "^11.2.0",
     "react-router-dom": "^5.2.0",
-    "react-toastify": "^6.1.0",
+    "react-toastify": "^6.2.0",
     "styled-components": "^5.2.1"
   }
 }
