@@ -55,8 +55,12 @@ export const Store = (sql: Sql<any>): CharImageStore => {
       let rows = [];
       if (ids !== undefined && ids.length > 0) {
         rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE id IN (${ids})`;
-      } else if (hasBox !== undefined && hasPoint !== undefined) {
-        rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE has_box = ${hasBox} AND has_point = ${hasPoint}`;
+      } else if (hasBox !== undefined && hasPoint !== undefined && state !== undefined) {
+        rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE has_box = ${hasBox} AND has_point = ${hasPoint} AND state = ${state}`;
+      } else if (hasBox !== undefined && state !== undefined) {
+        rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE has_box = ${hasBox} AND state = ${state}`;
+      } else if (hasPoint !== undefined && state !== undefined) {
+        rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE has_point = ${hasPoint} AND state = ${state}`;
       } else if (hasBox !== undefined) {
         rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE has_box = ${hasBox}`;
       } else if (hasPoint !== undefined) {
