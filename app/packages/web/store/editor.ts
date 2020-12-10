@@ -245,7 +245,11 @@ export const Editor = (root: {
       }
       toast.show("Success", Level.Success);
       await data.fetchCharImages({ ids: [id] });
-      history.goBack();
+      if(imageData === ImageData.Done) {
+        next()
+      }else{
+        history.goBack();
+      }
     });
   };
 
