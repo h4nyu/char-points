@@ -245,7 +245,7 @@ export const Editor = (root: {
       }
       toast.show("Success", Level.Success);
       await data.fetchCharImages({ ids: [id] });
-      if(imageData === ImageData.Done) {
+      if(imageState === ImageState.Done) {
         next()
       }else{
         history.goBack();
