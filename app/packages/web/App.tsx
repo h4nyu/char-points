@@ -19,8 +19,8 @@ export default function App() {
         <Loading />
         <Toast />
         <Suspense fallback={<div>Loading...</div>}>
-          <Route path={"/edit"} component={EditChartImagePage} />
-          <Route path={"/"} component={MainPage} />
+          <Route exact path={"/edit"} component={EditChartImagePage} />
+          <Route exact path={"/"} component={MainPage} />
         </Suspense>
       </Router>
     </>
