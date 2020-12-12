@@ -74,12 +74,13 @@ export const DetectionApi = (): DetectionApi => {
       const { boxes, scores, image } = res.data;
       return {
         boxes: boxes.map((b) => {
+          console.log(b)
           return {
             ...Box(),
-            x0: b[0] - b[2] / 2,
-            y0: b[1] - b[3] / 2,
-            x1: b[0] + b[2] / 2,
-            y1: b[1] + b[3] / 2,
+            x0: b[0],
+            y0: b[1],
+            x1: b[2],
+            y1: b[3],
           };
         }),
         scores,

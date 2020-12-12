@@ -23,11 +23,6 @@ const Content = observer(() => {
   const rows = charImages
     .toList()
     .filter((x) => {
-      console.log(x.state)
-      console.log(state)
-      console.log(
-        x.state === state , x.hasPoint === hasPoint , x.hasBox === hasBox
-      )
       return x.state === state || x.hasPoint === hasPoint || x.hasBox === hasBox 
     })
     .sortBy((x) => -parseISO(x.createdAt));
