@@ -4,8 +4,10 @@ import { Map, List } from "immutable";
 import { ErrorStore } from "./error";
 import { RootApi } from "@charpoints/api";
 import { LoadingStore } from "./loading";
-import { State as ImageState } from "@charpoints/core/charImage"
+import { State as ImageState, CharImage } from "@charpoints/core/charImage"
 import { MemoryRouter } from "react-router";
+import { take, flow, sortBy, map } from "lodash/fp"
+import { parseISO } from 'date-fns'
 import dayjs from "dayjs";
 
 export type DataStore = {
@@ -34,11 +36,15 @@ export const DataStore = (args: {
     ids?: string[];
     state?: ImageState;
   }): Promise<void> => {
-    const rows = await api.charImage.filter(payload);
+    let rows = await api.charImage.filter(payload);
     if (rows instanceof Error) {
       return;
     }
-    const reqs = rows.map((x) => api.charImage.find({ id: x.id }));
+    const reqs = flow([
+      take(10), 
+      sortBy((x:CharImage) => parseISO(x.createdAt)), 
+      map((x:CharImage) => api.charImage.find({id:x.id}))
+    ])(rows);
     await loading.auto(async () => {
       for (const req of reqs) {
         const row = await req;
@@ -63,6 +69,7 @@ export const DataStore = (args: {
   const init = async () => {
     await loading.auto(async () => {
       await fetchCharImages({state:ImageState.Todo});
+      await fetchCharImages({state:ImageState.Done});
     });
   };
   return {
