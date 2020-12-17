@@ -71,10 +71,6 @@ export const RootStore = (): RootStore => {
     onInit: () => {
       history.push("/edit");
     },
-    onSave: (id) => {
-      data.fetchImage(id)
-      history.push("/");
-    }
   });
   const charImage = CharImageStore({
     api,
