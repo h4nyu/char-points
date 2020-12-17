@@ -77,6 +77,7 @@ export const Editor = (root: {
     await loading.auto(async () => {
       const charImage = await api.charImage.find({id});
       if (charImage instanceof Error) {
+        toast.show(charImage.message, Level.Error);
         return charImage;
       }
       state.points = Map((charImage.points || []).map((x) => [uuid(), x]));

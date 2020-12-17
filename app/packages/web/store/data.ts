@@ -23,6 +23,7 @@ export type DataStore = {
   state: State;
   updateFilter: (payload: { isBox?: boolean, isPoint?: boolean, tag?: ImageState, }) => void;
   next: () => undefined|string;
+  prev: () => undefined|string;
   fetchImages: () => Promise<void>;
   fetchImage: (id:string) => Promise<void>;
   init: () => Promise<void>;
@@ -58,6 +59,7 @@ export const DataStore = (args: {
     else{
       state.images = state.images.set(index, row);
     }
+    state.images = state.images.sortBy( x => - parseISO(x.createdAt))
   }
 
   const fetchImages = async (): Promise<void> => {
@@ -104,9 +106,19 @@ export const DataStore = (args: {
     }
     return img?.id;
   }
+
+  const prev = () => {
+    const img = state.images.get(state.cursor - 1)
+    if(img) {
+      state.cursor = state.cursor - 1;
+    }
+    return img?.id;
+  }
+
   return {
-    next,
     state,
+    next,
+    prev,
     updateFilter,
     fetchImages,
     fetchImage,

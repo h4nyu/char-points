@@ -13,7 +13,7 @@ import Upload from "../components/FileUpload";
 import { RouteComponentProps } from "react-router";
 import { useParams, useHistory } from "react-router-dom";
 
-const { editor } = store;
+const { editor, data } = store;
 const Content = observer(() => {
   const {
     id,
@@ -25,6 +25,7 @@ const Content = observer(() => {
     mode,
   } = editor.state;
   const {
+    init,
     save,
     changeSize,
     add,
@@ -35,6 +36,10 @@ const Content = observer(() => {
     del,
     clear,
   } = editor;
+  const {
+    next,
+    prev
+  } = data;
   const history = useHistory();
   return (
     <div
@@ -140,6 +145,16 @@ const Content = observer(() => {
         </button>
         <button className="button is-warning is-light" onClick={() => save(ImageState.Todo)}>
           Todo
+        </button>
+        <button className="button is-light" onClick={() => {
+          init(prev() || "")
+        }}>
+          <i className="fas fa-arrow-left"></i>
+        </button>
+        <button className="button is-light" onClick={() => {
+          init(next() || "")
+        }}>
+          <i className="fas fa-arrow-right"></i>
         </button>
       </div>
     </div>
