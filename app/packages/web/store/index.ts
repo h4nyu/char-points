@@ -68,8 +68,9 @@ export const RootStore = (): RootStore => {
     loading,
     toast,
     error,
-    onInit: () => {
+    onInit: (id) => {
       history.push("/edit");
+      data.setCursor(id)
     },
   });
   const charImage = CharImageStore({

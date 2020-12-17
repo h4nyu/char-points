@@ -24,6 +24,7 @@ export type DataStore = {
   updateFilter: (payload: { isBox?: boolean, isPoint?: boolean, tag?: ImageState, }) => void;
   next: () => undefined|string;
   prev: () => undefined|string;
+  setCursor: (id: string) => void;
   fetchImages: () => Promise<void>;
   fetchImage: (id:string) => Promise<void>;
   init: () => Promise<void>;
@@ -114,11 +115,15 @@ export const DataStore = (args: {
     }
     return img?.id;
   }
+  const setCursor = (id:string) => {
+    state.cursor = state.images.findIndex(x => x.id === id)
+  }
 
   return {
     state,
     next,
     prev,
+    setCursor,
     updateFilter,
     fetchImages,
     fetchImage,
