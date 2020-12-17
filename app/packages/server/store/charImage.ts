@@ -9,8 +9,8 @@ export const Store = (sql: Sql<any>): CharImageStore => {
     return {
       id: r.id,
       data: (r.data && r.data.toString("base64")) || undefined,
-      hasPoint: r.has_point || undefined,
-      hasBox: r.has_box || undefined,
+      hasPoint: r.has_point,
+      hasBox: r.has_box,
       state: r.state,
       createdAt: r.created_at.toISOString(),
     };
@@ -20,8 +20,8 @@ export const Store = (sql: Sql<any>): CharImageStore => {
     return {
       id: r.id,
       data: (r.data && Buffer.from(r.data, "base64")) || null,
-      has_point: r.hasPoint || null,
-      has_box: r.hasBox || null,
+      has_point: r.hasPoint,
+      has_box: r.hasBox,
       state: r.state,
       created_at: r.createdAt,
     };

@@ -13,12 +13,11 @@ export { Point } from "@charpoints/core/point";
 import { Point } from "@charpoints/core/point";
 export { Box } from "@charpoints/core/box";
 import { Box } from "@charpoints/core/box";
-import { Board } from "./board";
 import { configure } from "mobx";
 configure({
   enforceActions: "never",
 });
-export type CharImages = Map<string, CharImage>;
+export type CharImages = List<CharImage>;
 export type Points = Map<string, Point>;
 export type Boxes = Map<string, Box>;
 export enum Level {
@@ -51,7 +50,6 @@ export type RootStore = {
   editor: Editor;
   api: RootApi;
   detectionApi: DetectionApi;
-  board: Board,
   init: () => Promise<void>;
 };
 export const RootStore = (): RootStore => {
@@ -64,13 +62,19 @@ export const RootStore = (): RootStore => {
 
   const data = DataStore({ api, loading, error });
   const editor = Editor({
-    data,
     history,
     api,
     detectionApi,
     loading,
     toast,
     error,
+    onInit: () => {
+      history.push("/edit");
+    },
+    onSave: (id) => {
+      data.fetchImage(id)
+      history.push("/");
+    }
   });
   const charImage = CharImageStore({
     api,
@@ -88,7 +92,6 @@ export const RootStore = (): RootStore => {
     detectionApi.setUrl(url);
     toast.show("Success", Level.Success);
   };
-  const board = Board()
   return {
     api,
     detectionApi,
@@ -99,7 +102,6 @@ export const RootStore = (): RootStore => {
     init,
     history,
     editor,
-    board,
   };
 };
 

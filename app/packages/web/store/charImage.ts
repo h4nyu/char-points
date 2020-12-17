@@ -25,7 +25,6 @@ export type CharImageStore = {
   selectAll: () => void;
   unSelectAll: () => void;
   uploadFiles: (files: File[]) => void;
-  delete: (id: string) => Promise<void>;
 };
 export const CharImageStore = (root: {
   api: RootApi;
@@ -64,7 +63,6 @@ export const CharImageStore = (root: {
           error.notify(id);
           continue;
         }
-        await root.data.fetchCharImages({ ids: [id] });
       }
     });
   };
@@ -80,24 +78,12 @@ export const CharImageStore = (root: {
   };
 
   const selectAll = () => {
-    const { charImages } = data.state;
-    state.selectedIds = charImages.keySeq().toSet();
+    const { images } = data.state;
+    state.selectedIds = images.keySeq().toSet();
   };
 
   const unSelectAll = () => {
     state.selectedIds = Set();
-  };
-
-  const delete_ = async () => {
-    await loading.auto(async () => {
-      let { selectedIds } = state;
-      for (const id of state.selectedIds) {
-        await data.deleteChartImage(id);
-        selectedIds = selectedIds.delete(id);
-      }
-      state.selectedIds = selectedIds;
-    });
-    toast.show("Success", Level.Success);
   };
 
   return {
@@ -106,6 +92,5 @@ export const CharImageStore = (root: {
     selectAll,
     unSelectAll,
     uploadFiles,
-    delete: delete_,
  };
 };

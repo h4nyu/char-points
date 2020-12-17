@@ -4,24 +4,37 @@ import { Map, List } from "immutable";
 import { ErrorStore } from "./error";
 import { RootApi } from "@charpoints/api";
 import { LoadingStore } from "./loading";
-import { State as ImageState, CharImage } from "@charpoints/core/charImage"
+import { State as ImageState, CharImage, FilterPayload } from "@charpoints/core/charImage"
 import { MemoryRouter } from "react-router";
 import { take, flow, sortBy, map } from "lodash/fp"
 import { parseISO } from 'date-fns'
 import dayjs from "dayjs";
 
+type State = {
+  images: CharImages;
+  cursor: number;
+  limit: number;
+  tag: ImageState;
+  isBox: boolean;
+  isPoint: boolean;
+};
+
 export type DataStore = {
   state: State;
-  fetchCharImages: (payload: { ids?: string[] }) => Promise<void>;
-  deleteChartImage: (id: string) => Promise<void>;
+  updateFilter: (payload: { isBox?: boolean, isPoint?: boolean, tag?: ImageState, }) => void;
+  next: () => undefined|string;
+  fetchImages: () => Promise<void>;
+  fetchImage: (id:string) => Promise<void>;
   init: () => Promise<void>;
 };
-type State = {
-  charImages: CharImages;
-};
-const State = (): State => {
+const State = () => {
   return {
-    charImages: Map(),
+    cursor: 0,
+    images: List(),
+    limit: 100,
+    tag: ImageState.Todo,
+    isPoint: false,
+    isBox: false,
   };
 };
 export const DataStore = (args: {
@@ -32,50 +45,71 @@ export const DataStore = (args: {
   const { api, loading, error } = args;
   const state = observable(State());
 
-  const fetchCharImages = async (payload: {
-    ids?: string[];
-    state?: ImageState;
-  }): Promise<void> => {
-    let rows = await api.charImage.filter(payload);
+  const fetchImage = async (id:string) => {
+    const row = await api.charImage.find({id});
+    if (row instanceof Error) {
+      error.notify(row);
+      return
+    }
+    const index = state.images.findIndex(x => x.id === id)
+    if(index === -1){
+      state.images = state.images.push(row);
+    }
+    else{
+      state.images = state.images.set(index, row);
+    }
+  }
+
+  const fetchImages = async (): Promise<void> => {
+    const rows = await api.charImage.filter({
+      hasPoint:state.isPoint,
+      hasBox:state.isBox,
+      state:state.tag,
+    });
     if (rows instanceof Error) {
       return;
     }
-    const reqs = flow([
-      take(10), 
-      sortBy((x:CharImage) => parseISO(x.createdAt)), 
-      map((x:CharImage) => api.charImage.find({id:x.id}))
-    ])(rows);
+    state.images = List()
     await loading.auto(async () => {
-      for (const req of reqs) {
-        const row = await req;
-        if (row instanceof Error) {
-          error.notify(row);
-          continue;
-        }
-        state.charImages = state.charImages.set(row.id, row);
+      for (const id of rows.map(x => x.id)) {
+        await fetchImage(id)
       }
     });
   };
-
-  const deleteChartImage = async (id: string): Promise<void> => {
-    const { charImages } = state;
-    const err = await api.charImage.delete({ id });
-    if (err instanceof Error) {
-      return;
+  const updateFilter = (payload:{
+    isBox?: boolean,
+    isPoint?: boolean,
+    tag?: ImageState,
+  }) => {
+    const {isBox, isPoint, tag} = payload
+    if(isBox !== undefined){
+      state.isBox = isBox;
     }
-    state.charImages = charImages.delete(id);
+    if(isPoint !== undefined){
+      state.isPoint = isPoint
+    }
+    if(tag !== undefined){
+      state.tag = tag
+    }
   };
-
   const init = async () => {
     await loading.auto(async () => {
-      await fetchCharImages({state:ImageState.Todo});
-      await fetchCharImages({state:ImageState.Done});
+      await fetchImages();
     });
   };
+  const next = () => {
+    const img = state.images.get(state.cursor + 1)
+    if(img) {
+      state.cursor = state.cursor + 1;
+    }
+    return img?.id;
+  }
   return {
+    next,
     state,
-    fetchCharImages,
-    deleteChartImage,
+    updateFilter,
+    fetchImages,
+    fetchImage,
     init,
   };
 };

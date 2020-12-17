@@ -59,40 +59,36 @@ export type Editor = {
   detectBoxes: () => void;
   save: (imageState:ImageState) => Promise<void>;
   init: (id: string) => void;
-  next: () => void;
   clear: () => void;
 };
 export const Editor = (root: {
-  data: DataStore;
   history: History;
   api: RootApi;
   detectionApi: DetectionApi;
   loading: LoadingStore;
   toast: ToastStore;
   error: ErrorStore;
+  onSave?: (id:string) => void;
+  onInit?: (id:string) => void;
 }): Editor => {
   const state = observable(State());
-  const { history, data, api, loading, toast, error, detectionApi } = root;
+  const { history, api, loading, toast, error, detectionApi, onSave, onInit } = root;
   const init = async (id: string) => {
-    data.fetchCharImages({ ids: [id] });
-    history.push("/edit");
-    const charImage = data.state.charImages.get(id);
-    if (charImage === undefined) {
-      return;
-    }
-    state.points = Map((charImage.points || []).map((x) => [uuid(), x]));
-    state.boxes = Map((charImage.boxes || []).map((x) => [uuid(), x]));
-    state.id = charImage.id;
-    state.imageData = charImage.data;
+    await loading.auto(async () => {
+      const charImage = await api.charImage.find({id});
+      if (charImage instanceof Error) {
+        return charImage;
+      }
+      state.points = Map((charImage.points || []).map((x) => [uuid(), x]));
+      state.boxes = Map((charImage.boxes || []).map((x) => [uuid(), x]));
+      state.id = charImage.id;
+      state.imageData = charImage.data;
+      onInit && onInit(id);
+    })
   };
   const clear = () => {
     state.points = Map();
     state.boxes = Map();
-  }
-  const next = () => {
-    const item = data.state.charImages.filter(x => x.state ==　ImageState.Todo).find(x => x.id !== state.id)
-    if(item === undefined) { return }
-    init(item.id)
   }
 
   const setMode = (mode: InputMode) => {
@@ -243,13 +239,8 @@ export const Editor = (root: {
         error.notify(id);
         return;
       }
+      onSave && onSave(state.id);
       toast.show("Success", Level.Success);
-      await data.fetchCharImages({ ids: [id] });
-      if(imageState === ImageState.Done) {
-        next()
-      }else{
-        history.goBack();
-      }
     });
   };
 
@@ -264,7 +255,6 @@ export const Editor = (root: {
     del,
     save,
     init,
-    next,
     clear,
   };
 };

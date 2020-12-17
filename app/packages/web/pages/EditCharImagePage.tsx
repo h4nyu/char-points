@@ -32,11 +32,9 @@ const Content = observer(() => {
     move,
     setMode,
     detectBoxes,
-    next,
     del,
     clear,
   } = editor;
-  const { deleteChartImage } = store.data;
   const history = useHistory();
   return (
     <div
@@ -142,19 +140,6 @@ const Content = observer(() => {
         </button>
         <button className="button is-warning is-light" onClick={() => save(ImageState.Todo)}>
           Todo
-        </button>
-        <button
-          className="button is-danger is-light"
-          onClick={() => {
-            deleteChartImage(id);
-            history.goBack();
-          }}
-        >
-          Delete
-        </button>
-
-        <button className="button is-info is-light" onClick={next}>
-          Next
         </button>
       </div>
     </div>

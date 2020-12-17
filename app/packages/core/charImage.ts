@@ -14,8 +14,8 @@ export type CharImage = {
   data?: string; // base64 encoded string
   points?: Point[];
   boxes?: Box[];
-  hasBox?: boolean;
-  hasPoint?: boolean;
+  hasBox: boolean;
+  hasPoint: boolean;
   state: State;
   createdAt: string;
 };
@@ -53,6 +53,8 @@ export const CharImage = (): CharImage => {
   return {
     id: uuid(),
     state: State.Todo,
+    hasPoint: false,
+    hasBox: false,
     createdAt: dayjs().toISOString(),
   };
 };
@@ -169,8 +171,8 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
         ...row,
         data: data || row.data,
         state: payload.state,
-        hasPoint: (points && points.length > 0) || undefined,
-        hasBox: (boxes && boxes.length > 0) || undefined,
+        hasPoint: points && points.length > 0 || row.hasPoint,
+        hasBox: boxes && boxes.length > 0 || row.hasBox,
       };
       const err = await store.charImage.update(next);
       if (err instanceof Error) {

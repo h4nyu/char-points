@@ -13,6 +13,6 @@ export default {
 
 const [charImage, points] = fromLabelMe(labelMeData);
 const { editor, data } = store;
-data.state.charImages = data.state.charImages.set(charImage.id, charImage);
+data.state.images = data.state.images.push(charImage);
 editor.init(charImage.id);
 export const Primary = (args) => <Page />;

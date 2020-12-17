@@ -6,14 +6,14 @@ import ImageData from "../data/imageData.txt";
 import { range } from "lodash";
 
 const { data, loading } = store;
-let charImages = data.state.charImages;
+let images = data.state.images;
 range(10).forEach(() => {
   const charImage = {
     ...CharImage(),
     data: ImageData,
   };
-  charImages = charImages.set(charImage.id, charImage);
-  data.state.charImages = charImages;
+  images = images.push(charImage);
+  data.state.images = images;
 });
 loading.state.isActive = true;
 

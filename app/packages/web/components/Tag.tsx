@@ -1,7 +1,10 @@
 import React from "react";
 import { State } from "@charpoints/core/charImage";
 
-export const Tag = (props: { value: "Point" | "Box" | State }) => {
+export const Tag = (props: { 
+  value: "Point" | "Box" | State ,
+  isChecked?: boolean
+}) => {
   const { value } = props;
   if (value === "Point") {
     return <span className="tag is-light is-info">{value}</span>;
