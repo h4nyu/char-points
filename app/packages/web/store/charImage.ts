@@ -92,5 +92,5 @@ export const CharImageStore = (root: {
     selectAll,
     unSelectAll,
     uploadFiles,
- };
+  };
 };

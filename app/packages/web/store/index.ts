@@ -70,7 +70,11 @@ export const RootStore = (): RootStore => {
     error,
     onInit: (id) => {
       history.push("/edit");
-      data.setCursor(id)
+      data.setCursor(id);
+    },
+    onDelete: (id) => {
+      history.push("/");
+      data.deleteImage(id);
     },
   });
   const charImage = CharImageStore({

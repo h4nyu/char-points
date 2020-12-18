@@ -1,9 +1,9 @@
 import React from "react";
 import { State } from "@charpoints/core/charImage";
 
-export const Tag = (props: { 
-  value: "Point" | "Box" | State ,
-  isChecked?: boolean
+export const Tag = (props: {
+  value: "Point" | "Box" | State;
+  isChecked?: boolean;
 }) => {
   const { value } = props;
   if (value === "Point") {

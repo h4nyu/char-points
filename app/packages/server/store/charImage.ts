@@ -48,14 +48,18 @@ export const Store = (sql: Sql<any>): CharImageStore => {
     ids?: string[];
     hasPoint?: boolean;
     hasBox?: boolean;
-    state?:State,
+    state?: State;
   }): Promise<CharImage[] | Error> => {
     try {
       const { ids, hasBox, hasPoint, state } = payload;
       let rows = [];
       if (ids !== undefined && ids.length > 0) {
         rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE id IN (${ids})`;
-      } else if (hasBox !== undefined && hasPoint !== undefined && state !== undefined) {
+      } else if (
+        hasBox !== undefined &&
+        hasPoint !== undefined &&
+        state !== undefined
+      ) {
         rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE has_box = ${hasBox} AND has_point = ${hasPoint} AND state = ${state}`;
       } else if (hasBox !== undefined && state !== undefined) {
         rows = await sql`SELECT id, created_at, has_point, has_box, state FROM images WHERE has_box = ${hasBox} AND state = ${state}`;

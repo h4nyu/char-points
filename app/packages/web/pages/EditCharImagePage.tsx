@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../components/Header";
 import { observer } from "mobx-react-lite";
 import { State as ImageState } from "@charpoints/core/charImage";
-   
+
 import PageLayout from "../components/PageLayout";
 import store, { InputMode } from "../store";
 import SvgCharPlot from "../components/SvgCharPlot";
@@ -15,15 +15,7 @@ import { useParams, useHistory } from "react-router-dom";
 
 const { editor, data } = store;
 const Content = observer(() => {
-  const {
-    id,
-    points,
-    boxes,
-    size,
-    draggingId,
-    imageData,
-    mode,
-  } = editor.state;
+  const { id, points, boxes, size, draggingId, imageData, mode } = editor.state;
   const {
     init,
     save,
@@ -36,17 +28,14 @@ const Content = observer(() => {
     del,
     clear,
   } = editor;
-  const {
-    next,
-    prev
-  } = data;
+  const { next, prev } = data;
   const history = useHistory();
   return (
     <div
       style={{
         display: "grid",
         gridTemplateRows: "50px 1fr 50px",
-        gridTemplateColumns: "1fr 1fr",
+        gridTemplateColumns: "auto 1fr auto",
         width: "100%",
         height: "100%",
       }}
@@ -58,17 +47,44 @@ const Content = observer(() => {
           gridColumn: "1",
         }}
       >
-        <button className="button" onClick={() => changeSize(size * 1.1)}>
+        <button
+          className="button is-light"
+          onClick={() => changeSize(size * 1.1)}
+        >
           <i className="fas fa-plus" />
         </button>
-        <button className="button" onClick={() => changeSize(size * 0.9)}>
+        <button
+          className="button is-light"
+          onClick={() => changeSize(size * 0.9)}
+        >
           <i className="fas fa-minus" />
         </button>
-        <button className="button" onClick={detectBoxes}>
+        <button className="button is-light" onClick={detectBoxes}>
           文字検出
         </button>
-        <button className="button is-danger is-light" onClick={clear}>
-          Clear
+        <button
+          className={"button is-light ".concat(
+            (mode === InputMode.Point && "is-warning") || ""
+          )}
+          onClick={() => setMode(InputMode.Point)}
+        >
+          Point
+        </button>
+        <button
+          className={"button is-light ".concat(
+            ([
+              InputMode.Box,
+              InputMode.TR,
+              InputMode.TR,
+              InputMode.BR,
+              InputMode.BL,
+            ].includes(mode) &&
+              "is-warning") ||
+              ""
+          )}
+          onClick={() => setMode(InputMode.Box)}
+        >
+          Box
         </button>
       </div>
 
@@ -83,7 +99,7 @@ const Content = observer(() => {
         style={{
           display: "flex",
           gridRow: "2",
-          gridColumn: "1 / span 2",
+          gridColumn: "1 / span 3",
           overflow: "scroll",
         }}
         tabIndex={0}
@@ -104,34 +120,13 @@ const Content = observer(() => {
 
       <div
         style={{
-          gridColumn: "2",
+          gridColumn: "3",
           gridRow: "1",
         }}
       >
-        <div className="tabs is-toggle">
-          <ul>
-            <li
-              className={(mode === InputMode.Point && "is-active") || undefined}
-            >
-              <a onClick={() => setMode(InputMode.Point)}>Points</a>
-            </li>
-            <li
-              className={
-                ([
-                  InputMode.Box,
-                  InputMode.TR,
-                  InputMode.TR,
-                  InputMode.BR,
-                  InputMode.BL,
-                ].includes(mode) &&
-                  "is-active") ||
-                undefined
-              }
-            >
-              <a onClick={() => setMode(InputMode.Box)}>Boxes</a>
-            </li>
-          </ul>
-        </div>
+        <button className="button is-danger is-light" onClick={clear}>
+          Clear
+        </button>
       </div>
       <div
         className="buttons"
@@ -140,21 +135,47 @@ const Content = observer(() => {
           gridColumn: "1",
         }}
       >
-        <button className="button is-info is-light" onClick={() => save(ImageState.Done)}>
+        <button
+          className="button is-info is-light"
+          onClick={() => save(ImageState.Done)}
+        >
           Done
         </button>
-        <button className="button is-warning is-light" onClick={() => save(ImageState.Todo)}>
+        <button
+          className="button is-warning is-light"
+          onClick={() => save(ImageState.Todo)}
+        >
           Todo
         </button>
-        <button className="button is-light" onClick={() => {
-          init(prev() || "")
-        }}>
+        <button
+          className="button is-light"
+          onClick={() => {
+            init(prev() || "");
+          }}
+        >
           <i className="fas fa-arrow-left"></i>
         </button>
-        <button className="button is-light" onClick={() => {
-          init(next() || "")
-        }}>
+        <button
+          className="button is-light"
+          onClick={() => {
+            init(next() || "");
+          }}
+        >
           <i className="fas fa-arrow-right"></i>
+        </button>
+      </div>
+      <div
+        className="buttons"
+        style={{
+          gridRow: "3",
+          gridColumn: "3",
+        }}
+      >
+        <button
+          className="button is-danger is-light"
+          onClick={() => editor.delete()}
+        >
+          Delete
         </button>
       </div>
     </div>

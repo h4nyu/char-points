@@ -57,8 +57,9 @@ export type Editor = {
   del: () => void;
   changeSize: (size: number) => void;
   detectBoxes: () => void;
-  save: (imageState:ImageState) => Promise<void>;
+  save: (imageState: ImageState) => Promise<void>;
   init: (id: string) => void;
+  delete: () => Promise<void>;
   clear: () => void;
 };
 export const Editor = (root: {
@@ -68,14 +69,25 @@ export const Editor = (root: {
   loading: LoadingStore;
   toast: ToastStore;
   error: ErrorStore;
-  onSave?: (id:string) => void;
-  onInit?: (id:string) => void;
+  onSave?: (id: string) => void;
+  onInit?: (id: string) => void;
+  onDelete?: (id: string) => void;
 }): Editor => {
   const state = observable(State());
-  const { history, api, loading, toast, error, detectionApi, onSave, onInit } = root;
+  const {
+    history,
+    api,
+    loading,
+    toast,
+    error,
+    detectionApi,
+    onSave,
+    onInit,
+    onDelete,
+  } = root;
   const init = async (id: string) => {
     await loading.auto(async () => {
-      const charImage = await api.charImage.find({id});
+      const charImage = await api.charImage.find({ id });
       if (charImage instanceof Error) {
         toast.show(charImage.message, Level.Error);
         return charImage;
@@ -85,12 +97,12 @@ export const Editor = (root: {
       state.id = charImage.id;
       state.imageData = charImage.data;
       onInit && onInit(id);
-    })
+    });
   };
   const clear = () => {
     state.points = Map();
     state.boxes = Map();
-  }
+  };
 
   const setMode = (mode: InputMode) => {
     state.mode = mode;
@@ -226,7 +238,7 @@ export const Editor = (root: {
     state.imageData = res.imageData;
   };
 
-  const save = async (imageState:ImageState) => {
+  const save = async (imageState: ImageState) => {
     const payload = {
       id: state.id,
       points: state.points.toList().toJS(),
@@ -245,6 +257,18 @@ export const Editor = (root: {
     });
   };
 
+  const delete_ = async () => {
+    await loading.auto(async () => {
+      const id = await api.charImage.delete({ id: state.id });
+      if (id instanceof Error) {
+        error.notify(id);
+        return;
+      }
+      onDelete && onDelete(id);
+      toast.show("Success", Level.Success);
+    });
+  };
+
   return {
     state,
     setMode,
@@ -257,5 +281,6 @@ export const Editor = (root: {
     save,
     init,
     clear,
+    delete: delete_,
   };
 };

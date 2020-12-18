@@ -74,7 +74,7 @@ export const DetectionApi = (): DetectionApi => {
       const { boxes, scores, image } = res.data;
       return {
         boxes: boxes.map((b) => {
-          console.log(b)
+          console.log(b);
           return {
             ...Box(),
             x0: b[0],

@@ -15,10 +15,10 @@ import Upload from "../components/FileUpload";
 
 const Content = observer(() => {
   const { updateFilter, fetchImages, next } = store.data;
-  const { images, isPoint, isBox, tag, cursor} = store.data.state;
+  const { images, isPoint, isBox, tag, cursor } = store.data.state;
   const { init } = store.editor;
   const { uploadFiles } = store.charImage;
-  const rows = images
+  const rows = images;
   return (
     <div
       style={{
@@ -29,48 +29,49 @@ const Content = observer(() => {
         height: "100%",
       }}
     >
-
-      <div className="buttons has-addons"
-        style={{ 
+      <div
+        className="buttons"
+        style={{
           gridRow: "1",
-          gridColumn: "1" 
+          gridColumn: "1",
         }}
       >
-        <button 
-          className={"button is-light".concat(tag === ImageState.Todo && " is-info" || "")}
-          onClick={() => updateFilter({tag: ImageState.Todo})}
+        <button
+          className={"button is-light".concat(
+            (tag === ImageState.Todo && " is-info") || ""
+          )}
+          onClick={() => updateFilter({ tag: ImageState.Todo })}
         >
           Todo
         </button>
-        <button 
-          className={"button is-light".concat(tag === ImageState.Done && " is-info" || "")}
-          onClick={() => updateFilter({tag: ImageState.Done})}
+        <button
+          className={"button is-light".concat(
+            (tag === ImageState.Done && " is-info") || ""
+          )}
+          onClick={() => updateFilter({ tag: ImageState.Done })}
         >
           Done
         </button>
-        <button 
-          className={"button is-light".concat(isPoint && " is-warning" || "")}
-          onClick={() => updateFilter({isPoint: !isPoint})}
+        <button
+          className={"button is-light".concat((isPoint && " is-warning") || "")}
+          onClick={() => updateFilter({ isPoint: !isPoint })}
         >
           Point
         </button>
-        <button 
-          className={"button is-light".concat(isBox && " is-warning" || "") }
-          onClick={() => updateFilter({isBox: !isBox})}
+        <button
+          className={"button is-light".concat((isBox && " is-warning") || "")}
+          onClick={() => updateFilter({ isBox: !isBox })}
         >
           Box
         </button>
       </div>
       <div
-        style={{ 
+        style={{
           gridRow: "1",
-          gridColumn: "2" 
+          gridColumn: "2",
         }}
       >
-        <button 
-          className={"button is-light" }
-          onClick={() => fetchImages()}
-        >
+        <button className={"button is-light"} onClick={() => fetchImages()}>
           Search
         </button>
       </div>
@@ -84,35 +85,36 @@ const Content = observer(() => {
           overflow: "scroll",
         }}
       >
-        {
-          rows.map((x, i) => (
-            <div
-              className="card m-1"
-              key={i}
-              style={{
-                cursor: "pointer",
-                position: "relative",
-                width: 128,
-                height: 128,
-              }}
-              onClick={() => init(x.id)}
-            >
-              <div style={{ position: "absolute" }}>
-                <SvgCharPlot data={x.data} size={128} />
-              </div>
-              <div style={{ position: "absolute" }}>
-                {x.hasPoint && <Tag value="Point" />}
-                {x.hasBox && <Tag value="Box" />}
-                {x.state && <Tag value={x.state} />}
-              </div>
+        {rows.map((x, i) => (
+          <div
+            className="card m-1"
+            key={i}
+            style={{
+              cursor: "pointer",
+              position: "relative",
+              width: 128,
+              height: 128,
+            }}
+            onClick={() => init(x.id)}
+          >
+            <div style={{ position: "absolute" }}>
+              <SvgCharPlot data={x.data} size={128} />
             </div>
-          ))}
+            <div style={{ position: "absolute" }}>
+              {x.hasPoint && <Tag value="Point" />}
+              {x.hasBox && <Tag value="Box" />}
+              {x.state && <Tag value={x.state} />}
+            </div>
+          </div>
+        ))}
       </div>
 
-      <div style={{ 
-        gridRow: "3",  
-        gridColumn: "1 / span 2",
-      }}>
+      <div
+        style={{
+          gridRow: "3",
+          gridColumn: "1 / span 2",
+        }}
+      >
         <Upload accept={"application/json, image/*"} onChange={uploadFiles} />
       </div>
     </div>
