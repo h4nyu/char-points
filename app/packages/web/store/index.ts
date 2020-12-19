@@ -1,5 +1,4 @@
 import { DataStore } from "./data";
-import { CharImageStore } from "./charImage";
 import { LoadingStore } from "./loading";
 import { ToastStore } from "./toast";
 import { RootApi, DetectionApi } from "@charpoints/api";
@@ -45,7 +44,6 @@ export type RootStore = {
   data: DataStore;
   loading: LoadingStore;
   toast: ToastStore;
-  charImage: CharImageStore;
   history: History;
   editor: Editor;
   api: RootApi;
@@ -72,17 +70,13 @@ export const RootStore = (): RootStore => {
       history.push("/edit");
       data.setCursor(id);
     },
+    onSave: async (id) => {
+      data.fetchImage(id);
+    },
     onDelete: (id) => {
       history.push("/");
       data.deleteImage(id);
     },
-  });
-  const charImage = CharImageStore({
-    api,
-    data,
-    toast,
-    loading,
-    error,
   });
   const init = async () => {
     await data.init();
@@ -99,7 +93,6 @@ export const RootStore = (): RootStore => {
     data,
     toast,
     loading,
-    charImage,
     init,
     history,
     editor,

@@ -9,6 +9,7 @@ import {
   CharImage,
   FilterPayload,
 } from "@charpoints/core/charImage";
+import { readAsBase64 } from "../utils";
 import { MemoryRouter } from "react-router";
 import { take, flow, sortBy, map } from "lodash/fp";
 import { parseISO } from "date-fns";
@@ -35,6 +36,7 @@ export type DataStore = {
   setCursor: (id: string) => void;
   fetchImages: () => Promise<void>;
   fetchImage: (id: string) => Promise<void>;
+  uploadFiles: (files: File[]) => Promise<void>;
   deleteImage: (id: string) => void;
   init: () => Promise<void>;
 };
@@ -130,6 +132,29 @@ export const DataStore = (args: {
     state.cursor = state.images.findIndex((x) => x.id === id);
   };
 
+  const uploadFiles = async (files: File[]) => {
+    const ids: string[] = [];
+    await loading.auto(async () => {
+      for (const f of files) {
+        if (!f.type.includes("image")) {
+          error.notify(Error("UnsupportedFormat"));
+          continue;
+        }
+        const data = await readAsBase64(f);
+        if (data instanceof Error) {
+          error.notify(data);
+          continue;
+        }
+        const id = await api.charImage.create({ data });
+        if (id instanceof Error) {
+          error.notify(id);
+          continue;
+        }
+        await fetchImage(id);
+      }
+    });
+  };
+
   return {
     state,
     next,
@@ -139,6 +164,7 @@ export const DataStore = (args: {
     fetchImages,
     fetchImage,
     deleteImage,
+    uploadFiles,
     init,
   };
 };

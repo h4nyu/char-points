@@ -17,7 +17,6 @@ const Content = observer(() => {
   const { updateFilter, fetchImages, next } = store.data;
   const { images, isPoint, isBox, tag, cursor } = store.data.state;
   const { init } = store.editor;
-  const { uploadFiles } = store.charImage;
   const rows = images;
   return (
     <div
@@ -115,7 +114,10 @@ const Content = observer(() => {
           gridColumn: "1 / span 2",
         }}
       >
-        <Upload accept={"application/json, image/*"} onChange={uploadFiles} />
+        <Upload
+          accept={"application/json, image/*"}
+          onChange={store.data.uploadFiles}
+        />
       </div>
     </div>
   );
