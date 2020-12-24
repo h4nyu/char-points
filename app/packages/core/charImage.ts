@@ -12,6 +12,7 @@ export enum State {
 export type CharImage = {
   id: string; // Uuid
   data?: string; // base64 encoded string
+  weight?: Number;
   points?: Point[];
   boxes?: Box[];
   hasBox: boolean;
