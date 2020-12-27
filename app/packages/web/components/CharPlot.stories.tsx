@@ -2,8 +2,7 @@ import React from "react";
 import CharPlot from "./CharPlot";
 import { action } from "@storybook/addon-actions";
 import { boolean } from "@storybook/addon-knobs";
-import { fromLabelMe } from "@charpoints/core/charImage";
-import labelMeData from "/srv/data/annto.json";
+import { Image } from "@charpoints/core/image";
 import annot from "/srv/data/annto.json";
 
 export default {
@@ -11,7 +10,10 @@ export default {
   component: CharPlot,
 };
 
-const image = fromLabelMe(labelMeData);
+const image = {
+  ...Image(),
+  data: annot.imageData,
+};
 export const Basic = (args) => <CharPlot {...args} image={image} />;
 
 export const Large = (args) => <CharPlot {...args} image={image} size={512} />;

@@ -9,10 +9,10 @@ export enum State {
   Todo = "Todo",
 }
 
-export type CharImage = {
+export type Image = {
   id: string; // Uuid
   data?: string; // base64 encoded string
-  weight?: Number;
+  weight: number;
   points?: Point[];
   boxes?: Box[];
   hasBox: boolean;
@@ -21,41 +21,13 @@ export type CharImage = {
   createdAt: string;
 };
 
-export type LabelMe = {
-  version: string;
-  shapes: {
-    label: string;
-    line_color: string | null;
-    fill_color: string | null;
-    shape_type: string;
-    points: [number, number][];
-  }[];
-  imagePath: string;
-  imageData: string;
-  imageHeight: number;
-  imageWidth: number;
-};
-
-export const fromLabelMe = (prev: any): [CharImage, Point[]] => {
-  const image = CharImage();
-  image.data = prev.imageData;
-  const points = prev.shapes.map((s) => {
-    const [x, y] = s.points[0];
-    return {
-      x: x / prev.imageWidth,
-      y: y / prev.imageHeight,
-      imageId: image.id,
-    };
-  });
-  return [image, points];
-};
-
-export const CharImage = (): CharImage => {
+export const Image = (): Image => {
   return {
     id: uuid(),
     state: State.Todo,
     hasPoint: false,
     hasBox: false,
+    weight: 1.0,
     createdAt: dayjs().toISOString(),
   };
 };
@@ -88,22 +60,22 @@ export type Service = {
   create: (payload: CreatePayload) => Promise<string | Error>;
   delete: (payload: DeletePayload) => Promise<string | Error>;
   update: (payload: UpdatePayload) => Promise<string | Error>;
-  find: (payload: FindPayload) => Promise<CharImage | Error>;
-  filter: (payload: FilterPayload) => Promise<CharImage[] | Error>;
+  find: (payload: FindPayload) => Promise<Image | Error>;
+  filter: (payload: FilterPayload) => Promise<Image[] | Error>;
 };
 
 export const Service = (args: { store: Store; lock: Lock }): Service => {
   const { store, lock } = args;
   const filter = async (payload: FilterPayload) => {
-    return await store.charImage.filter(payload);
+    return await store.image.filter(payload);
   };
   const find = async (payload: FindPayload) => {
-    const image = await store.charImage.find(payload);
+    const image = await store.image.find(payload);
     if (image instanceof Error) {
       return image;
     }
     if (image === undefined) {
-      return new Error(ErrorKind.CharImageNotFound);
+      return new Error(ErrorKind.ImageNotFound);
     }
     const [points, boxes] = await Promise.all([
       store.point.filter({ imageId: image.id }),
@@ -126,10 +98,10 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     return await lock.auto(async () => {
       const { data } = payload;
       const row = {
-        ...CharImage(),
+        ...Image(),
         data,
       };
-      const err = await store.charImage.insert(row);
+      const err = await store.image.insert(row);
       if (err instanceof Error) {
         return err;
       }
@@ -140,12 +112,12 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
   const update = async (payload: UpdatePayload) => {
     return await lock.auto(async () => {
       const { id, points, boxes, data } = payload;
-      const row = await store.charImage.find({ id });
+      const row = await store.image.find({ id });
       if (row instanceof Error) {
         return row;
       }
       if (row === undefined) {
-        return new Error(ErrorKind.CharImageNotFound);
+        return new Error(ErrorKind.ImageNotFound);
       }
       if (points !== undefined) {
         let err = await store.point.delete({ imageId: id });
@@ -175,7 +147,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
         hasPoint: (points && points.length > 0) || row.hasPoint,
         hasBox: (boxes && boxes.length > 0) || row.hasBox,
       };
-      const err = await store.charImage.update(next);
+      const err = await store.image.update(next);
       if (err instanceof Error) {
         return err;
       }
@@ -186,14 +158,14 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
   const delete_ = async (payload: DeletePayload) => {
     return await lock.auto(async () => {
       const { id } = payload;
-      const row = await store.charImage.find({ id });
+      const row = await store.image.find({ id });
       if (row instanceof Error) {
         return row;
       }
       if (row === undefined) {
-        return new Error(ErrorKind.CharImageNotFound);
+        return new Error(ErrorKind.ImageNotFound);
       }
-      let err = await store.charImage.delete({ id });
+      let err = await store.image.delete({ id });
       if (err instanceof Error) {
         return err;
       }

@@ -6,8 +6,8 @@ import { ErrorStore } from "./error";
 import { Map, List } from "immutable";
 import { Editor } from "./editor";
 import { createHashHistory } from "history";
-import { CharImage } from "@charpoints/core/charImage";
-export { CharImage } from "@charpoints/core/charImage";
+import { Image } from "@charpoints/core/image";
+export { Image } from "@charpoints/core/image";
 export { Point } from "@charpoints/core/point";
 import { Point } from "@charpoints/core/point";
 export { Box } from "@charpoints/core/box";
@@ -16,7 +16,7 @@ import { configure } from "mobx";
 configure({
   enforceActions: "never",
 });
-export type CharImages = List<CharImage>;
+export type Images = List<Image>;
 export type Points = Map<string, Point>;
 export type Boxes = Map<string, Box>;
 export enum Level {

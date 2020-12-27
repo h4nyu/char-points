@@ -3,8 +3,8 @@ import fs from "fs";
 
 const rootApi = RootApi();
 rootApi.setUrl("http://srv");
-describe("charImage", () => {
-  const api = rootApi.charImage;
+describe("image", () => {
+  const api = rootApi.image;
   test("create and filter", async () => {
     const buffer = await fs.promises.readFile("/srv/package.json");
     const data = buffer.toString("base64");

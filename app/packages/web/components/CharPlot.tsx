@@ -1,13 +1,14 @@
 import React, { useRef, RefObject, useState, useEffect } from "react";
-import { CharImage, Points } from "../store";
+import { Point } from "@charpoints/core/point";
 
 export const CharPlot = (props: {
-  image: CharImage;
+  imageData: string;
   size?: number;
+  points?: Point[];
   onClick?: (pos: { x: number; y: number }) => void;
 }) => {
   const canvasRef: RefObject<HTMLCanvasElement> = useRef(null);
-  const { image, onClick } = props;
+  const { imageData, onClick, points } = props;
   const position = { x: 0, y: 0 };
   let scale = 1.0;
   const size = props.size || 128;
@@ -40,7 +41,7 @@ export const CharPlot = (props: {
 
   useEffect(() => {
     const img = new Image();
-    img.src = `data:image;base64,${image.data}`;
+    img.src = `data:image;base64,${imageData}`;
     img.onload = () => {
       const canvas = canvasRef.current;
       if (!canvas) {
@@ -57,7 +58,7 @@ export const CharPlot = (props: {
         return;
       }
       ctx.drawImage(img, 0, 0, width, height);
-      image.points?.forEach((p) => {
+      points?.forEach((p) => {
         ctx.beginPath();
         ctx.arc(p.x * scale, p.y * scale, 1 * scale, 0, 2 * Math.PI);
         ctx.fillStyle = "red";

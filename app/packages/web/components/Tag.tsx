@@ -1,5 +1,5 @@
 import React from "react";
-import { State } from "@charpoints/core/charImage";
+import { State } from "@charpoints/core/image";
 
 export const Tag = (props: {
   value: "Point" | "Box" | State;

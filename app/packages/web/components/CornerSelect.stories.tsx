@@ -2,12 +2,12 @@ import React from "react";
 import Component from "./CornerSelect";
 import { action } from "@storybook/addon-actions";
 import { boolean } from "@storybook/addon-knobs";
-import { CharImage } from "@charpoints/core/charImage";
+import { Image } from "@charpoints/core/image";
 import Mock from "./Mock";
 import ImageData from "../data/imageData.txt";
 import annot from "/srv/data/annto.json";
 
-const charImage = CharImage();
+const charImage = Image();
 charImage.data = ImageData;
 
 export default {

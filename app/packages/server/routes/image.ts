@@ -8,9 +8,9 @@ import {
   DeletePayload,
   UpdatePayload,
   CreatePayload,
-} from "@charpoints/core/charImage";
+} from "@charpoints/core/image";
 
-export const CharImageRoutes = (args: {
+export const ImageRoutes = (args: {
   store: Store;
   lock: Lock;
 }): FastifyPlugin<{ prefix: string }> => {

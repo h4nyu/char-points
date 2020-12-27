@@ -1,4 +1,4 @@
-import { CharImageApi } from "./charImage";
+import { ImageApi } from "./image";
 import { Box } from "@charpoints/core/box";
 import { Api as PointApi } from "./point";
 
@@ -16,7 +16,7 @@ export function toError(err: any): Error {
 export type RootApi = {
   setUrl: (url: string) => void;
   detectionUrl: () => Promise<string | Error>;
-  charImage: CharImageApi;
+  image: ImageApi;
   point: PointApi;
 };
 
@@ -32,7 +32,7 @@ export const RootApi = (): RootApi => {
     }
   };
 
-  const charImage = CharImageApi({ http, prefix: `${prefix}/char-image` });
+  const image = ImageApi({ http, prefix: `${prefix}/image` });
   const point = PointApi(http, `${prefix}/point`);
 
   const setUrl = (url: string) => {
@@ -42,7 +42,7 @@ export const RootApi = (): RootApi => {
     setUrl,
     detectionUrl,
     point,
-    charImage,
+    image,
   };
 };
 
@@ -74,7 +74,6 @@ export const DetectionApi = (): DetectionApi => {
       const { boxes, scores, image } = res.data;
       return {
         boxes: boxes.map((b) => {
-          console.log(b);
           return {
             ...Box(),
             x0: b[0],

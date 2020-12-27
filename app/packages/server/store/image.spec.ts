@@ -1,6 +1,6 @@
 import { Store } from ".";
 import fs from "fs";
-import { CharImage, State } from "@charpoints/core/charImage";
+import { Image, State } from "@charpoints/core/image";
 const rootStore = Store({ url: process.env.DATABASE_URL || "" });
 
 afterAll(async () => {
@@ -8,9 +8,9 @@ afterAll(async () => {
 });
 
 describe("image", () => {
-  const store = rootStore.charImage;
+  const store = rootStore.image;
   const row = {
-    ...CharImage(),
+    ...Image(),
     hasPoint: true,
     hasBox: true,
   };
@@ -33,6 +33,7 @@ describe("image", () => {
   test("update", async () => {
     row.data = Buffer.from("aaaaa").toString("base64");
     row.state = State.Done;
+    row.weight = 1000.0;
     const err = await store.update(row);
     if (err instanceof Error) {
       throw err;

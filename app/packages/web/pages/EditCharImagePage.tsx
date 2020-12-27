@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../components/Header";
 import { observer } from "mobx-react-lite";
-import { State as ImageState } from "@charpoints/core/charImage";
+import { State as ImageState } from "@charpoints/core/image";
 
 import PageLayout from "../components/PageLayout";
 import store, { InputMode } from "../store";
