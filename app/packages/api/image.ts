@@ -7,12 +7,12 @@ import {
   DeletePayload,
   FindPayload,
   Service,
-  CharImage,
-} from "@charpoints/core/charImage";
+  Image,
+} from "@charpoints/core/image";
 
-export type CharImageApi = Service;
+export type ImageApi = Service;
 
-export const CharImageApi = (arg: {
+export const ImageApi = (arg: {
   http: AxiosInstance;
   prefix: string;
 }): Service => {

@@ -1,5 +1,5 @@
 import React, { RefObject, useRef, useEffect, useState } from "react";
-import { CharImage, Points, Boxes, InputMode } from "../store";
+import { Image, Points, Boxes, InputMode } from "../store";
 
 export const SvgCharPlot = (props: {
   data?: string;

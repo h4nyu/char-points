@@ -1,14 +1,14 @@
 import { observable } from "mobx";
-import { CharImages, Points } from ".";
+import { Images, Points } from ".";
 import { Map, List } from "immutable";
 import { ErrorStore } from "./error";
 import { RootApi } from "@charpoints/api";
 import { LoadingStore } from "./loading";
 import {
   State as ImageState,
-  CharImage,
+  Image,
   FilterPayload,
-} from "@charpoints/core/charImage";
+} from "@charpoints/core/image";
 import { readAsBase64 } from "../utils";
 import { MemoryRouter } from "react-router";
 import { take, flow, sortBy, map } from "lodash/fp";
@@ -16,7 +16,7 @@ import { parseISO } from "date-fns";
 import dayjs from "dayjs";
 
 type State = {
-  images: CharImages;
+  images: Images;
   cursor: number;
   limit: number;
   tag: ImageState;
@@ -59,7 +59,7 @@ export const DataStore = (args: {
   const state = observable(State());
 
   const fetchImage = async (id: string) => {
-    const row = await api.charImage.find({ id });
+    const row = await api.image.find({ id });
     if (row instanceof Error) {
       error.notify(row);
       return;
@@ -77,7 +77,7 @@ export const DataStore = (args: {
   };
 
   const fetchImages = async (): Promise<void> => {
-    const rows = await api.charImage.filter({
+    const rows = await api.image.filter({
       hasPoint: state.isPoint,
       hasBox: state.isBox,
       state: state.tag,
@@ -145,7 +145,7 @@ export const DataStore = (args: {
           error.notify(data);
           continue;
         }
-        const id = await api.charImage.create({ data });
+        const id = await api.image.create({ data });
         if (id instanceof Error) {
           error.notify(id);
           continue;

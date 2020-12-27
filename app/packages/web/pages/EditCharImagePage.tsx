@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../components/Header";
 import { observer } from "mobx-react-lite";
-import { State as ImageState } from "@charpoints/core/charImage";
+import { State as ImageState } from "@charpoints/core/image";
 
 import PageLayout from "../components/PageLayout";
 import store, { InputMode } from "../store";
@@ -15,7 +15,7 @@ import { useParams, useHistory } from "react-router-dom";
 
 const { editor, data } = store;
 const Content = observer(() => {
-  const { id, points, boxes, size, draggingId, imageData, mode } = editor.state;
+  const { id, points, boxes, size, draggingId, imageData, mode, weight } = editor.state;
   const {
     init,
     save,
@@ -34,58 +34,72 @@ const Content = observer(() => {
     <div
       style={{
         display: "grid",
-        gridTemplateRows: "50px 1fr 50px",
+        gridTemplateRows: "auto 1fr 50px",
         gridTemplateColumns: "auto 1fr auto",
         width: "100%",
         height: "100%",
       }}
     >
       <div
-        className="buttons"
         style={{
           gridRow: "1",
           gridColumn: "1",
         }}
       >
-        <button
-          className="button is-light"
-          onClick={() => changeSize(size * 1.1)}
-        >
-          <i className="fas fa-plus" />
-        </button>
-        <button
-          className="button is-light"
-          onClick={() => changeSize(size * 0.9)}
-        >
-          <i className="fas fa-minus" />
-        </button>
-        <button className="button is-light" onClick={detectBoxes}>
-          文字検出
-        </button>
-        <button
-          className={"button is-light ".concat(
-            (mode === InputMode.Point && "is-warning") || ""
-          )}
-          onClick={() => setMode(InputMode.Point)}
-        >
-          Point
-        </button>
-        <button
-          className={"button is-light ".concat(
-            ([
-              InputMode.Box,
-              InputMode.TR,
-              InputMode.TR,
-              InputMode.BR,
-              InputMode.BL,
-            ].includes(mode) &&
-              "is-warning") ||
-              ""
-          )}
-          onClick={() => setMode(InputMode.Box)}
-        >
-          Box
-        </button>
+        <div className="field">
+          <label className="label">Control</label>
+          <div className="control buttons">
+            <button
+              className="button is-light"
+              onClick={() => changeSize(size * 1.1)}
+            >
+              <i className="fas fa-plus" />
+            </button>
+            <button
+              className="button is-light"
+              onClick={() => changeSize(size * 0.9)}
+            >
+              <i className="fas fa-minus" />
+            </button>
+            <button className="button is-light" onClick={detectBoxes}>
+              文字検出
+            </button>
+            <button
+              className={"button is-light ".concat(
+                (mode === InputMode.Point && "is-warning") || ""
+              )}
+              onClick={() => setMode(InputMode.Point)}
+            >
+              Point
+            </button>
+            <button
+              className={"button is-light ".concat(
+                ([
+                  InputMode.Box,
+                  InputMode.TR,
+                  InputMode.TR,
+                  InputMode.BR,
+                  InputMode.BL,
+                ].includes(mode) &&
+                  "is-warning") ||
+                  ""
+              )}
+              onClick={() => setMode(InputMode.Box)}
+            >
+              Box
+            </button>
+          </div>
+        </div>
+        <div className="field">
+          <label className="label">Weight</label>
+          <div className="control">
+            <input className="input" type="number" 
+              style={{ width:50}} 
+              value={weight} 
+              onChange={e => editor.setWeight(parseFloat(e.target.value))}
+            />
+          </div>
+        </div>
       </div>
 
       <div

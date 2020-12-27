@@ -1,6 +1,6 @@
 import { observable } from "mobx";
 import { Set } from "immutable";
-import { State as ImageState } from "@charpoints/core/charImage";
+import { State as ImageState } from "@charpoints/core/image";
 
 export type State = {
   hasBox: boolean;

@@ -1,17 +1,17 @@
 export { ErrorKind } from "./error";
-import { CharImage } from "./charImage";
+import { Image } from "./image";
 import { Point } from "./point";
 import { Box } from "./box";
 
-export type CharImageStore = {
+export type ImageStore = {
   filter: (payload: {
     ids?: string[];
     hasBox?: boolean;
     hasPoint?: boolean;
-  }) => Promise<CharImage[] | Error>;
-  find: (payload: { id?: string }) => Promise<CharImage | undefined | Error>;
-  update: (payload: CharImage) => Promise<void | Error>;
-  insert: (payload: CharImage) => Promise<void | Error>;
+  }) => Promise<Image[] | Error>;
+  find: (payload: { id?: string }) => Promise<Image | undefined | Error>;
+  update: (payload: Image) => Promise<void | Error>;
+  insert: (payload: Image) => Promise<void | Error>;
   delete: (payload: { id?: string }) => Promise<void | Error>;
   clear: () => Promise<void | Error>;
 };
@@ -35,7 +35,7 @@ export type Lock = {
 };
 
 export type Store = {
-  charImage: CharImageStore;
+  image: ImageStore;
   point: PointStore;
   box: BoxStore;
 };

@@ -1,29 +1,20 @@
 import { observable } from "mobx";
 import { RootApi, DetectionApi } from "@charpoints/api";
 import { ErrorStore } from "./error";
-import { State as ImageState } from "@charpoints/core/charImage";
-import {
-  Point,
-  Points,
-  Boxes,
-  CharImage,
-  History,
-  Level,
-  InputMode,
-  Box,
-} from ".";
+import { State as ImageState } from "@charpoints/core/image";
+import { Point, Points, Boxes, History, Level, InputMode, Box } from ".";
 import { ToastStore } from "./toast";
 import { Map } from "immutable";
 import { v4 as uuid } from "uuid";
-import { uniq, keyBy } from "lodash";
+import { keyBy } from "lodash";
 import { LoadingStore } from "./loading";
-import { DataStore } from "./data";
 
 export type State = {
   id: string;
   points: Points;
   boxes: Boxes;
   mode: InputMode;
+  weight: number,
   imageData?: string;
   draggingId?: string;
   size: number;
@@ -37,6 +28,7 @@ export const State = (): State => {
     id: "",
     points: Map(),
     boxes: Map(),
+    weight: 1.0,
     mode: InputMode.Point,
     imageData: undefined,
     draggingId: undefined,
@@ -57,6 +49,7 @@ export type Editor = {
   del: () => void;
   changeSize: (size: number) => void;
   detectBoxes: () => void;
+  setWeight: (weight: number) => void;
   save: (imageState: ImageState) => Promise<void>;
   init: (id: string) => void;
   delete: () => Promise<void>;
@@ -87,15 +80,15 @@ export const Editor = (root: {
   } = root;
   const init = async (id: string) => {
     await loading.auto(async () => {
-      const charImage = await api.charImage.find({ id });
-      if (charImage instanceof Error) {
-        toast.show(charImage.message, Level.Error);
-        return charImage;
+      const image = await api.image.find({ id });
+      if (image instanceof Error) {
+        toast.show(image.message, Level.Error);
+        return image;
       }
-      state.points = Map((charImage.points || []).map((x) => [uuid(), x]));
-      state.boxes = Map((charImage.boxes || []).map((x) => [uuid(), x]));
-      state.id = charImage.id;
-      state.imageData = charImage.data;
+      state.points = Map((image.points || []).map((x) => [uuid(), x]));
+      state.boxes = Map((image.boxes || []).map((x) => [uuid(), x]));
+      state.id = image.id;
+      state.imageData = image.data;
       onInit && onInit(id);
     });
   };
@@ -178,8 +171,7 @@ export const Editor = (root: {
   };
 
   const add = () => {
-    console.log("add");
-    const { draggingId, mode, pos, boxes, points, id } = state;
+    const { mode, pos, boxes, points, id } = state;
     if ((state.draggingId = undefined)) {
       state.draggingId = undefined;
       return;
@@ -210,7 +202,7 @@ export const Editor = (root: {
   };
 
   const del = () => {
-    const { points, boxes, mode, draggingId } = state;
+    const { points, boxes, draggingId } = state;
     state.points = points.filter((v, k) => k !== draggingId);
     state.boxes = boxes.filter((v, k) => k !== draggingId);
     state.draggingId = undefined;
@@ -247,7 +239,7 @@ export const Editor = (root: {
       state: imageState,
     };
     await loading.auto(async () => {
-      const id = await api.charImage.update(payload);
+      const id = await api.image.update(payload);
       if (id instanceof Error) {
         error.notify(id);
         return;
@@ -259,7 +251,7 @@ export const Editor = (root: {
 
   const delete_ = async () => {
     await loading.auto(async () => {
-      const id = await api.charImage.delete({ id: state.id });
+      const id = await api.image.delete({ id: state.id });
       if (id instanceof Error) {
         error.notify(id);
         return;
@@ -268,6 +260,9 @@ export const Editor = (root: {
       toast.show("Success", Level.Success);
     });
   };
+  const setWeight = (value: number) => {
+    state.weight = value;
+  }
 
   return {
     state,
@@ -276,6 +271,7 @@ export const Editor = (root: {
     move,
     changeSize,
     detectBoxes,
+    setWeight,
     add,
     del,
     save,

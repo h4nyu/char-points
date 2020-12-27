@@ -1,5 +1,5 @@
 import React, { useRef, RefObject, CSSProperties } from "react";
-import { CharImage } from "@charpoints/core/charImage";
+import { Image } from "@charpoints/core/image";
 
 const CheckIcon = () => (
   <i
