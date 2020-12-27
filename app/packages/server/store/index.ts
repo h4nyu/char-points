@@ -5,7 +5,7 @@ import { Store as BoxStore } from "./box";
 
 export const Store = (args: { url: string; max?: number }) => {
   const sql = postgres(args.url, {
-    max: args.max || 10,
+    max: args.max || 5,
   });
   const close = async () => {
     await sql.end({ timeout: 5 });
