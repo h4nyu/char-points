@@ -14,6 +14,7 @@ export type State = {
   points: Points;
   boxes: Boxes;
   mode: InputMode;
+  weight: number,
   imageData?: string;
   draggingId?: string;
   size: number;
@@ -27,6 +28,7 @@ export const State = (): State => {
     id: "",
     points: Map(),
     boxes: Map(),
+    weight: 1.0,
     mode: InputMode.Point,
     imageData: undefined,
     draggingId: undefined,
@@ -47,6 +49,7 @@ export type Editor = {
   del: () => void;
   changeSize: (size: number) => void;
   detectBoxes: () => void;
+  setWeight: (weight: number) => void;
   save: (imageState: ImageState) => Promise<void>;
   init: (id: string) => void;
   delete: () => Promise<void>;
@@ -257,6 +260,9 @@ export const Editor = (root: {
       toast.show("Success", Level.Success);
     });
   };
+  const setWeight = (value: number) => {
+    state.weight = value;
+  }
 
   return {
     state,
@@ -265,6 +271,7 @@ export const Editor = (root: {
     move,
     changeSize,
     detectBoxes,
+    setWeight,
     add,
     del,
     save,
