@@ -16,7 +16,7 @@ services:
     depends_on:
       - migration
 
-  migration:
+  migrate:
     image: "charpoints-app"
     environment:
       - DATABASE_URL=postgres://app:app@db/app
