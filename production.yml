@@ -14,7 +14,7 @@ services:
     ports:
       - "${SERVER_PORT}:80"
     depends_on:
-      - migration
+      - migrate
 
   migrate:
     image: "charpoints-app"
