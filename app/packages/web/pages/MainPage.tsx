@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import Tag from "../components/Tag";
 import { State as ImageState } from "@charpoints/core/image";
+import ImageTable from "@charpoints/web/components/ImageTable";
 import { observer } from "mobx-react-lite";
 import { Map } from "immutable";
 import PageLayout from "../components/PageLayout";
@@ -84,28 +85,7 @@ const Content = observer(() => {
           overflow: "scroll",
         }}
       >
-        {rows.map((x, i) => (
-          <div
-            className="card m-1"
-            key={i}
-            style={{
-              cursor: "pointer",
-              position: "relative",
-              width: 128,
-              height: 128,
-            }}
-            onClick={() => init(x.id)}
-          >
-            <div style={{ position: "absolute" }}>
-              <SvgCharPlot data={x.data} size={128} />
-            </div>
-            <div style={{ position: "absolute" }}>
-              {x.hasPoint && <Tag value="Point" />}
-              {x.hasBox && <Tag value="Box" />}
-              {x.state && <Tag value={x.state} />}
-            </div>
-          </div>
-        ))}
+        <ImageTable images={images.toList().toJS()} onClick={init}/>
       </div>
 
       <div

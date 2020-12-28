@@ -85,12 +85,7 @@ export const DataStore = (args: {
     if (rows instanceof Error) {
       return;
     }
-    state.images = List();
-    await loading.auto(async () => {
-      for (const id of rows.map((x) => x.id)) {
-        await fetchImage(id);
-      }
-    });
+    state.images = List(rows);
   };
   const updateFilter = (payload: {
     isBox?: boolean;
