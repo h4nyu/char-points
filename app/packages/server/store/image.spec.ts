@@ -11,8 +11,6 @@ describe("image", () => {
   const store = rootStore.image;
   const row = {
     ...Image(),
-    hasPoint: true,
-    hasBox: true,
   };
   beforeAll(async () => {
     await store.clear();
@@ -34,6 +32,8 @@ describe("image", () => {
     row.data = Buffer.from("aaaaa").toString("base64");
     row.state = State.Done;
     row.weight = 1000.0;
+    row.boxCount = 100
+    row.pointCount = 200
     const err = await store.update(row);
     if (err instanceof Error) {
       throw err;
@@ -46,13 +46,6 @@ describe("image", () => {
   });
   test("filter", async () => {
     const rows = await store.filter({});
-    if (rows instanceof Error) {
-      throw rows;
-    }
-    expect(rows).toMatchObject([{ ...row, data: undefined }]);
-  });
-  test("filter-hasBox", async () => {
-    const rows = await store.filter({ hasBox: true });
     if (rows instanceof Error) {
       throw rows;
     }

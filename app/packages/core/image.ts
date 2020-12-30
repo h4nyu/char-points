@@ -2,7 +2,6 @@ import { Lock, ErrorKind, Store } from ".";
 import { Point } from "./point";
 import { Box } from "./box";
 import { v4 as uuid } from "uuid";
-import dayjs from "dayjs";
 
 export enum State {
   Done = "Done",
@@ -13,29 +12,28 @@ export type Image = {
   id: string; // Uuid
   data?: string; // base64 encoded string
   weight: number;
-  points?: Point[];
-  boxes?: Box[];
-  hasBox: boolean;
-  hasPoint: boolean;
+  boxCount: number;
+  pointCount: number;
   state: State;
-  createdAt: string;
+  loss?: number;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export const Image = (): Image => {
   return {
     id: uuid(),
     state: State.Todo,
-    hasPoint: false,
-    hasBox: false,
+    boxCount: 0,
+    pointCount: 0,
     weight: 1.0,
-    createdAt: dayjs().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 };
 
 export type FilterPayload = {
   ids?: string[];
-  hasPoint?: boolean;
-  hasBox?: boolean;
   state?: State;
 };
 
@@ -47,8 +45,6 @@ export type UpdatePayload = {
   id: string;
   state: State;
   data?: string;
-  points?: Point[];
-  boxes?: Box[];
 };
 export type DeletePayload = {
   id: string;
@@ -77,21 +73,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     if (image === undefined) {
       return new Error(ErrorKind.ImageNotFound);
     }
-    const [points, boxes] = await Promise.all([
-      store.point.filter({ imageId: image.id }),
-      store.box.filter({ imageId: image.id }),
-    ]);
-    if (points instanceof Error) {
-      return points;
-    }
-    if (boxes instanceof Error) {
-      return boxes;
-    }
-    return {
-      ...image,
-      points,
-      boxes,
-    };
+    return image;
   };
 
   const create = async (payload: CreatePayload) => {
@@ -111,7 +93,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
 
   const update = async (payload: UpdatePayload) => {
     return await lock.auto(async () => {
-      const { id, points, boxes, data } = payload;
+      const { id, data } = payload;
       const row = await store.image.find({ id });
       if (row instanceof Error) {
         return row;
@@ -119,33 +101,11 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       if (row === undefined) {
         return new Error(ErrorKind.ImageNotFound);
       }
-      if (points !== undefined) {
-        let err = await store.point.delete({ imageId: id });
-        if (err instanceof Error) {
-          return err;
-        }
-        err = await store.point.load(points.filter((x) => x.imageId === id));
-        if (err instanceof Error) {
-          return err;
-        }
-      }
-      if (boxes !== undefined) {
-        let err = await store.box.delete({ imageId: id });
-        if (err instanceof Error) {
-          return err;
-        }
-        err = await store.box.load(boxes.filter((x) => x.imageId === id));
-        if (err instanceof Error) {
-          return err;
-        }
-      }
-
       const next = {
         ...row,
         data: data || row.data,
         state: payload.state,
-        hasPoint: (points && points.length > 0) || row.hasPoint,
-        hasBox: (boxes && boxes.length > 0) || row.hasBox,
+        updateAt: new Date(),
       };
       const err = await store.image.update(next);
       if (err instanceof Error) {
@@ -170,6 +130,9 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
         return err;
       }
       err = await store.point.delete({ imageId: id });
+      if (err instanceof Error) { return err; }
+      err = await store.box.delete({ imageId: id });
+      if (err instanceof Error) { return err; }
       return id;
     });
   };

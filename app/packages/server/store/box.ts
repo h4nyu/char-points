@@ -10,6 +10,7 @@ export const Store = (sql: Sql<any>): BoxStore => {
       x1: r.x1,
       y1: r.y1,
       imageId: r.image_id,
+      isGrandTruth: r.is_grand_truth,
       label: r.label || undefined,
     };
   };
@@ -21,14 +22,17 @@ export const Store = (sql: Sql<any>): BoxStore => {
       x1: b.x1,
       y1: b.y1,
       image_id: b.imageId,
+      is_grand_truth: b.isGrandTruth,
       label: b.label || null,
     };
   };
-  const filter = async (payload: { imageId?: string }) => {
+  const filter = async (payload: { imageId?: string, isGrandTruth?:boolean }) => {
     try {
-      const { imageId } = payload;
+      const { imageId, isGrandTruth } = payload;
       let rows: Row[] = [];
-      if (imageId !== undefined) {
+      if (imageId !== undefined && isGrandTruth !== undefined) {
+        rows = await sql`SELECT * FROM boxes WHERE image_id =${imageId} AND is_grand_truth=${isGrandTruth}`;
+      } else if (imageId !== undefined) {
         rows = await sql`SELECT * FROM boxes WHERE image_id =${imageId}`;
       } else {
         rows = await sql`SELECT * FROM boxes`;
@@ -52,6 +56,7 @@ export const Store = (sql: Sql<any>): BoxStore => {
         "x1",
         "y1",
         "image_id",
+        "is_grand_truth",
         "label"
       )}
       `;
@@ -60,10 +65,12 @@ export const Store = (sql: Sql<any>): BoxStore => {
     }
   };
 
-  const delete_ = async (payload: { imageId?: string }) => {
+  const delete_ = async (payload: { imageId?: string, isGrandTruth?:boolean }) => {
     try {
-      const { imageId } = payload;
-      if (imageId !== undefined) {
+      const { imageId, isGrandTruth } = payload;
+      if (imageId !== undefined && isGrandTruth !== undefined) {
+        await sql`DELETE FROM boxes WHERE image_id=${imageId} AND is_grand_truth=${isGrandTruth}`;
+      }else if (imageId !== undefined) {
         await sql`DELETE FROM boxes WHERE image_id=${imageId}`;
       }
     } catch (err) {

@@ -15,7 +15,17 @@ import { useParams, useHistory } from "react-router-dom";
 
 const { editor, data } = store;
 const Content = observer(() => {
-  const { id, points, boxes, size, draggingId, imageData, mode, weight } = editor.state;
+  const {
+    id,
+    gtPoints,
+    gtBoxes,
+    predictedBoxes,
+    size,
+    draggingId,
+    imageData,
+    mode,
+    weight,
+  } = editor.state;
   const {
     init,
     save,
@@ -93,10 +103,12 @@ const Content = observer(() => {
         <div className="field">
           <label className="label">Weight</label>
           <div className="control">
-            <input className="input" type="number" 
-              style={{ width:50}} 
-              value={weight} 
-              onChange={e => editor.setWeight(parseFloat(e.target.value))}
+            <input
+              className="input"
+              type="number"
+              style={{ width: 50 }}
+              value={weight}
+              onChange={(e) => editor.setWeight(parseFloat(e.target.value))}
             />
           </div>
         </div>
@@ -120,9 +132,10 @@ const Content = observer(() => {
       >
         <SvgCharPlot
           data={imageData}
-          points={points}
+          gtPoints={gtPoints}
+          predictedBoxes={predictedBoxes}
           mode={mode}
-          boxes={boxes}
+          gtBoxes={gtBoxes}
           selectedId={draggingId}
           onMove={move}
           onAdd={add}

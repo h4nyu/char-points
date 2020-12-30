@@ -1,5 +1,6 @@
 import { ImageApi } from "./image";
 import { Box } from "@charpoints/core/box";
+import { BoxApi } from "@charpoints/api/box"
 import { Api as PointApi } from "./point";
 
 import axios from "axios";
@@ -18,6 +19,7 @@ export type RootApi = {
   detectionUrl: () => Promise<string | Error>;
   image: ImageApi;
   point: PointApi;
+  box: BoxApi;
 };
 
 export const RootApi = (): RootApi => {
@@ -34,6 +36,7 @@ export const RootApi = (): RootApi => {
 
   const image = ImageApi({ http, prefix: `${prefix}/image` });
   const point = PointApi(http, `${prefix}/point`);
+  const box = BoxApi(http, `${prefix}/box`);
 
   const setUrl = (url: string) => {
     http.defaults.baseURL = url;
@@ -42,6 +45,7 @@ export const RootApi = (): RootApi => {
     setUrl,
     detectionUrl,
     point,
+    box,
     image,
   };
 };

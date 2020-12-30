@@ -10,7 +10,7 @@ afterAll(async () => {
 
 describe("box", () => {
   const store = rootStore.box;
-  const row = { ...Box(), imageId: "aaa" };
+  const row = { ...Box(), imageId: "aaa", isGrandTruth:true };
 
   beforeAll(async () => {
     await store.clear();
@@ -33,7 +33,7 @@ describe("box", () => {
     }
     expect(rows).toMatchObject([row]);
   });
-  test("delete", async () => {
+  test("delete-imageId", async () => {
     const err = await store.delete({ imageId: row.imageId });
     if (err instanceof Error) {
       throw err;

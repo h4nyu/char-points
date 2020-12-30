@@ -1,41 +1,42 @@
-import React from 'react';
+import React from "react";
 import Tag from "@charpoints/web/components/Tag";
-import { Image } from '@charpoints/core/image';
+import { Image } from "@charpoints/core/image";
+import DateView from "@charpoints/web/components/DateView";
 
-
-export const ImageTable = (props:{
-  images: Image[],
-  onClick?: (imageId:string) => void
+export const ImageTable = (props: {
+  images: Image[];
+  onClick?: (imageId: string) => void;
 }) => {
-  const {images, onClick} = props
-  return  <table className="table is-fullwidth"> 
-    <thead>
-      <tr>
-        <th>id</th>
-        <th>Box</th>
-        <th>Point</th>
-        <th>State</th>
-        <th>Create</th>
-      </tr>
-    </thead>
-    <tbody >
-      {
-        images.map((x, i) => {
+  const { images, onClick } = props;
+  return (
+    <table className="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>State</th>
+          <th>Create</th>
+          <th>Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        {images.map((x, i) => {
           return (
-            <tr key={i} onClick={() => onClick && onClick(x.id)}
-              style={{cursor: onClick ? 'pointer' : ""}}
+            <tr
+              key={i}
+              onClick={() => onClick && onClick(x.id)}
+              style={{ cursor: onClick ? "pointer" : "" }}
             >
               <td> {x.id} </td>
-              <td> { x.boxes?.length || 0 } </td>
-              <td> { x.points?.length || 0 } </td>
-              <td> <Tag value={x.state}/> </td>
-              <td> {x.createdAt} </td>
+              <td>
+                <Tag value={x.state} />
+              </td>
+              <td> <DateView  value={x.createdAt}/> </td>
+              <td> <DateView  value={x.updatedAt}/> </td>
             </tr>
-          )
-        })
-      }
-    </tbody>
-  </table>
-}
-export default ImageTable
-
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};
+export default ImageTable;

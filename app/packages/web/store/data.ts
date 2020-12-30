@@ -13,7 +13,6 @@ import { readAsBase64 } from "../utils";
 import { MemoryRouter } from "react-router";
 import { take, flow, sortBy, map } from "lodash/fp";
 import { parseISO } from "date-fns";
-import dayjs from "dayjs";
 
 type State = {
   images: Images;
@@ -77,11 +76,7 @@ export const DataStore = (args: {
   };
 
   const fetchImages = async (): Promise<void> => {
-    const rows = await api.image.filter({
-      hasPoint: state.isPoint,
-      hasBox: state.isBox,
-      state: state.tag,
-    });
+    const rows = await api.image.filter({});
     if (rows instanceof Error) {
       return;
     }

@@ -9,6 +9,7 @@ import {
   Service,
   Image,
 } from "@charpoints/core/image";
+import { parseISO } from "date-fns";
 
 export type ImageApi = Service;
 
@@ -17,6 +18,13 @@ export const ImageApi = (arg: {
   prefix: string;
 }): Service => {
   const { http, prefix } = arg;
+  const to = (res: any) => {
+    return {
+      ...res,
+      updatedAt: parseISO(res.updatedAt),
+      createdAt: parseISO(res.createdAt),
+    };
+  };
   const create = async (payload: CreatePayload): Promise<string | Error> => {
     try {
       const res = await http.post(`${prefix}/create`, payload);
@@ -29,7 +37,7 @@ export const ImageApi = (arg: {
   const filter = async (payload: FilterPayload) => {
     try {
       const res = await http.post(`${prefix}/filter`, payload);
-      return res.data;
+      return res.data.map(to);
     } catch (err) {
       return toError(err);
     }
@@ -54,7 +62,7 @@ export const ImageApi = (arg: {
   const find = async (payload: FindPayload) => {
     try {
       const res = await http.post(`${prefix}/find`, payload);
-      return res.data;
+      return to(res.data);
     } catch (err) {
       return toError(err);
     }

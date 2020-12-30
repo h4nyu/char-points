@@ -9,11 +9,12 @@ export const Store = (sql: Sql<any>): ImageStore => {
     return {
       id: r.id,
       data: (r.data && r.data.toString("base64")) || undefined,
-      hasPoint: r.has_point,
-      hasBox: r.has_box,
+      boxCount: r.box_count,
+      pointCount: r.point_count,
       weight: r.weight,
       state: r.state,
-      createdAt: r.created_at.toISOString(),
+      createdAt: r.created_at,
+      updatedAt: r.updated_at,
     };
   };
 
@@ -21,11 +22,12 @@ export const Store = (sql: Sql<any>): ImageStore => {
     return {
       id: r.id,
       data: (r.data && Buffer.from(r.data, "base64")) || null,
-      has_point: r.hasPoint,
-      has_box: r.hasBox,
+      point_count: r.pointCount,
+      box_count: r.boxCount,
       weight: r.weight,
       state: r.state,
       created_at: r.createdAt,
+      updated_at: r.updatedAt,
     };
   };
   const find = async (payload: {
@@ -48,33 +50,30 @@ export const Store = (sql: Sql<any>): ImageStore => {
   };
   const filter = async (payload: {
     ids?: string[];
-    hasPoint?: boolean;
-    hasBox?: boolean;
     state?: State;
   }): Promise<Image[] | Error> => {
     try {
-      const { ids, hasBox, hasPoint, state } = payload;
+      const { ids, state } = payload;
       let rows = [];
+      const columns = [
+        "id",
+        "created_at",
+        "point_count",
+        "box_count",
+        "state",
+        "weight",
+        "updated_at",
+      ];
       if (ids !== undefined && ids.length > 0) {
-        rows = await sql`SELECT id, created_at, has_point, has_box, state, weight FROM images WHERE id IN (${ids})`;
-      } else if (
-        hasBox !== undefined &&
-        hasPoint !== undefined &&
-        state !== undefined
-      ) {
-        rows = await sql`SELECT id, created_at, has_point, has_box, state, weight FROM images WHERE has_box = ${hasBox} AND has_point = ${hasPoint} AND state = ${state}`;
-      } else if (hasBox !== undefined && state !== undefined) {
-        rows = await sql`SELECT id, created_at, has_point, has_box, state, weight FROM images WHERE has_box = ${hasBox} AND state = ${state}`;
-      } else if (hasPoint !== undefined && state !== undefined) {
-        rows = await sql`SELECT id, created_at, has_point, has_box, state, weight FROM images WHERE has_point = ${hasPoint} AND state = ${state}`;
-      } else if (hasBox !== undefined) {
-        rows = await sql`SELECT id, created_at, has_point, has_box, state, weight FROM images WHERE has_box = ${hasBox}`;
-      } else if (hasPoint !== undefined) {
-        rows = await sql`SELECT id, created_at, has_point, has_box, state, weight FROM images WHERE has_point = ${hasPoint}`;
+        rows = await sql`SELECT ${sql(
+          columns
+        )} FROM images WHERE id IN (${ids})`;
       } else if (state !== undefined) {
-        rows = await sql`SELECT id, created_at, has_point, has_box, state, weight FROM images WHERE state = ${state}`;
+        rows = await sql`SELECT ${sql(
+          columns
+        )} FROM images WHERE state = ${state}`;
       } else {
-        rows = await sql`SELECT id, created_at, has_point, has_box, state, weight FROM images`;
+        rows = await sql`SELECT ${sql(columns)} FROM images`;
       }
       return rows.map(to);
     } catch (err) {
@@ -90,11 +89,12 @@ export const Store = (sql: Sql<any>): ImageStore => {
         ${sql(
           from(payload),
           "data",
-          "created_at",
           "state",
           "weight",
-          "has_point",
-          "has_box"
+          "point_count",
+          "box_count",
+          "created_at",
+          "updated_at"
         )}
       WHERE 
         id=${payload.id} 
@@ -114,8 +114,9 @@ export const Store = (sql: Sql<any>): ImageStore => {
         "created_at",
         "state",
         "weight",
-        "has_box",
-        "has_point"
+        "box_count",
+        "point_count",
+        "updated_at"
       )}`;
     } catch (err) {
       return err;

@@ -12,10 +12,11 @@ describe("image", () => {
     if (id instanceof Error) {
       throw id;
     }
-    const rows = await api.filter({});
-    if (rows instanceof Error) {
-      throw rows;
+    const saved = await api.find({ id });
+    if (saved instanceof Error) {
+      throw saved;
     }
-    expect(rows.find((x) => x.id === id)?.data).toEqual(data);
+    console.log(saved);
+    expect(saved?.data).toEqual(data);
   });
 });

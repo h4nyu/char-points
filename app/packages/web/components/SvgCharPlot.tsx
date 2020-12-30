@@ -4,8 +4,9 @@ import { Image, Points, Boxes, InputMode } from "../store";
 export const SvgCharPlot = (props: {
   data?: string;
   mode?: InputMode;
-  points?: Points;
-  boxes?: Boxes;
+  gtPoints?: Points;
+  gtBoxes?: Boxes;
+  predictedBoxes?: Boxes;
   size?: number;
   selectedId?: string;
   onAdd?: () => void;
@@ -19,8 +20,9 @@ export const SvgCharPlot = (props: {
     onAdd,
     onMove,
     selectedId,
-    points,
-    boxes,
+    gtPoints,
+    gtBoxes,
+    predictedBoxes,
     onSelect,
     onLeave,
   } = props;
@@ -92,7 +94,34 @@ export const SvgCharPlot = (props: {
           onAdd && onAdd();
         }}
       >
-        {points
+        {
+          predictedBoxes?.map((b, i) => (
+            <g
+              key={i}
+            >
+              <rect
+                x={b.x0 * width}
+                y={b.y0 * height}
+                width={(b.x1 - b.x0) * width || 2 / width}
+                height={(b.y1 - b.y0) * height || 2 / height}
+                fill="none"
+                stroke="blue"
+                strokeWidth={pointSize / 2}
+              />
+              <text 
+                x={b.x0 * width}
+                y={b.y0 * height + pointSize * 3}
+                fontSize={pointSize * 3} fill="blue">
+                {b.confidence}
+              </text>
+            </g>
+          ))
+          .toList()
+        }
+
+
+
+        {gtPoints
           ?.map((p, i) => (
             <circle
               key={i}
@@ -110,9 +139,19 @@ export const SvgCharPlot = (props: {
             />
           ))
           .toList()}
-        {boxes
+
+        {
+          gtBoxes
           ?.map((b, i) => (
             <g key={i}>
+              <text 
+                x={b.x0 * width}
+                y={b.y0 * height + pointSize * 3}
+                fontSize={pointSize * 3} 
+                fill={selectedId === i ? "green" : "red"}
+              >
+                {b.confidence}
+              </text>
               <rect
                 x={b.x0 * width}
                 y={b.y0 * height}
@@ -120,7 +159,7 @@ export const SvgCharPlot = (props: {
                 height={(b.y1 - b.y0) * height || 2 / height}
                 fill="none"
                 stroke={selectedId === i ? "green" : "red"}
-                strokeWidth={pointSize / 2}
+                strokeWidth={pointSize / 4}
                 onClick={(e) => {
                   e.stopPropagation();
                   onSelect && onSelect(i, InputMode.Box);
@@ -172,7 +211,8 @@ export const SvgCharPlot = (props: {
               />
             </g>
           ))
-          .toList()}
+          .toList()
+        }
       </svg>
     </div>
   );
