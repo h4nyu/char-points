@@ -94,11 +94,9 @@ export const SvgCharPlot = (props: {
           onAdd && onAdd();
         }}
       >
-        {
-          predictedBoxes?.map((b, i) => (
-            <g
-              key={i}
-            >
+        {predictedBoxes
+          ?.map((b, i) => (
+            <g key={i}>
               <rect
                 x={b.x0 * width}
                 y={b.y0 * height}
@@ -108,18 +106,17 @@ export const SvgCharPlot = (props: {
                 stroke="blue"
                 strokeWidth={pointSize / 2}
               />
-              <text 
+              <text
                 x={b.x0 * width}
                 y={b.y0 * height + pointSize * 3}
-                fontSize={pointSize * 3} fill="blue">
+                fontSize={pointSize * 3}
+                fill="blue"
+              >
                 {b.confidence}
               </text>
             </g>
           ))
-          .toList()
-        }
-
-
+          .toList()}
 
         {gtPoints
           ?.map((p, i) => (
@@ -140,14 +137,13 @@ export const SvgCharPlot = (props: {
           ))
           .toList()}
 
-        {
-          gtBoxes
+        {gtBoxes
           ?.map((b, i) => (
             <g key={i}>
-              <text 
+              <text
                 x={b.x0 * width}
                 y={b.y0 * height + pointSize * 3}
-                fontSize={pointSize * 3} 
+                fontSize={pointSize * 3}
                 fill={selectedId === i ? "green" : "red"}
               >
                 {b.confidence}
@@ -211,8 +207,7 @@ export const SvgCharPlot = (props: {
               />
             </g>
           ))
-          .toList()
-        }
+          .toList()}
       </svg>
     </div>
   );

@@ -1,6 +1,11 @@
 import { AxiosInstance } from "axios";
 import { toError } from ".";
-import { FilterPayload,AnnotatePayload, PredictPayload,Service } from "@charpoints/core/point";
+import {
+  FilterPayload,
+  AnnotatePayload,
+  PredictPayload,
+  Service,
+} from "@charpoints/core/point";
 
 export type Api = Service;
 

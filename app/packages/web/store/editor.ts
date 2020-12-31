@@ -85,20 +85,27 @@ export const Editor = (root: {
       const image = await api.image.find({ id });
       if (image instanceof Error) {
         toast.show(image.message, Level.Error);
-        return
+        return;
       }
-      const boxes = await api.box.filter({imageId:id})
+      const boxes = await api.box.filter({ imageId: id });
       if (boxes instanceof Error) {
         toast.show(boxes.message, Level.Error);
-        return
+        return;
       }
-      state.gtBoxes = Map(boxes.filter((x) => x.isGrandTruth === true).map((x) => [uuid(), x]));
-      state.predictedBoxes = Map(boxes.filter((x) => x.isGrandTruth === false).map((x) => [uuid(), x]));
+      state.gtBoxes = Map(
+        boxes.filter((x) => x.isGrandTruth === true).map((x) => [uuid(), x])
+      );
+      state.predictedBoxes = Map(
+        boxes.filter((x) => x.isGrandTruth === false).map((x) => [uuid(), x])
+      );
 
-      const gtPoints = await api.point.filter({imageId:id, isGrandTruth:true})
+      const gtPoints = await api.point.filter({
+        imageId: id,
+        isGrandTruth: true,
+      });
       if (gtPoints instanceof Error) {
         toast.show(gtPoints.message, Level.Error);
-        return
+        return;
       }
       state.gtPoints = Map(gtPoints.map((x) => [uuid(), x]));
       state.id = image.id;
@@ -237,8 +244,8 @@ export const Editor = (root: {
     }
     state.gtBoxes = Map(
       keyBy(
-        zip(res.boxes, res.scores).map((z:any) => {
-          return { ...z[0], imageId: state.id, confidence:z[1]?.toFixed(2) }
+        zip(res.boxes, res.scores).map((z: any) => {
+          return { ...z[0], imageId: state.id, confidence: z[1]?.toFixed(2) };
         }),
         (_) => uuid()
       )
@@ -248,16 +255,28 @@ export const Editor = (root: {
 
   const save = async (imageState: ImageState) => {
     await loading.auto(async () => {
-      let boxErr = await api.box.annotate({boxes: state.gtBoxes.toList().toJS(), imageId: state.id});
-      if (boxErr instanceof Error) {  return error.notify(boxErr); }
-      let pointErr = await api.point.annotate({points: state.gtPoints.toList().toJS(), imageId: state.id});
-      if (pointErr instanceof Error) {  return error.notify(pointErr); }
-      let imageErr = await api.image.update({
+      const boxErr = await api.box.annotate({
+        boxes: state.gtBoxes.toList().toJS(),
+        imageId: state.id,
+      });
+      if (boxErr instanceof Error) {
+        return error.notify(boxErr);
+      }
+      const pointErr = await api.point.annotate({
+        points: state.gtPoints.toList().toJS(),
+        imageId: state.id,
+      });
+      if (pointErr instanceof Error) {
+        return error.notify(pointErr);
+      }
+      const imageErr = await api.image.update({
         id: state.id,
         data: state.imageData,
         state: imageState,
       });
-      if (imageErr instanceof Error) {  return error.notify(imageErr); }
+      if (imageErr instanceof Error) {
+        return error.notify(imageErr);
+      }
       onSave && onSave(state.id);
       toast.show("Success", Level.Success);
     });

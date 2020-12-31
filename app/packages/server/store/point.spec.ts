@@ -10,7 +10,12 @@ afterAll(async () => {
 
 describe("point", () => {
   const store = rootStore.point;
-  const row = { ...Point(), imageId: "aaa", isGrandTruth: false, confidence: 0.1 };
+  const row = {
+    ...Point(),
+    imageId: "aaa",
+    isGrandTruth: false,
+    confidence: 0.1,
+  };
 
   beforeAll(async () => {
     await store.clear();
@@ -34,7 +39,10 @@ describe("point", () => {
     expect(rows).toMatchObject([row]);
   });
   test("delete", async () => {
-    const err = await store.delete({ imageId: row.imageId, isGrandTruth:row.isGrandTruth });
+    const err = await store.delete({
+      imageId: row.imageId,
+      isGrandTruth: row.isGrandTruth,
+    });
     if (err instanceof Error) {
       throw err;
     }

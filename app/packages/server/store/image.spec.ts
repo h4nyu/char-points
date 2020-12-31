@@ -32,8 +32,9 @@ describe("image", () => {
     row.data = Buffer.from("aaaaa").toString("base64");
     row.state = State.Done;
     row.weight = 1000.0;
-    row.boxCount = 100
-    row.pointCount = 200
+    row.boxCount = 100;
+    row.pointCount = 200;
+    row.loss = 12312
     const err = await store.update(row);
     if (err instanceof Error) {
       throw err;

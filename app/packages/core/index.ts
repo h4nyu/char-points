@@ -17,16 +17,28 @@ export type ImageStore = {
 };
 
 export type PointStore = {
-  filter: (payload: { imageId?: string, isGrandTruth?:boolean }) => Promise<Point[] | Error>;
+  filter: (payload: {
+    imageId?: string;
+    isGrandTruth?: boolean;
+  }) => Promise<Point[] | Error>;
   load: (payload: Point[]) => Promise<void | Error>;
-  delete: (payload: { imageId?: string, isGrandTruth?:boolean }) => Promise<void | Error>;
+  delete: (payload: {
+    imageId?: string;
+    isGrandTruth?: boolean;
+  }) => Promise<void | Error>;
   clear: () => Promise<void | Error>;
 };
 
 export type BoxStore = {
-  filter: (payload: { imageId?: string, isGrandTruth?:boolean }) => Promise<Box[] | Error>;
+  filter: (payload: {
+    imageId?: string;
+    isGrandTruth?: boolean;
+  }) => Promise<Box[] | Error>;
   load: (payload: Box[]) => Promise<void | Error>;
-  delete: (payload: { imageId?: string, isGrandTruth?:boolean }) => Promise<void | Error>;
+  delete: (payload: {
+    imageId?: string;
+    isGrandTruth?: boolean;
+  }) => Promise<void | Error>;
   clear: () => Promise<void | Error>;
 };
 

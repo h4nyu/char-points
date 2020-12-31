@@ -26,7 +26,10 @@ export const Store = (sql: Sql<any>): BoxStore => {
       label: b.label || null,
     };
   };
-  const filter = async (payload: { imageId?: string, isGrandTruth?:boolean }) => {
+  const filter = async (payload: {
+    imageId?: string;
+    isGrandTruth?: boolean;
+  }) => {
     try {
       const { imageId, isGrandTruth } = payload;
       let rows: Row[] = [];
@@ -65,12 +68,15 @@ export const Store = (sql: Sql<any>): BoxStore => {
     }
   };
 
-  const delete_ = async (payload: { imageId?: string, isGrandTruth?:boolean }) => {
+  const delete_ = async (payload: {
+    imageId?: string;
+    isGrandTruth?: boolean;
+  }) => {
     try {
       const { imageId, isGrandTruth } = payload;
       if (imageId !== undefined && isGrandTruth !== undefined) {
         await sql`DELETE FROM boxes WHERE image_id=${imageId} AND is_grand_truth=${isGrandTruth}`;
-      }else if (imageId !== undefined) {
+      } else if (imageId !== undefined) {
         await sql`DELETE FROM boxes WHERE image_id=${imageId}`;
       }
     } catch (err) {

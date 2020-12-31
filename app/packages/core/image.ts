@@ -43,8 +43,12 @@ export type CreatePayload = {
 
 export type UpdatePayload = {
   id: string;
-  state: State;
+  state?: State;
   data?: string;
+  loss?: number;
+  gtBoxes?: Box[],
+  gtPoints?: Point[],
+  weight?: number;
 };
 export type DeletePayload = {
   id: string;
@@ -104,7 +108,9 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       const next = {
         ...row,
         data: data || row.data,
-        state: payload.state,
+        state: payload.state || row.state,
+        weight: payload.weight || row.weight,
+        loss: payload.loss || row.loss,
         updateAt: new Date(),
       };
       const err = await store.image.update(next);
@@ -130,9 +136,13 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
         return err;
       }
       err = await store.point.delete({ imageId: id });
-      if (err instanceof Error) { return err; }
+      if (err instanceof Error) {
+        return err;
+      }
       err = await store.box.delete({ imageId: id });
-      if (err instanceof Error) { return err; }
+      if (err instanceof Error) {
+        return err;
+      }
       return id;
     });
   };

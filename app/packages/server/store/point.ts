@@ -24,7 +24,10 @@ export const Store = (sql: Sql<any>): PointStore => {
       confidence: p.confidence || null,
     };
   };
-  const filter = async (payload: { imageId?: string, isGrandTruth?:boolean }) => {
+  const filter = async (payload: {
+    imageId?: string;
+    isGrandTruth?: boolean;
+  }) => {
     try {
       const { imageId, isGrandTruth } = payload;
       let rows: Row[] = [];
@@ -47,19 +50,30 @@ export const Store = (sql: Sql<any>): PointStore => {
         return;
       }
       const rows = payload.map(from);
-      await sql` INSERT INTO points ${sql(rows, "x", "y", "image_id", "label", "is_grand_truth", "confidence")}
+      await sql` INSERT INTO points ${sql(
+        rows,
+        "x",
+        "y",
+        "image_id",
+        "label",
+        "is_grand_truth",
+        "confidence"
+      )}
       `;
     } catch (err) {
       return err;
     }
   };
 
-  const delete_ = async (payload: { imageId?: string, isGrandTruth?:boolean }) => {
+  const delete_ = async (payload: {
+    imageId?: string;
+    isGrandTruth?: boolean;
+  }) => {
     try {
       const { imageId, isGrandTruth } = payload;
       if (imageId !== undefined && isGrandTruth !== undefined) {
         await sql`DELETE FROM points WHERE image_id=${imageId} AND is_grand_truth=${isGrandTruth}`;
-      }else if (imageId !== undefined) {
+      } else if (imageId !== undefined) {
         await sql`DELETE FROM points WHERE image_id=${imageId}`;
       }
     } catch (err) {

@@ -9,10 +9,7 @@ import {
 
 export type BoxApi = Service;
 
-export const BoxApi = (
-  http: AxiosInstance,
-  prefix: string
-): Service => {
+export const BoxApi = (http: AxiosInstance, prefix: string): Service => {
   const filter = async (payload: FilterPayload) => {
     try {
       const res = await http.post(`${prefix}/filter`, payload);
@@ -30,7 +27,7 @@ export const BoxApi = (
     }
   };
 
-  const predict = async (payload: AnnotatePayload) => {
+  const predict = async (payload: PredictPayload) => {
     try {
       const res = await http.post(`${prefix}/predict`, payload);
       return res.data;
@@ -39,11 +36,9 @@ export const BoxApi = (
     }
   };
 
-
   return {
     filter,
     annotate,
     predict,
   };
 };
-

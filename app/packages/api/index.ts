@@ -1,6 +1,6 @@
 import { ImageApi } from "./image";
 import { Box } from "@charpoints/core/box";
-import { BoxApi } from "@charpoints/api/box"
+import { BoxApi } from "@charpoints/api/box";
 import { Api as PointApi } from "./point";
 
 import axios from "axios";

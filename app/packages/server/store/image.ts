@@ -13,6 +13,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
       pointCount: r.point_count,
       weight: r.weight,
       state: r.state,
+      loss: r.loss || undefined,
       createdAt: r.created_at,
       updatedAt: r.updated_at,
     };
@@ -25,6 +26,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
       point_count: r.pointCount,
       box_count: r.boxCount,
       weight: r.weight,
+      loss: r.loss || null,
       state: r.state,
       created_at: r.createdAt,
       updated_at: r.updatedAt,
@@ -61,6 +63,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
         "point_count",
         "box_count",
         "state",
+        "loss",
         "weight",
         "updated_at",
       ];
@@ -93,6 +96,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
           "weight",
           "point_count",
           "box_count",
+          "loss",
           "created_at",
           "updated_at"
         )}
@@ -114,6 +118,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
         "created_at",
         "state",
         "weight",
+        "loss",
         "box_count",
         "point_count",
         "updated_at"

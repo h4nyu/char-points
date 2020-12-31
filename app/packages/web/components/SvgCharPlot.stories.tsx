@@ -12,14 +12,20 @@ export default {
   component: Component,
 };
 const gtBoxes = Map(
-  [{ ...Box(), x0: 0.1, y0: 0.1, x1: 0.2, y1: 0.2, confidence:0.1 }].map((x, i) => [`${i}`, x])
+  [
+    { ...Box(), x0: 0.1, y0: 0.1, x1: 0.2, y1: 0.2, confidence: 0.1 },
+  ].map((x, i) => [`${i}`, x])
 );
 
 const predictedBoxes = Map(
-  [{ ...Box(), x0: 0.2, y0: 0.2, x1: 0.3, y1: 0.3, confidence:0.9 }].map((x, i) => [`${i}`, x])
+  [
+    { ...Box(), x0: 0.2, y0: 0.2, x1: 0.3, y1: 0.3, confidence: 0.9 },
+  ].map((x, i) => [`${i}`, x])
 );
 
-const gtPoints = Map([{ ...Point(), x: 0.3, y: 0.2 }].map((x, i) => [`${i}`, x]));
+const gtPoints = Map(
+  [{ ...Point(), x: 0.3, y: 0.2 }].map((x, i) => [`${i}`, x])
+);
 
 export const Primary = (args) => (
   <Component {...args} data={imageData} gtPoints={gtPoints} />

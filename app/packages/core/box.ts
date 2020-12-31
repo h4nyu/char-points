@@ -1,10 +1,12 @@
 import { Lock, ErrorKind, Store } from "@charpoints/core";
 
-export type Box = {
+type PascalBox = {
   x0: number;
   y0: number;
   x1: number;
   y1: number;
+}
+export type Box = PascalBox & {
   imageId: string;
   label?: string;
   confidence?: number;
@@ -12,19 +14,20 @@ export type Box = {
 };
 
 export type AnnotatePayload = {
-  boxes: Box[],
-  imageId: string,
-}
+  boxes: Box[];
+  imageId: string;
+};
 
 export type PredictPayload = {
-  boxes: Box[],
-  imageId: string,
-}
+  boxes: PascalBox[];
+  imageId: string;
+  loss?: number;
+};
 
 export type FilterPayload = {
-  imageId?: string,
-  isGrandTruth?: boolean,
-}
+  imageId?: string;
+  isGrandTruth?: boolean;
+};
 
 export const Box = (): Box => {
   return {
@@ -34,41 +37,65 @@ export const Box = (): Box => {
     y1: 0.0,
     imageId: "",
   };
-}
+};
 export type Service = {
-  filter: (payload: FilterPayload) => Promise<Box[] | Error>
-  annotate: (payload:AnnotatePayload) => Promise<void | Error>
-  predict: (payload:PredictPayload) => Promise<void | Error>
-}
-
-
+  filter: (payload: FilterPayload) => Promise<Box[] | Error>;
+  annotate: (payload: AnnotatePayload) => Promise<void | Error>;
+  predict: (payload: PredictPayload) => Promise<void | Error>;
+};
 
 export const Service = (args: { store: Store; lock: Lock }): Service => {
   const { store, lock } = args;
-  const replace = async (payload:{imageId:string, boxes: Box[], isGrandTruth:boolean}) => {
-    const { imageId, boxes, isGrandTruth } = payload;
+  const replace = async (payload: {
+    imageId: string;
+    boxes: PascalBox[];
+    isGrandTruth: boolean;
+    loss?:number;
+  }) => {
+    const { imageId, boxes, isGrandTruth, loss } = payload;
     return await lock.auto(async () => {
-      const img = await store.image.find({ id:imageId });
-      if (img instanceof Error) { return img; }
-      if (img === undefined) { return new Error(ErrorKind.ImageNotFound); }
-      let err = await store.box.delete({imageId, isGrandTruth})
-      if(err instanceof Error){ return err }
-      err = await store.box.load(boxes.filter(x => x.imageId === imageId).map(x => ({...x, isGrandTruth})))
-      if(err instanceof Error){ return err }
+      const img = await store.image.find({ id: imageId });
+      if (img instanceof Error) {
+        return img;
+      }
+      if (img === undefined) {
+        return new Error(ErrorKind.ImageNotFound);
+      }
+      let err = await store.box.delete({ imageId, isGrandTruth });
+      if (err instanceof Error) {
+        return err;
+      }
+      err = await store.box.load(
+        boxes
+          .map((x) => ({ ...x, isGrandTruth, imageId }))
+      );
+      if (err instanceof Error) {
+        return err;
+      }
+      const nextImg = {
+        ...img,
+        boxCount: isGrandTruth ? boxes.length : img.boxCount,
+        loss: !isGrandTruth && loss || undefined,
+        updateAt: new Date(),
+      };
+      err = await store.image.update(nextImg);
+      if (err instanceof Error) {
+        return err;
+      }
     });
-  }
+  };
   const filter = async (payload: FilterPayload) => {
-    return await store.box.filter(payload)
-  }
+    return await store.box.filter(payload);
+  };
   const annotate = async (payload: AnnotatePayload) => {
-    return await replace({...payload, isGrandTruth:true})
-  }
+    return await replace({ ...payload, isGrandTruth: true });
+  };
   const predict = async (payload: PredictPayload) => {
-    return await replace({...payload, isGrandTruth:false})
-  }
-  return { 
+    return await replace({ ...payload, isGrandTruth: false });
+  };
+  return {
     filter,
     annotate,
-    predict
-  }
-}
+    predict,
+  };
+};
