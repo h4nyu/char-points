@@ -136,7 +136,7 @@ export const DataStore = (args: {
           error.notify(data);
           continue;
         }
-        const id = await api.image.create({ data });
+        const id = await api.image.create({ data, id:f.name });
         if (id instanceof Error) {
           error.notify(id);
           continue;

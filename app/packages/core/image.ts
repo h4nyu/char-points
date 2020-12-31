@@ -38,6 +38,7 @@ export type FilterPayload = {
 };
 
 export type CreatePayload = {
+  id?: string;
   data: string; //base64
 };
 
@@ -82,12 +83,17 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
 
   const create = async (payload: CreatePayload) => {
     return await lock.auto(async () => {
-      const { data } = payload;
-      const row = {
-        ...Image(),
-        data,
-      };
-      const err = await store.image.insert(row);
+      const { data, id } = payload;
+      const row = Image()
+      row.data = data
+      row.id = id || row.id
+      const prev = await store.image.find({id: row.id});
+      if(prev instanceof Error) {return prev}
+      if(prev !== undefined) {
+        return new Error(ErrorKind.ImageAlreadyExist)
+      }
+
+      let err = await store.image.insert(row);
       if (err instanceof Error) {
         return err;
       }
