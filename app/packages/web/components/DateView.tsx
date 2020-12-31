@@ -1,6 +1,7 @@
 import React from "react";
-import { formatISO } from "date-fns";
+import { formatDistance } from "date-fns";
 export const DateView = (props: { value: Date }) => {
-  return <>{formatISO(props.value)}</>;
+  const now = new Date();
+  return <>{formatDistance(now, props.value, {addSuffix: true})}</>;
 };
 export default DateView;

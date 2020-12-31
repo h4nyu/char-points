@@ -59,7 +59,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       const nextImg = {
         ...img,
         pointCount: isGrandTruth ? points.length : img.pointCount,
-        updateAt: new Date(),
+        updatedAt: isGrandTruth ? new Date() :img.updatedAt,
       };
       err = await store.image.update(nextImg);
       if (err instanceof Error) {

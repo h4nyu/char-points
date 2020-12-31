@@ -76,7 +76,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
         ...img,
         boxCount: isGrandTruth ? boxes.length : img.boxCount,
         loss: !isGrandTruth && loss || undefined,
-        updateAt: new Date(),
+        updatedAt: isGrandTruth ? new Date() :img.updatedAt,
       };
       err = await store.image.update(nextImg);
       if (err instanceof Error) {
