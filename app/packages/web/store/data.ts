@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, computed } from "mobx";
 import { Images, Points } from ".";
 import { Map, List } from "immutable";
 import { ErrorStore } from "./error";
@@ -69,7 +69,6 @@ export const DataStore = (args: {
     } else {
       state.images = state.images.set(index, row);
     }
-    state.images = state.images.sortBy((x) => -parseISO(x.createdAt));
   };
   const deleteImage = (id: string) => {
     state.images = state.images.filter((x) => x.id !== id);
@@ -80,7 +79,9 @@ export const DataStore = (args: {
     if (rows instanceof Error) {
       return;
     }
-    state.images = List(rows);
+    state.images = List(rows).filter( x => {
+      return x.state === state.tag && (state.isBox ? x.boxCount > 0: x.boxCount === 0) && (state.isPoint ? x.pointCount > 0 : x.pointCount === 0)
+    });
   };
   const updateFilter = (payload: {
     isBox?: boolean;
@@ -144,7 +145,6 @@ export const DataStore = (args: {
       }
     });
   };
-
   return {
     state,
     next,

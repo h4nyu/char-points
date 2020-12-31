@@ -18,7 +18,6 @@ const Content = observer(() => {
   const { updateFilter, fetchImages, next } = store.data;
   const { images, isPoint, isBox, tag, cursor } = store.data.state;
   const { init } = store.editor;
-  const rows = images;
   return (
     <div
       style={{
