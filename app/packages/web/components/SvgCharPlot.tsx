@@ -142,11 +142,11 @@ export const SvgCharPlot = (props: {
             <g key={i}>
               <text
                 x={b.x0 * width}
-                y={b.y0 * height + pointSize * 3}
-                fontSize={pointSize * 3}
+                y={b.y0 * height + pointSize * 4}
+                fontSize={pointSize * 4}
                 fill={selectedId === i ? "green" : "red"}
               >
-                {b.confidence}
+                {b.label}
               </text>
               <rect
                 x={b.x0 * width}

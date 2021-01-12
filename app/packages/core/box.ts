@@ -1,10 +1,12 @@
 import { Lock, ErrorKind, Store } from "@charpoints/core";
+import { zip } from "lodash";
 
 type PascalBox = {
   x0: number;
   y0: number;
   x1: number;
   y1: number;
+  label?: string;
 }
 export type Box = PascalBox & {
   imageId: string;
@@ -15,11 +17,14 @@ export type Box = PascalBox & {
 
 export type AnnotatePayload = {
   boxes: Box[];
+  labels?: string[];
   imageId: string;
+  label?:string;
 };
 
 export type PredictPayload = {
   boxes: PascalBox[];
+  labels?: string[];
   imageId: string;
   loss?: number;
 };
@@ -67,7 +72,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       }
       err = await store.box.load(
         boxes
-          .map((x) => ({ ...x, isGrandTruth, imageId }))
+          .map((x:any) => ({ ...x, isGrandTruth, imageId }))
       );
       if (err instanceof Error) {
         return err;

@@ -4,13 +4,16 @@ import { ErrorStore } from "./error";
 import { State as ImageState } from "@charpoints/core/image";
 import { Point, Points, Boxes, History, Level, InputMode, Box } from ".";
 import { ToastStore } from "./toast";
-import { Map } from "immutable";
+import { Map, Set } from "immutable";
 import { v4 as uuid } from "uuid";
 import { keyBy, zip } from "lodash";
 import { LoadingStore } from "./loading";
 
 export type State = {
   id: string;
+  labels: Set<string>;
+  label: string;
+  currentLabel?: string;
   gtPoints: Points;
   gtBoxes: Boxes;
   predictedBoxes: Boxes;
@@ -29,9 +32,12 @@ export const State = (): State => {
     id: "",
     gtPoints: Map(),
     gtBoxes: Map(),
+    labels: Set(),
+    label: "",
+    currentLabel: undefined,
     predictedBoxes: Map(),
     weight: 1.0,
-    mode: InputMode.Point,
+    mode: InputMode.Box,
     imageData: undefined,
     draggingId: undefined,
     size: 512,
@@ -52,6 +58,10 @@ export type Editor = {
   changeSize: (size: number) => void;
   detectBoxes: () => void;
   setWeight: (weight: number) => void;
+  addLabel: () => void;
+  setLabel: (value: string) => void;
+  toggleLabel: (value: string) => void;
+  delLabel: (value: string) => void;
   save: (imageState: ImageState) => Promise<void>;
   init: (id: string) => void;
   delete: () => Promise<void>;
@@ -92,6 +102,8 @@ export const Editor = (root: {
         toast.show(boxes.message, Level.Error);
         return;
       }
+      state.labels = Set(boxes.map(x => x.label || ""))
+      state.currentLabel = state.labels.first()
       state.gtBoxes = Map(
         boxes.filter((x) => x.isGrandTruth === true).map((x) => [uuid(), x])
       );
@@ -120,6 +132,31 @@ export const Editor = (root: {
 
   const setMode = (mode: InputMode) => {
     state.mode = mode;
+  };
+
+  const setLabel = (value: string) => {
+    state.label = value;
+  };
+
+  const toggleLabel = (value: string) => {
+    if(state.currentLabel === value){
+      state.currentLabel = undefined
+    }else{
+      state.currentLabel = value;
+    }
+  };
+
+  const addLabel = () => {
+    state.labels = state.labels.add(state.label);
+    state.currentLabel = state.label;
+    state.label = ""
+  };
+
+  const delLabel = (value: string) => {
+    state.labels = state.labels.delete(value);
+    if(state.currentLabel === value){
+      state.currentLabel = undefined;
+    }
   };
 
   const toggleDrag = (id: string, mode: InputMode) => {
@@ -216,6 +253,7 @@ export const Editor = (root: {
         y0: pos.y,
         x1: pos.x,
         y1: pos.y,
+        label: state.currentLabel,
       });
       setMode(InputMode.BR);
     }
@@ -305,6 +343,10 @@ export const Editor = (root: {
     changeSize,
     detectBoxes,
     setWeight,
+    addLabel,
+    toggleLabel,
+    setLabel,
+    delLabel,
     add,
     del,
     save,
