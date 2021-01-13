@@ -102,7 +102,7 @@ export const Editor = (root: {
         toast.show(boxes.message, Level.Error);
         return;
       }
-      state.labels = Set(boxes.map(x => x.label || ""))
+      state.labels = state.labels.merge(Set(boxes.map(x => x.label || "")))
       state.currentLabel = state.labels.first()
       state.gtBoxes = Map(
         boxes.filter((x) => x.isGrandTruth === true).map((x) => [uuid(), x])
