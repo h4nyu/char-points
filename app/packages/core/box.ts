@@ -17,14 +17,11 @@ export type Box = PascalBox & {
 
 export type AnnotatePayload = {
   boxes: Box[];
-  labels?: string[];
   imageId: string;
-  label?:string;
 };
 
 export type PredictPayload = {
   boxes: PascalBox[];
-  labels?: string[];
   imageId: string;
   loss?: number;
 };
