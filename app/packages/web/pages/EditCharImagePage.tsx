@@ -60,57 +60,43 @@ const Content = observer(() => {
         }}
         className="field p-1"
       >
-        <label className="label">Control</label>
-        <div className="control buttons">
-          <button
-            className="button is-light"
-            onClick={() => changeSize(size * 1.1)}
-          >
-            <i className="fas fa-plus" />
-          </button>
-          <button
-            className="button is-light"
-            onClick={() => changeSize(size * 0.9)}
-          >
-            <i className="fas fa-minus" />
-          </button>
-          <button className="button is-light" onClick={detectBoxes}>
-            文字検出
-          </button>
-          <button
-            className={"button is-light ".concat(
-              (mode === InputMode.Point && "is-warning") || ""
-            )}
-            onClick={() => setMode(InputMode.Point)}
-          >
-            Point
-          </button>
-          <button
-            className={"button is-light ".concat(
-              ([
-                InputMode.Box,
-                InputMode.TR,
-                InputMode.TR,
-                InputMode.BR,
-                InputMode.BL,
-              ].includes(mode) &&
-                "is-warning") ||
-                ""
-            )}
-            onClick={() => setMode(InputMode.Box)}
-          >
-            Box
-          </button>
-        </div>
+        <label className="label">{editor.state.id}</label>
       </div>
 
       <div 
-        className="field p-1" 
         style={{
-          gridRow: "1",
-          gridColumn: "2",
+          gridRow: "2",
+          gridColumn: "3",
         }}
       >
+        <div className="field">
+          <label className="label">Label</label>
+          <div className="control">
+            <input
+              className="input"
+              style={{ width: 100 }}
+              value={editor.state.label}
+            onChange={e => editor.setLabel(e.target.value)}
+            onKeyPress={e => e.key ==="Enter" && editor.addLabel()}
+            />
+          </div>
+          <div className="tags are-medium"
+            style={{display: "flex", flexDirection: "column"}}
+          >
+            {
+              labels.map(x => <span 
+                key={x}
+                className={"tag is-light " + (editor.state.currentLabel === x ? " is-info" : "")}
+                style={{ cursor: "pointer"}}
+                onClick={() => editor.toggleLabel(x)}
+              >
+                {x}
+                <button className="delete is-small" onClick={() => editor.delLabel(x)}/>
+              </span>)
+            }
+          </div>
+        </div>
+      <div className="field" >
         <label className="label">Weight</label>
         <div className="control">
           <input
@@ -122,38 +108,7 @@ const Content = observer(() => {
           />
         </div>
       </div>
-      <div 
-        className="field p-1" 
-        style={{
-          gridRow: "2",
-          gridColumn: "3",
-        }}
-      >
-        <label className="label">Label</label>
-        <div className="control">
-          <input
-            className="input"
-            style={{ width: 100 }}
-            value={editor.state.label}
-            onChange={e => editor.setLabel(e.target.value)}
-            onKeyPress={e => e.key ==="Enter" && editor.addLabel()}
-          />
-        </div>
-        <div className="tags are-medium"
-          style={{display: "flex", flexDirection: "column"}}
-        >
-          {
-            labels.map(x => <span 
-              key={x}
-              className={"tag is-light " + (editor.state.currentLabel === x ? " is-info" : "")}
-              style={{ cursor: "pointer"}}
-              onClick={() => editor.toggleLabel(x)}
-            >
-              {x}
-              <button className="delete is-small" onClick={() => editor.delLabel(x)}/>
-        </span>)
-          }
-      </div>
+
       </div>
 
       <div
@@ -232,6 +187,46 @@ const Content = observer(() => {
         >
           <i className="fas fa-arrow-right"></i>
         </button>
+
+        <button
+          className="button is-light"
+          onClick={() => changeSize(size * 1.1)}
+        >
+          <i className="fas fa-plus" />
+        </button>
+        <button
+          className="button is-light"
+          onClick={() => changeSize(size * 0.9)}
+        >
+          <i className="fas fa-minus" />
+        </button>
+        <button className="button is-light" onClick={detectBoxes}>
+          文字検出
+        </button>
+        <button
+          className={"button is-light ".concat(
+            (mode === InputMode.Point && "is-warning") || ""
+          )}
+          onClick={() => setMode(InputMode.Point)}
+        >
+          Point
+        </button>
+        <button
+          className={"button is-light ".concat(
+            ([
+              InputMode.Box,
+              InputMode.TR,
+              InputMode.TR,
+              InputMode.BR,
+              InputMode.BL,
+            ].includes(mode) &&
+              "is-warning") ||
+              ""
+          )}
+          onClick={() => setMode(InputMode.Box)}
+        >
+          Box
+        </button>
       </div>
       <div
         className="buttons"
@@ -247,7 +242,7 @@ const Content = observer(() => {
           Delete
         </button>
       </div>
-    </div>
+      </div>
   );
 });
 

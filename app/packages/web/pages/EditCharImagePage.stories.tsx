@@ -8,4 +8,5 @@ export default {
 };
 
 const { editor, data } = store;
+editor.state.id = "aaaaa"
 export const Primary = (args) => <Page />;

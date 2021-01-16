@@ -21,6 +21,7 @@ type State = {
   tag: ImageState;
   isBox: boolean;
   isPoint: boolean;
+  keyword: string;
 };
 
 export type DataStore = {
@@ -37,6 +38,7 @@ export type DataStore = {
   fetchImage: (id: string) => Promise<void>;
   uploadFiles: (files: File[]) => Promise<void>;
   deleteImage: (id: string) => void;
+  setKeyword:(value:string) => void;
   init: () => Promise<void>;
 };
 const State = () => {
@@ -47,6 +49,7 @@ const State = () => {
     tag: ImageState.Todo,
     isPoint: false,
     isBox: false,
+    keyword: "",
   };
 };
 export const DataStore = (args: {
@@ -145,6 +148,9 @@ export const DataStore = (args: {
       }
     });
   };
+  const setKeyword = (value:string) => {
+    state.keyword = value;
+  }
   return {
     state,
     next,
@@ -155,6 +161,7 @@ export const DataStore = (args: {
     fetchImage,
     deleteImage,
     uploadFiles,
+    setKeyword,
     init,
   };
 };

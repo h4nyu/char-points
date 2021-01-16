@@ -84,7 +84,12 @@ const Content = observer(() => {
           overflow: "scroll",
         }}
       >
-        <ImageTable images={images.toList().toJS()} onClick={init} />
+        <ImageTable 
+          images={images.toList().toJS()} 
+          onClick={init} 
+          keyword={store.data.state.keyword}
+          setKeyword={store.data.setKeyword}
+        />
       </div>
 
       <div
