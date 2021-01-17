@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
-import Tag from "../components/Tag";
 import { State as ImageState } from "@charpoints/core/image";
 import ImageTable from "@charpoints/web/components/ImageTable";
 import { observer } from "mobx-react-lite";

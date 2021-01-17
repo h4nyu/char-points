@@ -12,6 +12,7 @@ import { LoadingStore } from "./loading";
 export type State = {
   id: string;
   labels: Set<string>;
+  state: ImageState,
   label: string;
   currentLabel?: string;
   gtPoints: Points;
@@ -34,6 +35,7 @@ export const State = (): State => {
     gtBoxes: Map(),
     labels: Set(),
     label: "",
+    state: ImageState.Todo,
     currentLabel: undefined,
     predictedBoxes: Map(),
     weight: 1.0,
@@ -122,6 +124,7 @@ export const Editor = (root: {
       state.gtPoints = Map(gtPoints.map((x) => [uuid(), x]));
       state.id = image.id;
       state.imageData = image.data;
+      state.state = image.state;
       onInit && onInit(id);
     });
   };
@@ -315,6 +318,7 @@ export const Editor = (root: {
       if (imageErr instanceof Error) {
         return error.notify(imageErr);
       }
+      state.state = imageState;
       onSave && onSave(state.id);
       toast.show("Success", Level.Success);
     });

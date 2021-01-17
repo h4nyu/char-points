@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "../components/Header";
+import Tag from "../components/Tag";
 import { observer } from "mobx-react-lite";
 import { State as ImageState } from "@charpoints/core/image";
 
@@ -60,7 +61,10 @@ const Content = observer(() => {
         }}
         className="field p-1"
       >
-        <label className="label">{editor.state.id}</label>
+        <label className="label">
+          <Tag value={editor.state.state} />
+          <span>{editor.state.id}</span>
+        </label>
       </div>
 
       <div 
