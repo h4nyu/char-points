@@ -7,6 +7,7 @@ import TableHeader from "@charpoints/web/components/TableHeader";
 
 
 
+
 const columns = [
   "Id",
   "State",
@@ -15,6 +16,7 @@ const columns = [
   "Score",
   "Create",
   "Update",
+  "",
 ];
 
 const filterColumns = [
@@ -27,8 +29,9 @@ export const ImageTable = (props: {
   keyword: string;
   setKeyword: (value: string) => void;
   onClick?: (imageId: string) => void;
+  onDownload? : (imageId:string) => void;
 }) => {
-  const { images, onClick, keyword, setKeyword } = props;
+  const { images, onClick, keyword, setKeyword, onDownload } = props;
   const [sort, setSort] = React.useState<[string, boolean]>(["Id", true]);
   const [sortColumn, asc] = sort;
   const lowerKeyowerd = keyword.toLowerCase();
@@ -42,6 +45,8 @@ export const ImageTable = (props: {
       Score: x.loss,
       Create:x.createdAt,
       Update:x.updatedAt,
+      onClick: () => onClick && onClick(x.id),
+      onDownload: () => onDownload && onDownload(x.id)
     }
   })
   .filter(x =>  filterColumns
@@ -75,16 +80,16 @@ export const ImageTable = (props: {
               return (
                 <tr
                   key={i}
-                  onClick={() => onClick && onClick(x.id)}
                   style={{ cursor: onClick ? "pointer" : "" }}
                 >
-                  <td> {x.id} </td>
+                  <td> <a onClick={x.onClick}> {x.id} </a> </td>
                   <td><Tag value={x.State} /></td>
                   <td> {x.boxCount} </td>
                   <td> {x.pointCount} </td>
                   <td> {x.loss?.toFixed(3)}</td>
                   <td> <DateView value={x.createdAt} /> </td>
                   <td> <DateView value={x.updatedAt} /> </td>
+                  <td> <a onClick={x.onDownload}>Download</a> </td>
                 </tr>
               );
             })}

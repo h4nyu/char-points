@@ -88,6 +88,7 @@ const Content = observer(() => {
           onClick={init} 
           keyword={store.data.state.keyword}
           setKeyword={store.data.setKeyword}
+          onDownload={store.data.download}
         />
       </div>
 

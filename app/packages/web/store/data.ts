@@ -9,7 +9,8 @@ import {
   Image,
   FilterPayload,
 } from "@charpoints/core/image";
-import { readAsBase64 } from "../utils";
+import { saveAs } from 'file-saver';
+import { readAsBase64, b64toBlob } from "../utils";
 import { MemoryRouter } from "react-router";
 import { take, flow, sortBy, map } from "lodash/fp";
 import { parseISO } from "date-fns";
@@ -38,6 +39,7 @@ export type DataStore = {
   fetchImage: (id: string) => Promise<void>;
   uploadFiles: (files: File[]) => Promise<void>;
   deleteImage: (id: string) => void;
+  download: (id: string) => Promise<void>;
   setKeyword:(value:string) => void;
   init: () => Promise<void>;
 };
@@ -151,6 +153,22 @@ export const DataStore = (args: {
   const setKeyword = (value:string) => {
     state.keyword = value;
   }
+  const download = async (id: string) => {
+    const img = await api.image.find({ id });
+    if (img instanceof Error) {
+      error.notify(img)
+      return
+    }
+    if (img.data === undefined) {
+      return;
+    }
+    const blob = b64toBlob(img.data);
+    if (blob instanceof Error) {
+      error.notify(blob)
+      return;
+    }
+    saveAs(blob, id);
+  }
   return {
     state,
     next,
@@ -162,6 +180,7 @@ export const DataStore = (args: {
     deleteImage,
     uploadFiles,
     setKeyword,
+    download,
     init,
   };
 };
