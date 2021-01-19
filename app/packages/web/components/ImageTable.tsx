@@ -26,15 +26,12 @@ const filterColumns = [
 
 export const ImageTable = (props: {
   images: Image[];
-  keyword: string;
-  setKeyword: (value: string) => void;
   onClick?: (imageId: string) => void;
   onDownload? : (imageId:string) => void;
 }) => {
-  const { images, onClick, keyword, setKeyword, onDownload } = props;
+  const { images, onClick, onDownload } = props;
   const [sort, setSort] = React.useState<[string, boolean]>(["Id", true]);
   const [sortColumn, asc] = sort;
-  const lowerKeyowerd = keyword.toLowerCase();
   let rows = List(images).map(x => {
     return {
       ...x,
@@ -48,25 +45,13 @@ export const ImageTable = (props: {
       onClick: () => onClick && onClick(x.id),
       onDownload: () => onDownload && onDownload(x.id)
     }
-  })
-  .filter(x =>  filterColumns
-      .map((c) => x[c])
-      .join(" ")
-      .toLowerCase()
-      .includes(lowerKeyowerd)
-   )
-   .sortBy((x) => x[sortColumn]);
-   if (asc) {
-     rows = rows.reverse();
-   }
+  }).sortBy((x) => x[sortColumn]);
+  if (asc) {
+    rows = rows.reverse();
+  }
 
   return (
     <div style={{width:"100%"}}>
-      <input
-        className="input"
-        type="text"
-        onChange={(e) => setKeyword(e.target.value)}
-      />
       <table className="table is-fullwidth">
         <TableHeader
           columns={columns}
@@ -80,7 +65,6 @@ export const ImageTable = (props: {
               return (
                 <tr
                   key={i}
-                  style={{ cursor: onClick ? "pointer" : "" }}
                 >
                   <td> <a onClick={x.onClick}> {x.id} </a> </td>
                   <td><Tag value={x.State} /></td>

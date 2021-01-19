@@ -80,12 +80,15 @@ export const DataStore = (args: {
   };
 
   const fetchImages = async (): Promise<void> => {
-    const rows = await api.image.filter({});
+    const rows = await api.image.filter({
+      state: state.tag
+    });
     if (rows instanceof Error) {
       return;
     }
+    const lowerKeyword = state.keyword.toLowerCase();
     state.images = List(rows).filter( x => {
-      return x.state === state.tag && (state.isBox ? x.boxCount > 0: x.boxCount === 0) && (state.isPoint ? x.pointCount > 0 : x.pointCount === 0)
+      return (state.isBox ? x.boxCount > 0: x.boxCount === 0) && (state.isPoint ? x.pointCount > 0 : x.pointCount === 0) && `${x.id}`.toLowerCase().includes(lowerKeyword)
     });
   };
   const updateFilter = (payload: {

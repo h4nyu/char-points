@@ -21,47 +21,54 @@ const Content = observer(() => {
     <div
       style={{
         display: "grid",
-        gridTemplateRows: "50px 1fr 110px",
+        gridTemplateRows: "auto 1fr 110px",
         gridTemplateColumns: "1fr auto",
         width: "100%",
         height: "100%",
       }}
     >
       <div
-        className="buttons"
         style={{
           gridRow: "1",
           gridColumn: "1",
+          display:"flex",
+          flexDirection: "row"
         }}
       >
-        <button
-          className={"button is-light".concat(
-            (tag === ImageState.Todo && " is-info") || ""
-          )}
-          onClick={() => updateFilter({ tag: ImageState.Todo })}
-        >
-          Todo
-        </button>
-        <button
-          className={"button is-light".concat(
-            (tag === ImageState.Done && " is-info") || ""
-          )}
-          onClick={() => updateFilter({ tag: ImageState.Done })}
-        >
-          Done
-        </button>
-        <button
-          className={"button is-light".concat((isPoint && " is-warning") || "")}
-          onClick={() => updateFilter({ isPoint: !isPoint })}
-        >
-          Point
-        </button>
-        <button
-          className={"button is-light".concat((isBox && " is-warning") || "")}
-          onClick={() => updateFilter({ isBox: !isBox })}
-        >
-          Box
-        </button>
+        <input
+          className="input"
+          type="text"
+          value={store.data.state.keyword}
+          onChange={e => store.data.setKeyword(e.target.value)}
+        />
+          <button
+            className={"button is-light".concat(
+              (tag === ImageState.Todo && " is-info") || ""
+            )}
+            onClick={() => updateFilter({ tag: ImageState.Todo })}
+          >
+            Todo
+          </button>
+          <button
+            className={"button is-light".concat(
+              (tag === ImageState.Done && " is-info") || ""
+            )}
+            onClick={() => updateFilter({ tag: ImageState.Done })}
+          >
+            Done
+          </button>
+          <button
+            className={"button is-light".concat((isPoint && " is-warning") || "")}
+            onClick={() => updateFilter({ isPoint: !isPoint })}
+          >
+            Point
+          </button>
+          <button
+            className={"button is-light".concat((isBox && " is-warning") || "")}
+            onClick={() => updateFilter({ isBox: !isBox })}
+          >
+            Box
+          </button>
       </div>
       <div
         style={{
@@ -69,7 +76,7 @@ const Content = observer(() => {
           gridColumn: "2",
         }}
       >
-        <button className={"button is-light"} onClick={() => fetchImages()}>
+        <button className={"button is-light is-danger"} onClick={() => fetchImages()}>
           Search
         </button>
       </div>
@@ -86,8 +93,6 @@ const Content = observer(() => {
         <ImageTable 
           images={images.toList().toJS()} 
           onClick={init} 
-          keyword={store.data.state.keyword}
-          setKeyword={store.data.setKeyword}
           onDownload={store.data.download}
         />
       </div>
