@@ -230,7 +230,7 @@ const Content = observer(() => {
           Box
         </button>
         <button className="button is-light is-danger" onClick={editor.copyAsGT}>
-          Prediction -> GT
+          GT
         </button>
       </div>
 
