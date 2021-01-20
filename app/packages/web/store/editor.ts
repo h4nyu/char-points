@@ -13,6 +13,7 @@ export type State = {
   id: string;
   labels: Set<string>;
   state: ImageState,
+  loss?:number;
   label: string;
   currentLabel?: string;
   gtPoints: Points;
@@ -65,6 +66,7 @@ export type Editor = {
   toggleLabel: (value: string) => void;
   delLabel: (value: string) => void;
   save: (imageState: ImageState) => Promise<void>;
+  copyAsGT: () => void
   init: (id: string) => void;
   delete: () => Promise<void>;
   clear: () => void;
@@ -125,6 +127,7 @@ export const Editor = (root: {
       state.id = image.id;
       state.imageData = image.data;
       state.state = image.state;
+      state.loss = image.loss;
       onInit && onInit(id);
     });
   };
@@ -135,6 +138,10 @@ export const Editor = (root: {
 
   const setMode = (mode: InputMode) => {
     state.mode = mode;
+  };
+
+  const copyAsGT = () => {
+    state.gtBoxes = state.predictedBoxes
   };
 
   const setLabel = (value: string) => {
@@ -356,6 +363,7 @@ export const Editor = (root: {
     save,
     init,
     clear,
+    copyAsGT,
     delete: delete_,
   };
 };

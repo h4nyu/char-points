@@ -63,6 +63,7 @@ const Content = observer(() => {
       >
         <label className="label">
           <Tag value={editor.state.state} />
+          {editor.state.loss && <span className="tag is-light">{editor.state.loss}</span>}
           <span>{editor.state.id}</span>
         </label>
       </div>
@@ -80,8 +81,8 @@ const Content = observer(() => {
               className="input"
               style={{ width: 100 }}
               value={editor.state.label}
-            onChange={e => editor.setLabel(e.target.value)}
-            onKeyPress={e => e.key ==="Enter" && editor.addLabel()}
+              onChange={e => editor.setLabel(e.target.value)}
+              onKeyPress={e => e.key ==="Enter" && editor.addLabel()}
             />
           </div>
           <div className="tags are-medium"
@@ -100,18 +101,18 @@ const Content = observer(() => {
             }
           </div>
         </div>
-      <div className="field" >
-        <label className="label">Weight</label>
-        <div className="control">
-          <input
-            className="input"
-            type="number"
-            style={{ width: 50 }}
-            value={weight}
-            onChange={(e) => editor.setWeight(parseFloat(e.target.value))}
-          />
+        <div className="field" >
+          <label className="label">Weight</label>
+          <div className="control">
+            <input
+              className="input"
+              type="number"
+              style={{ width: 50 }}
+              value={weight}
+              onChange={(e) => editor.setWeight(parseFloat(e.target.value))}
+            />
+          </div>
         </div>
-      </div>
 
       </div>
 
@@ -204,9 +205,6 @@ const Content = observer(() => {
         >
           <i className="fas fa-minus" />
         </button>
-        <button className="button is-light" onClick={detectBoxes}>
-          文字検出
-        </button>
         <button
           className={"button is-light ".concat(
             (mode === InputMode.Point && "is-warning") || ""
@@ -231,7 +229,11 @@ const Content = observer(() => {
         >
           Box
         </button>
+        <button className="button is-light is-danger" onClick={editor.copyAsGT}>
+          Prediction -> GT
+        </button>
       </div>
+
       <div
         className="buttons"
         style={{
@@ -246,7 +248,7 @@ const Content = observer(() => {
           Delete
         </button>
       </div>
-      </div>
+    </div>
   );
 });
 
