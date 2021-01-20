@@ -20,16 +20,14 @@ type State = {
   cursor: number;
   limit: number;
   tag: ImageState;
-  isBox: boolean;
-  isPoint: boolean;
   keyword: string;
+  sortColumn: string;
+  asc:boolean
 };
 
 export type DataStore = {
   state: State;
   updateFilter: (payload: {
-    isBox?: boolean;
-    isPoint?: boolean;
     tag?: ImageState;
   }) => void;
   next: () => undefined | string;
@@ -41,6 +39,7 @@ export type DataStore = {
   deleteImage: (id: string) => void;
   download: (id: string) => Promise<void>;
   setKeyword:(value:string) => void;
+  setSort: (column: string, asc:boolean ) => void
   init: () => Promise<void>;
 };
 const State = () => {
@@ -49,14 +48,14 @@ const State = () => {
     images: List(),
     limit: 100,
     tag: ImageState.Todo,
-    isPoint: false,
-    isBox: false,
     keyword: "",
+    sortColumn: "Id",
+    asc: false,
   };
 };
 export const DataStore = (args: {
   api: RootApi;
-  loading: LoadingStore;
+  loading: <T>(fn: () => Promise<T>) => Promise<T>;
   error: ErrorStore;
 }): DataStore => {
   const { api, loading, error } = args;
@@ -80,35 +79,29 @@ export const DataStore = (args: {
   };
 
   const fetchImages = async (): Promise<void> => {
-    const rows = await api.image.filter({
-      state: state.tag
-    });
-    if (rows instanceof Error) {
-      return;
-    }
-    const lowerKeyword = state.keyword.toLowerCase();
-    state.images = List(rows).filter( x => {
-      return (state.isBox ? x.boxCount > 0: x.boxCount === 0) && (state.isPoint ? x.pointCount > 0 : x.pointCount === 0) && `${x.id}`.toLowerCase().includes(lowerKeyword)
-    });
+    await loading(async () => {
+      const rows = await api.image.filter({
+        state: state.tag
+      });
+      if (rows instanceof Error) {
+        return;
+      }
+      const lowerKeyword = state.keyword.toLowerCase();
+      state.images = List(rows).filter( x => {
+        return `${x.id}`.toLowerCase().includes(lowerKeyword)
+      });
+    })
   };
   const updateFilter = (payload: {
-    isBox?: boolean;
-    isPoint?: boolean;
     tag?: ImageState;
   }) => {
-    const { isBox, isPoint, tag } = payload;
-    if (isBox !== undefined) {
-      state.isBox = isBox;
-    }
-    if (isPoint !== undefined) {
-      state.isPoint = isPoint;
-    }
+    const { tag } = payload;
     if (tag !== undefined) {
       state.tag = tag;
     }
   };
   const init = async () => {
-    await loading.auto(async () => {
+    await loading(async () => {
       await fetchImages();
     });
   };
@@ -133,7 +126,7 @@ export const DataStore = (args: {
 
   const uploadFiles = async (files: File[]) => {
     const ids: string[] = [];
-    await loading.auto(async () => {
+    await loading(async () => {
       for (const f of files) {
         if (!f.type.includes("image")) {
           error.notify(Error("UnsupportedFormat"));
@@ -156,6 +149,29 @@ export const DataStore = (args: {
   const setKeyword = (value:string) => {
     state.keyword = value;
   }
+  const setSort = (column:string, asc:boolean) => {
+    state.sortColumn = column;
+    state.asc = asc;
+    state.images = state.images.sortBy(x => {
+      if(column === "Id"){
+        return x.id
+      }else if(column === "Score"){
+        return x.loss || 0.0
+      }else if(column === "Box"){
+        return x.boxCount
+      }else if(column === "Point"){
+        return x.pointCount
+      }else if(column === "Create"){
+        return x.createdAt
+      }else if(column === "Update"){
+        return x.updatedAt
+      }
+    })
+    if(asc) {
+      state.images = state.images.reverse()
+    }
+  }
+
   const download = async (id: string) => {
     const img = await api.image.find({ id });
     if (img instanceof Error) {
@@ -184,6 +200,7 @@ export const DataStore = (args: {
     uploadFiles,
     setKeyword,
     download,
+    setSort,
     init,
   };
 };

@@ -73,7 +73,7 @@ export const Editor = (root: {
   history: History;
   api: RootApi;
   detectionApi: DetectionApi;
-  loading: LoadingStore;
+  loading: <T>(fn: () => Promise<T>) => Promise<T>;
   toast: ToastStore;
   error: ErrorStore;
   onSave?: (id: string) => void;
@@ -93,7 +93,7 @@ export const Editor = (root: {
     onDelete,
   } = root;
   const init = async (id: string) => {
-    await loading.auto(async () => {
+    await loading(async () => {
       const image = await api.image.find({ id });
       if (image instanceof Error) {
         toast.show(image.message, Level.Error);
@@ -295,7 +295,7 @@ export const Editor = (root: {
   };
 
   const save = async (imageState: ImageState) => {
-    await loading.auto(async () => {
+    await loading(async () => {
       const boxErr = await api.box.annotate({
         boxes: state.gtBoxes.toList().toJS(),
         imageId: state.id,
@@ -325,7 +325,7 @@ export const Editor = (root: {
   };
 
   const delete_ = async () => {
-    await loading.auto(async () => {
+    await loading(async () => {
       const id = await api.image.delete({ id: state.id });
       if (id instanceof Error) {
         error.notify(id);

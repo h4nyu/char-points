@@ -2,7 +2,7 @@ import { observable } from "mobx";
 
 export type LoadingStore = {
   state: State;
-  auto: <T>(fn: () => Promise<T>) => Promise<T>;
+  loading: <T>(fn: () => Promise<T>) => Promise<T>;
 };
 type State = {
   isActive: boolean;
@@ -15,7 +15,7 @@ const State = (): State => {
 export const LoadingStore = (): LoadingStore => {
   const state = observable(State());
   let pendingNum = 0;
-  const auto = async <T>(fn: () => Promise<T>) => {
+  const loading = async <T>(fn: () => Promise<T>) => {
     try {
       pendingNum = pendingNum + 1;
       state.isActive = isActive();
@@ -28,6 +28,6 @@ export const LoadingStore = (): LoadingStore => {
   const isActive = () => pendingNum > 0;
   return {
     state,
-    auto,
+    loading,
   };
 };

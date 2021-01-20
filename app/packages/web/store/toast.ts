@@ -5,6 +5,10 @@ import { v4 as uuid } from "uuid";
 export type ToastStore = {
   state: State;
   show: (message: string, level?: Level) => void;
+  log: (message: string) => void;
+  info: (message: string) => void;
+  warn: (message: string) => void;
+  error: (message: string) => void;
 };
 
 type State = {
@@ -33,8 +37,24 @@ export const ToastStore = (): ToastStore => {
       level,
     };
   };
+  const info = (message: string) => {
+    show(message, Level.Info);
+  }
+  const error = (message: string) => {
+    show(message, Level.Error);
+  }
+  const warn = (message: string) => {
+    show(message, Level.Warning);
+  }
+  const log = (message: string) => {
+    show(message);
+  }
   return {
     state,
     show,
+    info,
+    error,
+    warn,
+    log,
   };
 };

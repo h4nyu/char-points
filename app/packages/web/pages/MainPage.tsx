@@ -15,7 +15,7 @@ import Upload from "../components/FileUpload";
 
 const Content = observer(() => {
   const { updateFilter, fetchImages, next } = store.data;
-  const { images, isPoint, isBox, tag, cursor } = store.data.state;
+  const { images, tag, cursor } = store.data.state;
   const { init } = store.editor;
   return (
     <div
@@ -57,18 +57,6 @@ const Content = observer(() => {
           >
             Done
           </button>
-          <button
-            className={"button is-light".concat((isPoint && " is-warning") || "")}
-            onClick={() => updateFilter({ isPoint: !isPoint })}
-          >
-            Point
-          </button>
-          <button
-            className={"button is-light".concat((isBox && " is-warning") || "")}
-            onClick={() => updateFilter({ isBox: !isBox })}
-          >
-            Box
-          </button>
       </div>
       <div
         style={{
@@ -91,7 +79,10 @@ const Content = observer(() => {
         }}
       >
         <ImageTable 
+          sortColumn={store.data.state.sortColumn}
+          asc={store.data.state.asc}
           images={images.toList().toJS()} 
+          setSort={store.data.setSort}
           onClick={init} 
           onDownload={store.data.download}
         />

@@ -58,12 +58,12 @@ export const RootStore = (): RootStore => {
   const error = ErrorStore({ toast });
   const history = createHashHistory();
 
-  const data = DataStore({ api, loading, error });
+  const data = DataStore({ api, loading:loading.loading, error });
   const editor = Editor({
     history,
     api,
     detectionApi,
-    loading,
+    loading:loading.loading,
     toast,
     error,
     onInit: (id) => {
@@ -85,7 +85,7 @@ export const RootStore = (): RootStore => {
       return;
     }
     detectionApi.setUrl(url);
-    toast.show("Success", Level.Success);
+    toast.info("Success");
   };
   return {
     api,

@@ -19,19 +19,15 @@ const columns = [
   "",
 ];
 
-const filterColumns = [
-  "Id",
-  "State",
-];
-
 export const ImageTable = (props: {
   images: Image[];
+  sortColumn: string;
+  asc:boolean;
   onClick?: (imageId: string) => void;
   onDownload? : (imageId:string) => void;
+  setSort:( column: string, asc:boolean ) => void
 }) => {
-  const { images, onClick, onDownload } = props;
-  const [sort, setSort] = React.useState<[string, boolean]>(["Id", true]);
-  const [sortColumn, asc] = sort;
+  const { images, onClick, onDownload, asc, sortColumn, setSort } = props;
   let rows = List(images).map(x => {
     return {
       ...x,
@@ -45,10 +41,7 @@ export const ImageTable = (props: {
       onClick: () => onClick && onClick(x.id),
       onDownload: () => onDownload && onDownload(x.id)
     }
-  }).sortBy((x) => x[sortColumn]);
-  if (asc) {
-    rows = rows.reverse();
-  }
+  })
 
   return (
     <div style={{width:"100%"}}>
@@ -56,8 +49,8 @@ export const ImageTable = (props: {
         <TableHeader
           columns={columns}
           sortColumns={columns}
-          onChange={setSort}
-          sort={sort}
+          onChange={e => setSort(...e)}
+          sort={[sortColumn, asc]}
         />
         <tbody>
           {rows
