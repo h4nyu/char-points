@@ -1,9 +1,8 @@
 {
   "name": "@charpoints/api",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "build": "tsc",
     "prebuild": "yarn clean",
@@ -17,6 +16,7 @@
     "typescript": "^4.0.3"
   },
   "dependencies": {
+    "@charpoints/core": "^0.1.0",
     "axios": "^0.21.0"
   }
 }
