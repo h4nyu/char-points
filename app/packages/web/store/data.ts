@@ -2,6 +2,7 @@ import { observable, computed } from "mobx";
 import { Images, Points } from ".";
 import { Map, List } from "immutable";
 import { ErrorStore } from "./error";
+import { v4 as uuid } from "uuid";
 import { RootApi } from "@charpoints/api";
 import { LoadingStore } from "./loading";
 import {
@@ -137,7 +138,7 @@ export const DataStore = (args: {
           error.notify(data);
           continue;
         }
-        const id = await api.image.create({ data, id:f.name });
+        const id = await api.image.create({ data, name:f.name });
         if (id instanceof Error) {
           error.notify(id);
           continue;

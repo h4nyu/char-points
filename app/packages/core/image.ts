@@ -11,6 +11,7 @@ export enum State {
 export type Image = {
   id: string; // Uuid
   data?: string; // base64 encoded string
+  name: string;
   weight: number;
   boxCount: number;
   pointCount: number;
@@ -24,6 +25,7 @@ export const Image = (): Image => {
   return {
     id: uuid(),
     state: State.Todo,
+    name: "",
     boxCount: 0,
     pointCount: 0,
     weight: 1.0,
@@ -39,11 +41,13 @@ export type FilterPayload = {
 
 export type CreatePayload = {
   id?: string;
+  name: string;
   data: string; //base64
 };
 
 export type UpdatePayload = {
   id: string;
+  name?: string;
   state?: State;
   data?: string;
   loss?: number;
@@ -83,16 +87,16 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
 
   const create = async (payload: CreatePayload) => {
     return await lock.auto(async () => {
-      const { data, id } = payload;
+      const { data, id, name } = payload;
       const row = Image()
       row.data = data
       row.id = id || row.id
+      row.name = name
       const prev = await store.image.find({id: row.id});
       if(prev instanceof Error) {return prev}
       if(prev !== undefined) {
         return new Error(ErrorKind.ImageAlreadyExist)
       }
-
       let err = await store.image.insert(row);
       if (err instanceof Error) {
         return err;
@@ -114,6 +118,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       const next = {
         ...row,
         data: data || row.data,
+        name: payload.name || row.name,
         state: payload.state || row.state,
         weight: payload.weight || row.weight,
         loss: payload.loss || row.loss,

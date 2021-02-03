@@ -9,6 +9,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
     return {
       id: r.id,
       data: (r.data && r.data.toString("base64")) || undefined,
+      name: r.name,
       boxCount: r.box_count,
       pointCount: r.point_count,
       weight: r.weight,
@@ -23,6 +24,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
     return {
       id: r.id,
       data: (r.data && Buffer.from(r.data, "base64")) || null,
+      name: r.name,
       point_count: r.pointCount,
       box_count: r.boxCount,
       weight: r.weight,
@@ -64,6 +66,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
         "box_count",
         "state",
         "loss",
+        "name",
         "weight",
         "updated_at",
       ];
@@ -96,6 +99,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
           "weight",
           "point_count",
           "box_count",
+          "name",
           "loss",
           "created_at",
           "updated_at"
@@ -119,6 +123,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
         "state",
         "weight",
         "loss",
+        "name",
         "box_count",
         "point_count",
         "updated_at"
