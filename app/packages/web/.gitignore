@@ -1,5 +1,6 @@
-dist
 **/*.js
+**/*.d.ts
+!jest.config.js
 !webpack.config.js
-!.storybook/*
-.build
+dist
+

@@ -1,14 +1,16 @@
 {
   "name": "@charpoints/web",
-  "version": "0.1.9",
+  "version": "0.1.1",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --progress --mode=production",
-    "watch": "webpack --watch",
-    "clean": "tsc --build --clean",
-    "start:dev": "webpack serve",
-    "storybook": "start-storybook -p $STORYBOOK_PORT"
+    "test": "jest",
+    "clean": "tsc --build --clean && rm -rf dist",
+    "build": "tsc && webpack --progress",
+    "prebuild": "yarn clean",
+    "prepack": "yarn clean && tsc",
+    "watch": "yarn clean && webpack --watch --mode development --progress",
+    "storybook": "yarn clean && start-storybook -p $STORYBOOK_PORT -c .storybook --ci"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
