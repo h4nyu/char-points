@@ -5,6 +5,7 @@ import { ImageRoutes } from "./image";
 import { Routes as PointRoutes } from "./point";
 import { Routes as BoxRoutes } from "./box";
 import fastifyStatic from "fastify-static";
+import fastifyCors from "fastify-static";
 
 export const App = (args: { store: Store; lock: Lock }) => {
   const { store, lock } = args;
@@ -16,6 +17,7 @@ export const App = (args: { store: Store; lock: Lock }) => {
   app.get(`${prefix}/detection-api`, {}, async (req, rep) => {
     rep.send(process.env.DETECTION_API);
   });
+  app.register(fastifyCors);
   app.register(fastifyStatic, {
     root: "/srv/packages/web/dist",
   });
