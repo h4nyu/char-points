@@ -90,7 +90,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       const { data, id, name } = payload;
       const row = Image()
       row.data = data
-      row.id = id || row.id
+      row.id = id || row.id || uuid()
       row.name = name
       const prev = await store.image.find({id: row.id});
       if(prev instanceof Error) {return prev}
