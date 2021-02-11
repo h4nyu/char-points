@@ -187,7 +187,7 @@ export const DataStore = (args: {
       error.notify(blob)
       return;
     }
-    saveAs(blob, id);
+    saveAs(blob, img.name || `${img.id}.jpg`);
   }
   return {
     state,
