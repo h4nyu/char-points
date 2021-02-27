@@ -1,5 +1,2 @@
 coverage
-**/*.ts
-**/*.tsx
-!**/*.d.ts
 dist
