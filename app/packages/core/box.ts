@@ -13,7 +13,30 @@ export type Box = PascalBox & {
   label?: string;
   confidence?: number;
   isGrandTruth?: boolean;
+  validate: () => void|Error;
 };
+export const Box = () => ({
+  x0: 0.0,
+  y0: 0.0,
+  x1: 0.0,
+  y1: 0.0,
+  imageId: "",
+  label: undefined,
+  confidence: undefined,
+  isGrandTruth: false,
+  validate: function() {
+    if(this.x0 >= this.x1 || this.y0 >= this.y1) {
+        return new Error(ErrorKind.BoxOutOfRange)
+    }
+    for (const v of [
+      this.x0, this.x1, this.y0, this.y1
+    ]){
+      if(v < 0.0 || v > 1.0){
+        return new Error(ErrorKind.ZeroSizeBox)
+      }
+    }
+  }
+})
 
 export type AnnotatePayload = {
   boxes: Box[];
@@ -31,15 +54,6 @@ export type FilterPayload = {
   isGrandTruth?: boolean;
 };
 
-export const Box = (): Box => {
-  return {
-    x0: 0.0,
-    y0: 0.0,
-    x1: 0.0,
-    y1: 0.0,
-    imageId: "",
-  };
-};
 export type Service = {
   filter: (payload: FilterPayload) => Promise<Box[] | Error>;
   annotate: (payload: AnnotatePayload) => Promise<void | Error>;
@@ -54,7 +68,17 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     isGrandTruth: boolean;
     loss?:number;
   }) => {
-    const { imageId, boxes, isGrandTruth, loss } = payload;
+    const { imageId, isGrandTruth, loss } = payload;
+    const boxes = payload.boxes.map( b => ({
+      ...Box(),
+      ...b,
+    }))
+    for(const b of boxes) {
+      const bErr = b.validate()
+      if(bErr instanceof Error){
+        return bErr
+      }
+    }
     return await lock.auto(async () => {
       const img = await store.image.find({ id: imageId });
       if (img instanceof Error) {
