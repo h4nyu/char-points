@@ -7,6 +7,12 @@ jobs:
       - SERVER_PORT: 8080
       - WEBPACK_PORT: 8081
     steps:
+       - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.28.4/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
       - checkout
       - run: docker-compose build
       - run: | 
