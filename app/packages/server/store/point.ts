@@ -5,6 +5,7 @@ import { PointStore } from "@charpoints/core";
 export const Store = (sql: Sql<any>): PointStore => {
   const to = (r: Row): Point => {
     return {
+      ...Point(),
       x: r.x,
       y: r.y,
       imageId: r.image_id,

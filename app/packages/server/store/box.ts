@@ -5,6 +5,7 @@ import { BoxStore } from "@charpoints/core";
 export const Store = (sql: Sql<any>): BoxStore => {
   const to = (r: Row): Box => {
     return {
+      ...Box(),
       x0: r.x0,
       y0: r.y0,
       x1: r.x1,
