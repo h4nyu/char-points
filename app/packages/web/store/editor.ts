@@ -12,8 +12,8 @@ import { LoadingStore } from "./loading";
 export type State = {
   id: string;
   labels: Set<string>;
-  state: ImageState,
-  loss?:number;
+  state: ImageState;
+  loss?: number;
   label: string;
   currentLabel?: string;
   gtPoints: Points;
@@ -66,7 +66,7 @@ export type Editor = {
   toggleLabel: (value: string) => void;
   delLabel: (value: string) => void;
   save: (imageState: ImageState) => Promise<void>;
-  copyAsGT: () => void
+  copyAsGT: () => void;
   init: (id: string) => void;
   delete: () => Promise<void>;
   clear: () => void;
@@ -106,8 +106,8 @@ export const Editor = (root: {
         toast.show(boxes.message, Level.Error);
         return;
       }
-      state.labels = state.labels.merge(Set(boxes.map(x => x.label || "")))
-      state.currentLabel = state.labels.first()
+      state.labels = state.labels.merge(Set(boxes.map((x) => x.label || "")));
+      state.currentLabel = state.labels.first();
       state.gtBoxes = Map(
         boxes.filter((x) => x.isGrandTruth === true).map((x) => [uuid(), x])
       );
@@ -141,7 +141,7 @@ export const Editor = (root: {
   };
 
   const copyAsGT = () => {
-    state.gtBoxes = state.predictedBoxes
+    state.gtBoxes = state.predictedBoxes;
   };
 
   const setLabel = (value: string) => {
@@ -149,9 +149,9 @@ export const Editor = (root: {
   };
 
   const toggleLabel = (value: string) => {
-    if(state.currentLabel === value){
-      state.currentLabel = undefined
-    }else{
+    if (state.currentLabel === value) {
+      state.currentLabel = undefined;
+    } else {
       state.currentLabel = value;
     }
   };
@@ -159,12 +159,12 @@ export const Editor = (root: {
   const addLabel = () => {
     state.labels = state.labels.add(state.label);
     state.currentLabel = state.label;
-    state.label = ""
+    state.label = "";
   };
 
   const delLabel = (value: string) => {
     state.labels = state.labels.delete(value);
-    if(state.currentLabel === value){
+    if (state.currentLabel === value) {
       state.currentLabel = undefined;
     }
   };

@@ -1,5 +1,5 @@
-import { Box } from "@charpoints/core/box"
-import { ErrorKind } from "@charpoints/core/error"
+import { Box } from "@charpoints/core/box";
+import { ErrorKind } from "@charpoints/core/error";
 
 describe("box/validate", () => {
   test("valid", () => {
@@ -8,38 +8,38 @@ describe("box/validate", () => {
       x0: 0.1,
       y0: 0.1,
       x1: 0.2,
-      y1: 0.2
+      y1: 0.2,
+    };
+    const err = box.validate();
+    if (err instanceof Error) {
+      throw err;
     }
-    let err = box.validate()
-    if(err instanceof Error){
-      throw err
-    }
-  })
+  });
 
   test("invalidRange", () => {
     const box = {
       ...Box(),
       x0: 10,
-      y1: 0.2
-    }
-    let err = box.validate()
-    expect(err instanceof Error).toBe(true)
+      x1: 12,
+      y1: 0.2,
+    };
+    const err = box.validate();
+    expect(err instanceof Error).toBe(true);
     if (err instanceof Error) {
-      expect(err.message).toBe(ErrorKind.BoxOutOfRange)
+      expect(err.message).toBe(ErrorKind.BoxOutOfRange);
     }
-  })
+  });
 
   test("invalidSize", () => {
     const box = {
       ...Box(),
       x0: 0.1,
-      x1: 0.1
-    }
-    let err = box.validate()
-    expect(err instanceof Error).toBe(true)
+      x1: 0.1,
+    };
+    const err = box.validate();
+    expect(err instanceof Error).toBe(true);
     if (err instanceof Error) {
-      expect(err.message).toBe(ErrorKind.BoxOutOfRange)
+      expect(err.message).toBe(ErrorKind.ZeroSizeBox);
     }
-  })
-})
-
+  });
+});

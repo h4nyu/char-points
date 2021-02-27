@@ -5,9 +5,6 @@ import { List } from "immutable";
 import DateView from "@charpoints/web/components/DateView";
 import TableHeader from "@charpoints/web/components/TableHeader";
 
-
-
-
 const columns = [
   "Id",
   "Name",
@@ -24,13 +21,13 @@ const columns = [
 export const ImageTable = (props: {
   images: Image[];
   sortColumn: string;
-  asc:boolean;
+  asc: boolean;
   onClick?: (imageId: string) => void;
-  onDownload? : (imageId:string) => void;
-  setSort:( column: string, asc:boolean ) => void
+  onDownload?: (imageId: string) => void;
+  setSort: (column: string, asc: boolean) => void;
 }) => {
   const { images, onClick, onDownload, asc, sortColumn, setSort } = props;
-  let rows = List(images).map(x => {
+  const rows = List(images).map((x) => {
     return {
       ...x,
       Id: x.id,
@@ -39,42 +36,57 @@ export const ImageTable = (props: {
       Point: x.pointCount,
       Box: x.boxCount,
       Score: x.loss,
-      Create:x.createdAt,
-      Update:x.updatedAt,
+      Create: x.createdAt,
+      Update: x.updatedAt,
       onClick: () => onClick && onClick(x.id),
-      onDownload: () => onDownload && onDownload(x.id)
-    }
-  })
+      onDownload: () => onDownload && onDownload(x.id),
+    };
+  });
 
   return (
-    <div style={{width:"100%"}}>
+    <div style={{ width: "100%" }}>
       <table className="table is-fullwidth">
         <TableHeader
           columns={columns}
           sortColumns={columns}
-          onChange={e => setSort(...e)}
+          onChange={(e) => setSort(...e)}
           sort={[sortColumn, asc]}
         />
         <tbody>
-          {rows
-            .map((x, i) => {
-              return (
-                <tr
-                  key={i}
-                >
-                  <td> {x.Id} </td>
-                  <td> {x.Name}</td>
-                  <td><Tag value={x.State} /></td>
-                  <td> {x.boxCount} </td>
-                  <td> {x.pointCount} </td>
-                  <td> {x.loss?.toFixed(3)}</td>
-                  <td> <DateView value={x.createdAt} /> </td>
-                  <td> <DateView value={x.updatedAt} /> </td>
-                  <td> <a onClick={x.onClick} className="button is-small">Edit</a> </td>
-                  <td> <a onClick={x.onDownload} className="button is-small">Download</a> </td>
-                </tr>
-              );
-            })}
+          {rows.map((x, i) => {
+            return (
+              <tr key={i}>
+                <td> {x.Id} </td>
+                <td> {x.Name}</td>
+                <td>
+                  <Tag value={x.State} />
+                </td>
+                <td> {x.boxCount} </td>
+                <td> {x.pointCount} </td>
+                <td> {x.loss?.toFixed(3)}</td>
+                <td>
+                  {" "}
+                  <DateView value={x.createdAt} />{" "}
+                </td>
+                <td>
+                  {" "}
+                  <DateView value={x.updatedAt} />{" "}
+                </td>
+                <td>
+                  {" "}
+                  <a onClick={x.onClick} className="button is-small">
+                    Edit
+                  </a>{" "}
+                </td>
+                <td>
+                  {" "}
+                  <a onClick={x.onDownload} className="button is-small">
+                    Download
+                  </a>{" "}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

@@ -7,16 +7,23 @@ export type Point = {
   label?: string;
   confidence?: number;
   isGrandTruth?: boolean;
+  validate: () => void | Error;
 };
 
-export const Point = (): Point => {
-  return {
-    x: 0,
-    y: 0,
-    imageId: "",
-    label: undefined,
-  };
-};
+export const Point = (): Point => ({
+  x: 0,
+  y: 0,
+  imageId: "",
+  label: undefined,
+  validate: function () {
+    for (const v of [this.x, this.x]) {
+      if (v < 0.0 || v > 1.0) {
+        return new Error(ErrorKind.PointOutOfRange);
+      }
+    }
+  },
+});
+
 export type FilterPayload = {
   imageId?: string;
   isGrandTruth?: boolean;
@@ -59,7 +66,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       const nextImg = {
         ...img,
         pointCount: isGrandTruth ? points.length : img.pointCount,
-        updatedAt: isGrandTruth ? new Date() :img.updatedAt,
+        updatedAt: isGrandTruth ? new Date() : img.updatedAt,
       };
       err = await store.image.update(nextImg);
       if (err instanceof Error) {

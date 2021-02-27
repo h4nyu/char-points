@@ -63,12 +63,14 @@ const Content = observer(() => {
       >
         <label className="label">
           <Tag value={editor.state.state} />
-          {editor.state.loss && <span className="tag is-light">{editor.state.loss}</span>}
+          {editor.state.loss && (
+            <span className="tag is-light">{editor.state.loss}</span>
+          )}
           <span>{editor.state.id}</span>
         </label>
       </div>
 
-      <div 
+      <div
         style={{
           gridRow: "2",
           gridColumn: "3",
@@ -81,27 +83,34 @@ const Content = observer(() => {
               className="input"
               style={{ width: 100 }}
               value={editor.state.label}
-              onChange={e => editor.setLabel(e.target.value)}
-              onKeyPress={e => e.key ==="Enter" && editor.addLabel()}
+              onChange={(e) => editor.setLabel(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && editor.addLabel()}
             />
           </div>
-          <div className="tags are-medium"
-            style={{display: "flex", flexDirection: "column"}}
+          <div
+            className="tags are-medium"
+            style={{ display: "flex", flexDirection: "column" }}
           >
-            {
-              labels.map(x => <span 
+            {labels.map((x) => (
+              <span
                 key={x}
-                className={"tag is-light " + (editor.state.currentLabel === x ? " is-info" : "")}
-                style={{ cursor: "pointer"}}
+                className={
+                  "tag is-light " +
+                  (editor.state.currentLabel === x ? " is-info" : "")
+                }
+                style={{ cursor: "pointer" }}
                 onClick={() => editor.toggleLabel(x)}
               >
                 {x}
-                <button className="delete is-small" onClick={() => editor.delLabel(x)}/>
-              </span>)
-            }
+                <button
+                  className="delete is-small"
+                  onClick={() => editor.delLabel(x)}
+                />
+              </span>
+            ))}
           </div>
         </div>
-        <div className="field" >
+        <div className="field">
           <label className="label">Weight</label>
           <div className="control">
             <input
@@ -113,7 +122,6 @@ const Content = observer(() => {
             />
           </div>
         </div>
-
       </div>
 
       <div

@@ -31,32 +31,32 @@ const Content = observer(() => {
         style={{
           gridRow: "1",
           gridColumn: "1",
-          display:"flex",
-          flexDirection: "row"
+          display: "flex",
+          flexDirection: "row",
         }}
       >
         <input
           className="input"
           type="text"
           value={store.data.state.keyword}
-          onChange={e => store.data.setKeyword(e.target.value)}
+          onChange={(e) => store.data.setKeyword(e.target.value)}
         />
-          <button
-            className={"button is-light".concat(
-              (tag === ImageState.Todo && " is-info") || ""
-            )}
-            onClick={() => updateFilter({ tag: ImageState.Todo })}
-          >
-            Todo
-          </button>
-          <button
-            className={"button is-light".concat(
-              (tag === ImageState.Done && " is-info") || ""
-            )}
-            onClick={() => updateFilter({ tag: ImageState.Done })}
-          >
-            Done
-          </button>
+        <button
+          className={"button is-light".concat(
+            (tag === ImageState.Todo && " is-info") || ""
+          )}
+          onClick={() => updateFilter({ tag: ImageState.Todo })}
+        >
+          Todo
+        </button>
+        <button
+          className={"button is-light".concat(
+            (tag === ImageState.Done && " is-info") || ""
+          )}
+          onClick={() => updateFilter({ tag: ImageState.Done })}
+        >
+          Done
+        </button>
       </div>
       <div
         style={{
@@ -64,7 +64,10 @@ const Content = observer(() => {
           gridColumn: "2",
         }}
       >
-        <button className={"button is-light is-danger"} onClick={() => fetchImages()}>
+        <button
+          className={"button is-light is-danger"}
+          onClick={() => fetchImages()}
+        >
           Search
         </button>
       </div>
@@ -78,12 +81,12 @@ const Content = observer(() => {
           overflow: "scroll",
         }}
       >
-        <ImageTable 
+        <ImageTable
           sortColumn={store.data.state.sortColumn}
           asc={store.data.state.asc}
-          images={images.toList().toJS()} 
+          images={images.toList().toJS()}
           setSort={store.data.setSort}
-          onClick={init} 
+          onClick={init}
           onDownload={store.data.download}
         />
       </div>

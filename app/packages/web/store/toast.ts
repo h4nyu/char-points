@@ -39,16 +39,16 @@ export const ToastStore = (): ToastStore => {
   };
   const info = (message: string) => {
     show(message, Level.Info);
-  }
+  };
   const error = (message: string) => {
     show(message, Level.Error);
-  }
+  };
   const warn = (message: string) => {
     show(message, Level.Warning);
-  }
+  };
   const log = (message: string) => {
     show(message);
-  }
+  };
   return {
     state,
     show,

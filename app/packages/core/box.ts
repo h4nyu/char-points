@@ -7,13 +7,13 @@ type PascalBox = {
   x1: number;
   y1: number;
   label?: string;
-}
+};
 export type Box = PascalBox & {
   imageId: string;
   label?: string;
   confidence?: number;
   isGrandTruth?: boolean;
-  validate: () => void|Error;
+  validate: () => void | Error;
 };
 export const Box = () => ({
   x0: 0.0,
@@ -24,19 +24,17 @@ export const Box = () => ({
   label: undefined,
   confidence: undefined,
   isGrandTruth: false,
-  validate: function() {
-    if(this.x0 >= this.x1 || this.y0 >= this.y1) {
-        return new Error(ErrorKind.BoxOutOfRange)
+  validate: function () {
+    if (this.x0 >= this.x1 || this.y0 >= this.y1) {
+      return new Error(ErrorKind.ZeroSizeBox);
     }
-    for (const v of [
-      this.x0, this.x1, this.y0, this.y1
-    ]){
-      if(v < 0.0 || v > 1.0){
-        return new Error(ErrorKind.ZeroSizeBox)
+    for (const v of [this.x0, this.x1, this.y0, this.y1]) {
+      if (v < 0.0 || v > 1.0) {
+        return new Error(ErrorKind.BoxOutOfRange);
       }
     }
-  }
-})
+  },
+});
 
 export type AnnotatePayload = {
   boxes: Box[];
@@ -66,17 +64,17 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     imageId: string;
     boxes: PascalBox[];
     isGrandTruth: boolean;
-    loss?:number;
+    loss?: number;
   }) => {
     const { imageId, isGrandTruth, loss } = payload;
-    const boxes = payload.boxes.map( b => ({
+    const boxes = payload.boxes.map((b) => ({
       ...Box(),
       ...b,
-    }))
-    for(const b of boxes) {
-      const bErr = b.validate()
-      if(bErr instanceof Error){
-        return bErr
+    }));
+    for (const b of boxes) {
+      const bErr = b.validate();
+      if (bErr instanceof Error) {
+        return bErr;
       }
     }
     return await lock.auto(async () => {
@@ -92,8 +90,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
         return err;
       }
       err = await store.box.load(
-        boxes
-          .map((x:any) => ({ ...x, isGrandTruth, imageId }))
+        boxes.map((x: any) => ({ ...x, isGrandTruth, imageId }))
       );
       if (err instanceof Error) {
         return err;
@@ -101,8 +98,8 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       const nextImg = {
         ...img,
         boxCount: isGrandTruth ? boxes.length : img.boxCount,
-        loss: !isGrandTruth && loss || undefined,
-        updatedAt: isGrandTruth ? new Date() :img.updatedAt,
+        loss: (!isGrandTruth && loss) || undefined,
+        updatedAt: isGrandTruth ? new Date() : img.updatedAt,
       };
       err = await store.image.update(nextImg);
       if (err instanceof Error) {

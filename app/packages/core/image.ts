@@ -51,8 +51,8 @@ export type UpdatePayload = {
   state?: State;
   data?: string;
   loss?: number;
-  gtBoxes?: Box[],
-  gtPoints?: Point[],
+  gtBoxes?: Box[];
+  gtPoints?: Point[];
   weight?: number;
 };
 export type DeletePayload = {
@@ -88,16 +88,18 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
   const create = async (payload: CreatePayload) => {
     return await lock.auto(async () => {
       const { data, id, name } = payload;
-      const row = Image()
-      row.data = data
-      row.id = id || row.id || uuid()
-      row.name = name
-      const prev = await store.image.find({id: row.id});
-      if(prev instanceof Error) {return prev}
-      if(prev !== undefined) {
-        return new Error(ErrorKind.ImageAlreadyExist)
+      const row = Image();
+      row.data = data;
+      row.id = id || row.id || uuid();
+      row.name = name;
+      const prev = await store.image.find({ id: row.id });
+      if (prev instanceof Error) {
+        return prev;
       }
-      let err = await store.image.insert(row);
+      if (prev !== undefined) {
+        return new Error(ErrorKind.ImageAlreadyExist);
+      }
+      const err = await store.image.insert(row);
       if (err instanceof Error) {
         return err;
       }
