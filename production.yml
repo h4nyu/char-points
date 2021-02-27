@@ -1,27 +1,28 @@
-version: '3.4'
+version: '3.9'
 
 volumes:
   db-data:
 
+x-app: &default-app
+  image: "charpoints-app"
+  environment:
+    - DATABASE_URL=postgres://app:app@db/app
+    - DETECTION_API  
+  restart: on-failure
+
+
 services:
   srv:
-    image: "charpoints-app"
+    <<: *default-app
     command: wait-for-it db:5432 -- yarn srv start
-    environment:
-      - DATABASE_URL=postgres://app:app@db/app
-      - DETECTION_API  
-    restart: on-failure
     ports:
       - "${SERVER_PORT}:80"
     depends_on:
       - migrate
 
   migrate:
-    image: "charpoints-app"
-    environment:
-      - DATABASE_URL=postgres://app:app@db/app
+    <<: *default-app
     command: wait-for-it db:5432 -- yarn db-migrate up
-    restart: on-failure
     depends_on:
       - db
   db:

@@ -1,54 +1,44 @@
-version: '3.1'
+version: '3.9'
+
+x-app: &default-app
+  image: "charpoints-app"
+  volumes:
+    - ./app:/srv
+  environment:
+    - DATABASE_URL=postgres://app:app@db/app
+    - NODE_ENV=development  
+    - DETECTION_API  
+    - STORYBOOK_PORT
+    - YARN_REGISTRY
 
 services:
   app:
+    <<: *default-app
     image: "charpoints-app"
     build:
       context: ./app
       args:
         - http_proxy
         - https_proxy
-    volumes:
-      - ./app:/srv
-    environment:
-      - DATABASE_URL=postgres://app:app@db/app
-      - NODE_ENV=development  
-      - DETECTION_API  
-      - STORYBOOK_PORT
-      - YARN_REGISTRY
     depends_on:
       - migrate
 
   srv:
-    image: "charpoints-app"
-    volumes:
-      - ./app:/srv
+    <<: *default-app
     command: wait-for-it db:5432 -- yarn srv start:dev
-    environment:
-      - DATABASE_URL=postgres://app:app@db/app
-      - DETECTION_API
-      - NODE_ENV=development
     depends_on:
       - migrate
     ports:
       - "${SERVER_PORT}:80"
 
   storybook:
-    image: "charpoints-app"
-    volumes:
-      - ./app:/srv
+    <<: *default-app
     command: yarn web storybook
-    environment:
-      - STORYBOOK_PORT
     ports:
       - "${STORYBOOK_PORT}:${STORYBOOK_PORT}"
 
   migrate:
-    image: "charpoints-app"
-    volumes:
-      - ./app:/srv
-    environment:
-      - DATABASE_URL=postgres://app:app@db/app
+    <<: *default-app
     command: wait-for-it db:5432 -- yarn db-migrate up
     depends_on:
       - db
