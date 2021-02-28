@@ -11,12 +11,12 @@ import {
 export type BoxApi = Service;
 
 export const BoxApi = (http: AxiosInstance, prefix: string): Service => {
-  const to = (res):Box => {
+  const to = (res): Box => {
     return {
       ...Box(),
       ...res,
-    }
-  }
+    };
+  };
   const filter = async (payload: FilterPayload) => {
     try {
       const res = await http.post(`${prefix}/filter`, payload);

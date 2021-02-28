@@ -14,9 +14,9 @@ export const Api = (http: AxiosInstance, prefix: string): Service => {
   const to = (res) => {
     return {
       ...Point(),
-      ...res
-    }
-  }
+      ...res,
+    };
+  };
   const filter = async (payload: FilterPayload) => {
     try {
       const res = await http.post(`${prefix}/filter`, payload);
