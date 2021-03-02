@@ -9,7 +9,7 @@ export type ImageStore = {
     hasBox?: boolean;
     hasPoint?: boolean;
   }) => Promise<Image[] | Error>;
-  find: (payload: { id?: string }) => Promise<Image | undefined | Error>;
+  find: (payload: { id?: string, hasData?: boolean }) => Promise<Image | undefined | Error>;
   update: (payload: Image) => Promise<void | Error>;
   insert: (payload: Image) => Promise<void | Error>;
   delete: (payload: { id?: string }) => Promise<void | Error>;

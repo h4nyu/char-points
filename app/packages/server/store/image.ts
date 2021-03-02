@@ -4,9 +4,35 @@ import { ImageStore } from "@charpoints/core";
 
 import { first } from "lodash";
 
+const COLUMNS = [
+  "id",
+  "data",
+  "created_at",
+  "state",
+  "weight",
+  "loss",
+  "name",
+  "box_count",
+  "point_count",
+  "updated_at"
+]
+
+const COLUMNS_NO_DATA = [
+  "id",
+  "created_at",
+  "state",
+  "weight",
+  "loss",
+  "name",
+  "box_count",
+  "point_count",
+  "updated_at"
+]
+
 export const Store = (sql: Sql<any>): ImageStore => {
   const to = (r: Row): Image => {
     return {
+      ...Image(),
       id: r.id,
       data: (r.data && r.data.toString("base64")) || undefined,
       name: r.name,
@@ -36,12 +62,16 @@ export const Store = (sql: Sql<any>): ImageStore => {
   };
   const find = async (payload: {
     id?: string;
+    hasData?: boolean;
   }): Promise<Image | undefined | Error> => {
     try {
-      const { id } = payload;
+      const { id, hasData } = payload;
       let rows = [];
-      if (id !== undefined) {
-        rows = await sql`SELECT * FROM images WHERE id=${id}`;
+      if (id !== undefined && hasData) {
+        rows = await sql`SELECT ${sql(COLUMNS)} FROM images WHERE id=${id}`;
+      }
+      else if (id !== undefined && !hasData) {
+        rows = await sql`SELECT ${sql(COLUMNS_NO_DATA)} FROM images WHERE id=${id}`;
       }
       const row = first(rows.map(to));
       if (row === undefined) {
@@ -59,27 +89,14 @@ export const Store = (sql: Sql<any>): ImageStore => {
     try {
       const { ids, state } = payload;
       let rows = [];
-      const columns = [
-        "id",
-        "created_at",
-        "point_count",
-        "box_count",
-        "state",
-        "loss",
-        "name",
-        "weight",
-        "updated_at",
-      ];
       if (ids !== undefined && ids.length > 0) {
         rows = await sql`SELECT ${sql(
-          columns
+          COLUMNS_NO_DATA
         )} FROM images WHERE id IN (${ids})`;
       } else if (state !== undefined) {
-        rows = await sql`SELECT ${sql(
-          columns
-        )} FROM images WHERE state = ${state}`;
+        rows = await sql`SELECT ${sql(COLUMNS_NO_DATA)} FROM images WHERE state = ${state}`;
       } else {
-        rows = await sql`SELECT ${sql(columns)} FROM images`;
+        rows = await sql`SELECT ${sql(COLUMNS_NO_DATA)} FROM images`;
       }
       return rows.map(to);
     } catch (err) {
@@ -94,15 +111,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
       SET 
         ${sql(
           from(payload),
-          "data",
-          "state",
-          "weight",
-          "point_count",
-          "box_count",
-          "name",
-          "loss",
-          "created_at",
-          "updated_at"
+          ...COLUMNS,
         )}
       WHERE 
         id=${payload.id} 
@@ -117,16 +126,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
       await sql`
       INSERT INTO images ${sql(
         from(payload),
-        "id",
-        "data",
-        "created_at",
-        "state",
-        "weight",
-        "loss",
-        "name",
-        "box_count",
-        "point_count",
-        "updated_at"
+        ...COLUMNS,
       )}`;
     } catch (err) {
       return err;

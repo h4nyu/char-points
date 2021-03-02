@@ -22,7 +22,7 @@ describe("image", () => {
     if (err instanceof Error) {
       throw err;
     }
-    const res = await store.find({ id: row.id });
+    const res = await store.find({ id: row.id, hasData: true });
     if (res instanceof Error) {
       throw res;
     }
@@ -39,7 +39,7 @@ describe("image", () => {
     if (err instanceof Error) {
       throw err;
     }
-    const res = await store.find({ id: row.id });
+    const res = await store.find({ id: row.id, hasData: true });
     if (res instanceof Error) {
       throw res;
     }

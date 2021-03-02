@@ -15,8 +15,18 @@ export type Box = PascalBox & {
   isGrandTruth?: boolean;
   validate: () => void | Error;
 };
-export function Box() {
-  return {
+export const Box = (args?:any) => {
+  const validate = () => {
+    if (self.x0 >= self.x1 || self.y0 >= self.y1) {
+      return new Error(ErrorKind.ZeroSizeBox);
+    }
+    for (const v of [self.x0, self.x1, self.y0, self.y1]) {
+      if (v < 0.0 || v > 1.0) {
+        return new Error(ErrorKind.BoxOutOfRange);
+      }
+    }
+  }
+  const self = {
     x0: 0.0,
     y0: 0.0,
     x1: 0.0,
@@ -25,17 +35,10 @@ export function Box() {
     label: undefined,
     confidence: undefined,
     isGrandTruth: false,
-    validate: function () {
-      if (this.x0 >= this.x1 || this.y0 >= this.y1) {
-        return new Error(ErrorKind.ZeroSizeBox);
-      }
-      for (const v of [this.x0, this.x1, this.y0, this.y1]) {
-        if (v < 0.0 || v > 1.0) {
-          return new Error(ErrorKind.BoxOutOfRange);
-        }
-      }
-    },
+    validate,
+    ...args
   };
+  return self;
 }
 
 export type AnnotatePayload = {

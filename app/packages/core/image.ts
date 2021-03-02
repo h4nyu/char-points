@@ -60,6 +60,7 @@ export type DeletePayload = {
 };
 export type FindPayload = {
   id: string;
+  hasData?: boolean;
 };
 export type Service = {
   create: (payload: CreatePayload) => Promise<string | Error>;

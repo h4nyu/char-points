@@ -10,19 +10,24 @@ export type Point = {
   validate: () => void | Error;
 };
 
-export const Point = (): Point => ({
-  x: 0,
-  y: 0,
-  imageId: "",
-  label: undefined,
-  validate: function () {
-    for (const v of [this.x, this.x]) {
+export const Point = (args?: any): Point => {
+  const validate = () => {
+    for (const v of [self.x, self.x]) {
       if (v < 0.0 || v > 1.0) {
         return new Error(ErrorKind.PointOutOfRange);
       }
     }
-  },
-});
+  }
+  const self = {
+    x: 0,
+    y: 0,
+    imageId: "",
+    label: undefined,
+    validate,
+    ...args
+  }
+  return self
+};
 
 export type FilterPayload = {
   imageId?: string;
