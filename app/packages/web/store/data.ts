@@ -170,7 +170,7 @@ export const DataStore = (args: {
   };
 
   const download = async (id: string) => {
-    const img = await api.image.find({ id });
+    const img = await api.image.find({ id, hasData:true });
     if (img instanceof Error) {
       error.notify(img);
       return;
