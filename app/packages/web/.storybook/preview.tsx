@@ -1,4 +1,4 @@
-import '../style.scss';
+import '../style';
 import { MemoryRouter as Router } from 'react-router-dom';
 
 

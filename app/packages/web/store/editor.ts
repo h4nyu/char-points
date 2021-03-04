@@ -96,7 +96,7 @@ export const Editor = (root: {
   } = root;
   const init = async (id: string) => {
     await loading(async () => {
-      const image = await api.image.find({ id });
+      const image = await api.image.find({ id, hasData:true });
       if (image instanceof Error) {
         toast.show(image.message, Level.Error);
         return;

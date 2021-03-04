@@ -1,6 +1,6 @@
 {
   "name": "@charpoints/web",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -24,9 +24,7 @@
     "css-loader": "^5.0.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.0.0-beta.1",
-    "node-sass": "^5.0.0",
     "raw-loader": "^4.0.2",
-    "sass-loader": "^11.0.1",
     "style-loader": "^2.0.0",
     "ts-loader": "^8.0.6",
     "typescript": "^4.0.3",
