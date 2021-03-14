@@ -1,7 +1,7 @@
 version: '3.9'
 
 x-app: &default-app
-  image: "charpoints-app"
+  image: "${DOCKER_REGISTRY}/charpoints/app"
   volumes:
     - ./app:/srv
   environment:
@@ -14,7 +14,6 @@ x-app: &default-app
 services:
   app:
     <<: *default-app
-    image: "charpoints-app"
     build:
       context: ./app
       args:

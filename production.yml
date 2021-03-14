@@ -4,7 +4,7 @@ volumes:
   db-data:
 
 x-app: &default-app
-  image: "charpoints-app"
+  image: "${DOCKER_REGISTRY}/charpoints/app"
   environment:
     - DATABASE_URL=postgres://app:app@db/app
     - DETECTION_API  
