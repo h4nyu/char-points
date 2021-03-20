@@ -10,7 +10,7 @@ export default function Progress(props: { isActive?: boolean }) {
           style={{
             margin: 0,
             borderRadius: 0,
-            height: 10,
+            height: 5,
             position: "fixed",
             top: 0,
             left: 0,

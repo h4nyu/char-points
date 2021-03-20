@@ -111,23 +111,21 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
   const update = async (payload: UpdatePayload) => {
     return await lock.auto(async () => {
       const { id, data } = payload;
-      const row = await store.image.find({ id });
+      const row = await store.image.find({ id, hasData:true });
       if (row instanceof Error) {
         return row;
       }
       if (row === undefined) {
         return new Error(ErrorKind.ImageNotFound);
       }
-      const next = {
-        ...row,
-        data: data || row.data,
-        name: payload.name || row.name,
-        state: payload.state || row.state,
-        weight: payload.weight || row.weight,
-        loss: payload.loss || row.loss,
-        updateAt: new Date(),
-      };
-      const err = await store.image.update(next);
+      row.data = data || row.data
+      row.name =  payload.name || row.name
+      row.state = payload.state || row.state
+      row.weight = payload.weight || row.weight
+      row.loss = payload.loss || row.loss
+      row.updatedAt = new Date()
+
+      const err = await store.image.update(row);
       if (err instanceof Error) {
         return err;
       }
