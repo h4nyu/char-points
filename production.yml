@@ -1,15 +1,10 @@
 version: '3.9'
 
-volumes:
-  db-data:
-
 x-app: &default-app
   image: "${DOCKER_REGISTRY}/charpoints/app"
   environment:
     - DATABASE_URL=postgres://app:app@db/app
     - DETECTION_API  
-  restart: on-failure
-
 
 services:
   srv:
@@ -17,18 +12,21 @@ services:
     command: wait-for-it db:5432 -- yarn srv start
     ports:
       - "${SERVER_PORT}:80"
+    restart: on-failure
     depends_on:
       - migrate
 
   migrate:
     <<: *default-app
     command: wait-for-it db:5432 -- yarn db-migrate up
+    restart: on-failure
     depends_on:
       - db
   db:
     image: "postgres:13"
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - ./db-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: app
       POSTGRES_USER: app
+    restart: on-failure
