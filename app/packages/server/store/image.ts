@@ -111,7 +111,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
       SET 
         ${sql(
           from(payload),
-          ...COLUMNS,
+          ...COLUMNS_NO_DATA,
         )}
       WHERE 
         id=${payload.id} 
