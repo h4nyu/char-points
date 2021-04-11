@@ -20,11 +20,6 @@ export const Box = (args?:any) => {
     if (self.x0 >= self.x1 || self.y0 >= self.y1) {
       return new Error(ErrorKind.ZeroSizeBox);
     }
-    for (const v of [self.x0, self.x1, self.y0, self.y1]) {
-      if (v < 0.0 || v > 1.0) {
-        return new Error(ErrorKind.BoxOutOfRange);
-      }
-    }
   }
   const self = {
     x0: 0.0,
@@ -72,10 +67,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
     loss?: number;
   }) => {
     const { imageId, isGrandTruth, loss } = payload;
-    const boxes = payload.boxes.map((b) => ({
-      ...Box(),
-      ...b,
-    }));
+    const boxes = payload.boxes.map((b) => Box(b));
     for (const b of boxes) {
       const bErr = b.validate();
       if (bErr instanceof Error) {
@@ -95,7 +87,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
         return err;
       }
       err = await store.box.load(
-        boxes.map((x: any) => ({ ...x, isGrandTruth, imageId }))
+        boxes.map((x: any) => Box({ ...x, isGrandTruth, imageId }))
       );
       if (err instanceof Error) {
         return err;
