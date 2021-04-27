@@ -1,6 +1,6 @@
-FROM arm32v7/node:15-slim
+FROM node:15-slim
 RUN apt-get update \
-    && apt-get install -y wait-for-it \
+    && apt-get install --no-install-recommends -y wait-for-it python3 make gcc g++ \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /srv
 COPY . .

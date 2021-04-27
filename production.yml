@@ -2,6 +2,9 @@ version: '3.9'
 
 x-app: &default-app
   image: "${DOCKER_REGISTRY}/charpoints/app"
+  platform: $PLATFORM
+  build:
+    context: ./app
   environment:
     - DATABASE_URL=postgres://app:app@db/app
     - DETECTION_API  
