@@ -26,6 +26,7 @@
     "fastify-static": "^4.0.1",
     "lodash": "^4.17.20",
     "postgres": "^2.0.0-beta.2",
+    "sharp": "^0.28.1",
     "uuid": "^8.3.1"
   }
 }
