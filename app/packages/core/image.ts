@@ -58,6 +58,7 @@ export type UpdatePayload = {
 export type DeletePayload = {
   id: string;
 };
+
 export type FindPayload = {
   id: string;
   hasData?: boolean;
@@ -70,7 +71,10 @@ export type Service = {
   filter: (payload: FilterPayload) => Promise<Image[] | Error>;
 };
 
-export const Service = (args: { store: Store; lock: Lock }): Service => {
+export const Service = (args: { 
+  store: Store, 
+  lock: Lock,
+}): Service => {
   const { store, lock } = args;
   const filter = async (payload: FilterPayload) => {
     return await store.image.filter(payload);
@@ -111,12 +115,9 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
   const update = async (payload: UpdatePayload) => {
     return await lock.auto(async () => {
       const { id, data } = payload;
-      const row = await store.image.find({ id, hasData:true });
+      const row = await find({ id, hasData:true });
       if (row instanceof Error) {
         return row;
-      }
-      if (row === undefined) {
-        return new Error(ErrorKind.ImageNotFound);
       }
       row.data = data || row.data
       row.name =  payload.name || row.name

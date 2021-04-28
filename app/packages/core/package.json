@@ -6,9 +6,9 @@
   "types": "index.ts",
   "scripts": {
     "clean": "tsc --build --clean",
-    "prebuild": "yarn clean",
     "build": "tsc",
-    "prepack": "yarn build",
+    "prepack": "yarn tsc --noEmit false",
+    "postpack": "yarn clean",
     "test": "yarn clean && jest"
   },
   "dependencies": {

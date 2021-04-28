@@ -13,6 +13,7 @@ export type ImageStore = {
   update: (payload: Image) => Promise<void | Error>;
   insert: (payload: Image) => Promise<void | Error>;
   delete: (payload: { id?: string }) => Promise<void | Error>;
+  replace: (payload: Image) => Promise<void | Error>;
   clear: () => Promise<void | Error>;
 };
 
