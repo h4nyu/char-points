@@ -1,13 +1,12 @@
 version: '3.9'
 
 x-app: &default-app
-  image: "${DOCKER_REGISTRY}/charpoints/app:dev"
+  image: "${DOCKER_REGISTRY}/charpoints/${PLATFORM}/app:dev"
   volumes:
     - ./app:/srv
-  platform: $PLATFORM
   build:
     context: ./app
-
+  platform: $PLATFORM
   environment:
     - DATABASE_URL=postgres://app:app@db/app
     - NODE_ENV=development  

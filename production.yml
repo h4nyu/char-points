@@ -1,7 +1,7 @@
 version: '3.9'
 
 x-app: &default-app
-  image: "${DOCKER_REGISTRY}/charpoints/app"
+  image: "${DOCKER_REGISTRY}/charpoints/${PLATFORM}/app:dev"
   platform: $PLATFORM
   build:
     context: ./app
