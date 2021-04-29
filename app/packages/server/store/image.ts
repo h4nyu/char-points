@@ -133,6 +133,21 @@ export const Store = (sql: Sql<any>): ImageStore => {
     }
   };
 
+  const replace = async (payload: Image): Promise<void | Error> => {
+    try {
+      await sql.begin(async sql => {
+        await sql`DELETE FROM images WHERE id=${payload.id}`;
+      })
+      await sql`
+      INSERT INTO images ${sql(
+        from(payload),
+        ...COLUMNS,
+      )}`;
+    } catch (err) {
+      return err;
+    }
+  };
+
   const delete_ = async (payload: { id?: string }): Promise<void | Error> => {
     try {
       const { id } = payload;
@@ -143,6 +158,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
       return err;
     }
   };
+
   const clear = async () => {
     try {
       await sql`TRUNCATE images`;
@@ -156,6 +172,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
     filter,
     update,
     delete: delete_,
+    replace,
     insert,
     clear,
   };
