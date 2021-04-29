@@ -4,8 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
+    "build": "tsc --noEmit false",
     "clean": "tsc --build --clean",
     "start": "node bin/start.js",
     "start:dev": "yarn clean && ts-node bin/start.ts",
