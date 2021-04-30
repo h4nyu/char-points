@@ -93,7 +93,7 @@ export const Editor = (root: {
   } = root;
   const init = async (id: string) => {
     await loading(async () => {
-      const image = await api.image.find({ id, hasData:true });
+      const image = await api.image.find({ id });
       if (image instanceof Error) {
         toast.show(image.message, Level.Error);
         return;
@@ -123,8 +123,6 @@ export const Editor = (root: {
       state.gtPoints = Map(gtPoints.map((x) => [uuid(), x]));
       state.id = image.id;
       state.imageData = image.data;
-      state.state = image.state;
-      state.loss = image.loss;
       onInit && onInit(id);
     });
   };
@@ -297,7 +295,6 @@ export const Editor = (root: {
       const imageErr = await api.image.update({
         id: state.id,
         data: state.imageData,
-        state: imageState,
       });
       if (imageErr instanceof Error) {
         return error.notify(imageErr);

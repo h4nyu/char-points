@@ -10,33 +10,23 @@ export enum State {
 
 export type Image = {
   id: string; // Uuid
-  data?: string; // base64 encoded string
+  data: string; // base64 encoded string
   name: string;
-  weight: number;
-  boxCount: number;
-  pointCount: number;
-  state: State;
-  loss?: number;
   createdAt: Date;
-  updatedAt: Date;
 };
 
-export const Image = (): Image => {
+export const Image = (args?: object): Image => {
   return {
     id: uuid(),
-    state: State.Todo,
+    data: "",
     name: "",
-    boxCount: 0,
-    pointCount: 0,
-    weight: 1.0,
     createdAt: new Date(),
-    updatedAt: new Date(),
+    ...args,
   };
 };
 
 export type FilterPayload = {
   ids?: string[];
-  state?: State;
 };
 
 export type CreatePayload = {
@@ -48,12 +38,7 @@ export type CreatePayload = {
 export type UpdatePayload = {
   id: string;
   name?: string;
-  state?: State;
   data?: string;
-  loss?: number;
-  gtBoxes?: Box[];
-  gtPoints?: Point[];
-  weight?: number;
 };
 export type DeletePayload = {
   id: string;
@@ -61,7 +46,6 @@ export type DeletePayload = {
 
 export type FindPayload = {
   id: string;
-  hasData?: boolean;
 };
 export type Service = {
   create: (payload: CreatePayload) => Promise<string | Error>;
@@ -97,11 +81,11 @@ export const Service = (args: {
       row.data = data;
       row.id = id || row.id || uuid();
       row.name = name;
-      const prev = await store.image.find({ id: row.id });
+      const prev = await store.image.has({ id: row.id });
       if (prev instanceof Error) {
         return prev;
       }
-      if (prev !== undefined) {
+      if (prev) {
         return new Error(ErrorKind.ImageAlreadyExist);
       }
       const err = await store.image.insert(row);
@@ -115,17 +99,12 @@ export const Service = (args: {
   const update = async (payload: UpdatePayload) => {
     return await lock.auto(async () => {
       const { id, data } = payload;
-      const row = await find({ id, hasData:true });
+      const row = await find({ id });
       if (row instanceof Error) {
         return row;
       }
       row.data = data || row.data
       row.name =  payload.name || row.name
-      row.state = payload.state || row.state
-      row.weight = payload.weight || row.weight
-      row.loss = payload.loss || row.loss
-      row.updatedAt = new Date()
-
       const err = await store.image.update(row);
       if (err instanceof Error) {
         return err;

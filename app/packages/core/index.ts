@@ -12,6 +12,7 @@ export type ImageStore = {
   }) => Promise<Image[] | Error>;
   find: (payload: { id?: string, hasData?: boolean }) => Promise<Image | undefined | Error>;
   update: (payload: Image) => Promise<void | Error>;
+  has: (payload:{id?:string}) => Promise<boolean | Error>;
   insert: (payload: Image) => Promise<void | Error>;
   delete: (payload: { id?: string }) => Promise<void | Error>;
   replace: (payload: Image) => Promise<void | Error>;
@@ -21,12 +22,10 @@ export type ImageStore = {
 export type PointStore = {
   filter: (payload: {
     imageId?: string;
-    isGrandTruth?: boolean;
   }) => Promise<Point[] | Error>;
   load: (payload: Point[]) => Promise<void | Error>;
   delete: (payload: {
     imageId?: string;
-    isGrandTruth?: boolean;
   }) => Promise<void | Error>;
   clear: () => Promise<void | Error>;
 };
@@ -34,12 +33,10 @@ export type PointStore = {
 export type BoxStore = {
   filter: (payload: {
     imageId?: string;
-    isGrandTruth?: boolean;
   }) => Promise<Box[] | Error>;
   load: (payload: Box[]) => Promise<void | Error>;
   delete: (payload: {
     imageId?: string;
-    isGrandTruth?: boolean;
   }) => Promise<void | Error>;
   clear: () => Promise<void | Error>;
 };

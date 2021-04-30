@@ -2,8 +2,7 @@ import { AxiosInstance } from "axios";
 import { toError } from ".";
 import {
   FilterPayload,
-  AnnotatePayload,
-  PredictPayload,
+  ReplacePayload,
   Service,
   Box,
 } from "@charpoints/core/box";
@@ -12,10 +11,7 @@ export type BoxApi = Service;
 
 export const BoxApi = (http: AxiosInstance, prefix: string): Service => {
   const to = (res): Box => {
-    return {
-      ...Box(),
-      ...res,
-    };
+    return Box(res)
   };
   const filter = async (payload: FilterPayload) => {
     try {
@@ -25,18 +21,9 @@ export const BoxApi = (http: AxiosInstance, prefix: string): Service => {
       return toError(err);
     }
   };
-  const annotate = async (payload: AnnotatePayload) => {
+  const replace = async (payload: ReplacePayload) => {
     try {
-      const res = await http.post(`${prefix}/annotate`, payload);
-      return res.data;
-    } catch (err) {
-      return toError(err);
-    }
-  };
-
-  const predict = async (payload: PredictPayload) => {
-    try {
-      const res = await http.post(`${prefix}/predict`, payload);
+      const res = await http.post(`${prefix}/replace`, payload);
       return res.data;
     } catch (err) {
       return toError(err);
@@ -45,7 +32,6 @@ export const BoxApi = (http: AxiosInstance, prefix: string): Service => {
 
   return {
     filter,
-    annotate,
-    predict,
+    replace,
   };
 };

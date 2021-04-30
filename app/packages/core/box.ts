@@ -11,15 +11,22 @@ type PascalBox = {
 export type Box = PascalBox & {
   imageId: string;
   label?: string;
-  confidence?: number;
-  isGrandTruth?: boolean;
   validate: () => void | Error;
+  equals: (other:PascalBox) => boolean
 };
 export const Box = (args?:any) => {
   const validate = () => {
     if (self.x0 >= self.x1 || self.y0 >= self.y1) {
       return new Error(ErrorKind.ZeroSizeBox);
     }
+  }
+  const equals = (other:Box) => {
+    return (
+      self.x0 === other.x0 
+      && self.y0 === other.y0 
+      && self.x1 === other.x1 
+      && self.y1 === other.y1
+    )
   }
   const self = {
     x0: 0.0,
@@ -28,34 +35,25 @@ export const Box = (args?:any) => {
     y1: 0.0,
     imageId: "",
     label: undefined,
-    confidence: undefined,
-    isGrandTruth: false,
     validate,
+    equals,
     ...args
   };
   return self;
 }
 
-export type AnnotatePayload = {
-  boxes: Box[];
-  imageId: string;
-};
-
-export type PredictPayload = {
+export type ReplacePayload = {
   boxes: PascalBox[];
   imageId: string;
-  loss?: number;
 };
 
 export type FilterPayload = {
   imageId?: string;
-  isGrandTruth?: boolean;
 };
 
 export type Service = {
   filter: (payload: FilterPayload) => Promise<Box[] | Error>;
-  annotate: (payload: AnnotatePayload) => Promise<void | Error>;
-  predict: (payload: PredictPayload) => Promise<void | Error>;
+  replace: (payload: ReplacePayload) => Promise<void | Error>;
 };
 
 export const Service = (args: { store: Store; lock: Lock }): Service => {
@@ -63,10 +61,8 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
   const replace = async (payload: {
     imageId: string;
     boxes: PascalBox[];
-    isGrandTruth: boolean;
-    loss?: number;
   }) => {
-    const { imageId, isGrandTruth, loss } = payload;
+    const { imageId } = payload;
     const boxes = payload.boxes.map((b) => Box(b));
     for (const b of boxes) {
       const bErr = b.validate();
@@ -82,23 +78,13 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       if (img === undefined) {
         return new Error(ErrorKind.ImageNotFound);
       }
-      let err = await store.box.delete({ imageId, isGrandTruth });
+      let err = await store.box.delete({ imageId });
       if (err instanceof Error) {
         return err;
       }
       err = await store.box.load(
-        boxes.map((x: any) => Box({ ...x, isGrandTruth, imageId }))
+        boxes.filter((x) => x.imageId === imageId)
       );
-      if (err instanceof Error) {
-        return err;
-      }
-      const nextImg = {
-        ...img,
-        boxCount: isGrandTruth ? boxes.length : img.boxCount,
-        loss: (!isGrandTruth && loss) || undefined,
-        updatedAt: isGrandTruth ? new Date() : img.updatedAt,
-      };
-      err = await store.image.update(nextImg);
       if (err instanceof Error) {
         return err;
       }
@@ -107,15 +93,8 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
   const filter = async (payload: FilterPayload) => {
     return await store.box.filter(payload);
   };
-  const annotate = async (payload: AnnotatePayload) => {
-    return await replace({ ...payload, isGrandTruth: true });
-  };
-  const predict = async (payload: PredictPayload) => {
-    return await replace({ ...payload, isGrandTruth: false });
-  };
   return {
     filter,
-    annotate,
-    predict,
+    replace,
   };
 };

@@ -79,9 +79,7 @@ export const DataStore = (args: {
 
   const fetchImages = async (): Promise<void> => {
     await loading(async () => {
-      const rows = await api.image.filter({
-        state: state.tag,
-      });
+      const rows = await api.image.filter({});
       if (rows instanceof Error) {
         return;
       }
@@ -170,7 +168,7 @@ export const DataStore = (args: {
   };
 
   const download = async (id: string) => {
-    const img = await api.image.find({ id, hasData:true });
+    const img = await api.image.find({ id });
     if (img instanceof Error) {
       error.notify(img);
       return;

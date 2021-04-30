@@ -22,7 +22,7 @@ describe("image", () => {
     if (err instanceof Error) {
       throw err;
     }
-    const res = await store.find({ id: row.id, hasData: true });
+    const res = await store.find({ id: row.id });
     if (res instanceof Error) {
       throw res;
     }
@@ -30,16 +30,11 @@ describe("image", () => {
   });
   test("update", async () => {
     row.data = Buffer.from("aaaaa").toString("base64");
-    row.state = State.Done;
-    row.weight = 1000.0;
-    row.boxCount = 100;
-    row.pointCount = 200;
-    row.loss = 12312;
     const err = await store.update(row);
     if (err instanceof Error) {
       throw err;
     }
-    const res = await store.find({ id: row.id, hasData: true });
+    const res = await store.find({ id: row.id });
     if (res instanceof Error) {
       throw res;
     }
@@ -50,7 +45,7 @@ describe("image", () => {
     if (rows instanceof Error) {
       throw rows;
     }
-    expect(rows).toMatchObject([{ ...row, data: undefined }]);
+    expect(rows).toMatchObject([row]);
   });
   test("delete", async () => {
     const err = await store.delete({ id: row.id });

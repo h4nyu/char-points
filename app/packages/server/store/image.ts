@@ -8,75 +8,36 @@ const COLUMNS = [
   "id",
   "data",
   "created_at",
-  "state",
-  "weight",
-  "loss",
   "name",
-  "box_count",
-  "point_count",
-  "updated_at"
-]
-
-const COLUMNS_NO_DATA = [
-  "id",
-  "created_at",
-  "state",
-  "weight",
-  "loss",
-  "name",
-  "box_count",
-  "point_count",
-  "updated_at"
 ]
 
 export const Store = (sql: Sql<any>): ImageStore => {
   const to = (r: Row): Image => {
-    return {
-      ...Image(),
+    return Image({
       id: r.id,
       data: (r.data && r.data.toString("base64")) || undefined,
       name: r.name,
-      boxCount: r.box_count,
-      pointCount: r.point_count,
-      weight: r.weight,
-      state: r.state,
-      loss: r.loss || undefined,
       createdAt: r.created_at,
-      updatedAt: r.updated_at,
-    };
+    });
   };
-
   const from = (r: Image): Row => {
     return {
       id: r.id,
       data: (r.data && Buffer.from(r.data, "base64")) || null,
       name: r.name,
-      point_count: r.pointCount,
-      box_count: r.boxCount,
-      weight: r.weight,
-      loss: r.loss || null,
-      state: r.state,
       created_at: r.createdAt,
-      updated_at: r.updatedAt,
     };
   };
   const find = async (payload: {
     id?: string;
-    hasData?: boolean;
   }): Promise<Image | undefined | Error> => {
     try {
-      const { id, hasData } = payload;
+      const { id } = payload;
       let rows = [];
-      if (id !== undefined && hasData) {
-        rows = await sql`SELECT ${sql(COLUMNS)} FROM images WHERE id=${id}`;
-      }
-      else if (id !== undefined && !hasData) {
-        rows = await sql`SELECT ${sql(COLUMNS_NO_DATA)} FROM images WHERE id=${id}`;
+      if (id !== undefined) {
+        rows = await sql`SELECT * FROM images WHERE id=${id}`;
       }
       const row = first(rows.map(to));
-      if (row === undefined) {
-        return;
-      }
       return row;
     } catch (err) {
       return err;
@@ -90,13 +51,11 @@ export const Store = (sql: Sql<any>): ImageStore => {
       const { ids, state } = payload;
       let rows = [];
       if (ids !== undefined && ids.length > 0) {
-        rows = await sql`SELECT ${sql(
-          COLUMNS_NO_DATA
-        )} FROM images WHERE id IN (${ids})`;
+        rows = await sql`SELECT * FROM images WHERE id IN (${ids})`;
       } else if (state !== undefined) {
-        rows = await sql`SELECT ${sql(COLUMNS_NO_DATA)} FROM images WHERE state = ${state}`;
+        rows = await sql`SELECT * FROM images WHERE state = ${state}`;
       } else {
-        rows = await sql`SELECT ${sql(COLUMNS_NO_DATA)} FROM images`;
+        rows = await sql`SELECT * FROM images`;
       }
       return rows.map(to);
     } catch (err) {
@@ -111,11 +70,24 @@ export const Store = (sql: Sql<any>): ImageStore => {
       SET 
         ${sql(
           from(payload),
-          ...COLUMNS_NO_DATA,
+          ...COLUMNS,
         )}
       WHERE 
         id=${payload.id} 
       `;
+    } catch (err) {
+      return err;
+    }
+  };
+
+  const has = async (payload: { id?:string }): Promise<boolean | Error> => {
+    try {
+      const { id } = payload;
+      let res = false
+      if(id !== undefined) {
+        // res = await sql`SELECT EXISTS (SELECT * FROM images WHERE id=${id})`;
+      }
+      return res;
     } catch (err) {
       return err;
     }
@@ -171,6 +143,7 @@ export const Store = (sql: Sql<any>): ImageStore => {
     find,
     filter,
     update,
+    has,
     delete: delete_,
     replace,
     insert,

@@ -24,14 +24,16 @@ describe("box", () => {
     if (res instanceof Error) {
       throw res;
     }
-    expect(res).toEqual([row]);
+    expect(res.length).toBe(1)
+    expect(res[0].equals(row)).toBe(true);
   });
   test("filter", async () => {
-    const rows = await store.filter({});
-    if (rows instanceof Error) {
-      throw rows;
+    const res = await store.filter({});
+    if (res instanceof Error) {
+      throw res;
     }
-    expect(rows).toMatchObject([row]);
+    expect(res.length).toBe(1)
+    expect(res[0].equals(row)).toBe(true);
   });
   test("delete-imageId", async () => {
     const err = await store.delete({ imageId: row.imageId });

@@ -4,8 +4,7 @@ import { FastifyPlugin } from "fastify";
 import {
   Service,
   FilterPayload,
-  PredictPayload,
-  AnnotatePayload,
+  ReplacePayload,
 } from "@charpoints/core/box";
 
 export const Routes = (args: {
@@ -19,12 +18,8 @@ export const Routes = (args: {
       const res = await srv.filter(req.body);
       reply.send(res);
     });
-    app.post<{ Body: AnnotatePayload }>("/annotate", {}, async (req, reply) => {
-      const res = await srv.annotate(req.body);
-      reply.send(res);
-    });
-    app.post<{ Body: PredictPayload }>("/predict", {}, async (req, reply) => {
-      const res = await srv.predict(req.body);
+    app.post<{ Body: ReplacePayload }>("/replace", {}, async (req, reply) => {
+      const res = await srv.replace(req.body);
       reply.send(res);
     });
     done();

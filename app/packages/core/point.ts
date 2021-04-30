@@ -5,8 +5,7 @@ export type Point = {
   y: number;
   imageId: string;
   label?: string;
-  confidence?: number;
-  isGrandTruth?: boolean;
+  equals: (other:Point) => boolean;
   validate: () => void | Error;
 };
 
@@ -18,12 +17,18 @@ export const Point = (args?: any): Point => {
       }
     }
   }
+  const equals = (other: Point): boolean => {
+    return (
+      self.x === other.x && self.y === other.y
+    )
+  }
   const self = {
     x: 0,
     y: 0,
     imageId: "",
     label: undefined,
     validate,
+    equals,
     ...args
   }
   return self
@@ -34,7 +39,7 @@ export type FilterPayload = {
   isGrandTruth?: boolean;
 };
 
-export type AnnotatePayload = {
+export type ReplacePayload = {
   points: Point[];
   imageId: string;
 };
@@ -45,43 +50,30 @@ export type PredictPayload = {
 };
 export type Service = {
   filter: (payload: FilterPayload) => Promise<Point[] | Error>;
-  annotate: (payload: AnnotatePayload) => Promise<void | Error>;
-  predict: (payload: PredictPayload) => Promise<void | Error>;
+  replace: (payload: ReplacePayload) => Promise<void | Error>;
 };
 export const Service = (args: { store: Store; lock: Lock }): Service => {
   const { store, lock } = args;
   const replace = async (payload: {
     imageId: string;
     points: Point[];
-    isGrandTruth: boolean;
   }) => {
-    const { imageId, points, isGrandTruth } = payload;
+    const { imageId, points } = payload;
     return await lock.auto(async () => {
-      const img = await store.image.find({ id: imageId });
-      if (img instanceof Error) {
-        return img;
+      const hasImage = await store.image.has({ id: imageId });
+      if (hasImage instanceof Error) {
+        return hasImage;
       }
-      if (img === undefined) {
+      if (!hasImage) {
         return new Error(ErrorKind.ImageNotFound);
       }
-      let err = await store.point.delete({ imageId, isGrandTruth });
+      let err = await store.point.delete({ imageId });
       if (err instanceof Error) {
         return err;
       }
-      const nextImg = {
-        ...img,
-        pointCount: isGrandTruth ? points.length : img.pointCount,
-        updatedAt: isGrandTruth ? new Date() : img.updatedAt,
-      };
-      err = await store.image.update(nextImg);
-      if (err instanceof Error) {
-        return err;
-      }
-
       err = await store.point.load(
         points
           .filter((x) => x.imageId === imageId)
-          .map((x) => ({ ...x, isGrandTruth }))
       );
       if (err instanceof Error) {
         return err;
@@ -92,11 +84,5 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
   const filter = async (payload: FilterPayload) => {
     return await store.point.filter(payload);
   };
-  const annotate = async (payload: AnnotatePayload) => {
-    return await replace({ ...payload, isGrandTruth: true });
-  };
-  const predict = async (payload: PredictPayload) => {
-    return await replace({ ...payload, isGrandTruth: false });
-  };
-  return { filter, annotate, predict };
+  return { filter, replace };
 };
