@@ -8,7 +8,7 @@ jobs:
       - WEBPACK_PORT: 8081
       - COMPOSE_FILE: production.yml
       - DOCKER_REGISTRY: localhost
-      - platform: linux/amd64
+      - PLATFORM: linux/amd64
     steps:
       - run:
           name: Install Docker Compose
