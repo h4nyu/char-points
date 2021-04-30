@@ -1,4 +1,4 @@
-
+import { Store, ErrorKind } from "@charpoints/core";
 
 export type CropPayload = {
   imageData: string,
@@ -15,9 +15,7 @@ export type Service = {
   crop: CropFn
 };
 export const Service = (args: {
-  store: {
-    crop: CropFn
-  }
+  store: Store
 }):Service => {
   const { store } = args;
   const crop = async (payload:CropPayload) => {

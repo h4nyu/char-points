@@ -2,6 +2,7 @@ import postgres from "postgres";
 import { Store as ImageStore } from "./image";
 import { Store as PointStore } from "./point";
 import { Store as BoxStore } from "./box";
+import { crop } from "./transform";
 
 export const Store = (args: { url: string; max?: number }) => {
   const sql = postgres(args.url, {
@@ -14,6 +15,7 @@ export const Store = (args: { url: string; max?: number }) => {
   const point = PointStore(sql);
   const box = BoxStore(sql);
   return {
+    crop,
     image,
     point,
     box,

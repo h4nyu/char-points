@@ -4,6 +4,7 @@ import path from "path";
 import { ImageRoutes } from "./image";
 import { Routes as PointRoutes } from "./point";
 import { Routes as BoxRoutes } from "./box";
+import TransformRoutes from "./transform";
 import fastifyStatic from "fastify-static";
 import fastifyCors from "fastify-cors";
 
@@ -29,6 +30,9 @@ export const App = (args: { store: Store; lock: Lock }) => {
   });
   app.register(BoxRoutes({ store, lock }), {
     prefix: `${prefix}/box`,
+  });
+  app.register(TransformRoutes({ store }), {
+    prefix: `${prefix}/transform`,
   });
   app.ready(async () => {
     console.log(app.printRoutes());

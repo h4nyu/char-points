@@ -2,6 +2,7 @@ import { ImageApi } from "./image";
 import { Box } from "@charpoints/core/box";
 import { BoxApi } from "@charpoints/api/box";
 import { Api as PointApi } from "./point";
+import TransformApi from "./transform";
 
 import axios from "axios";
 
@@ -20,6 +21,7 @@ export type RootApi = {
   image: ImageApi;
   point: PointApi;
   box: BoxApi;
+  transform: TransformApi;
 };
 
 export const RootApi = (): RootApi => {
@@ -37,6 +39,7 @@ export const RootApi = (): RootApi => {
   const image = ImageApi({ http, prefix: `${prefix}/image` });
   const point = PointApi(http, `${prefix}/point`);
   const box = BoxApi(http, `${prefix}/box`);
+  const transform = TransformApi(http, `${prefix}/transform`);
 
   const setUrl = (url: string) => {
     http.defaults.baseURL = url;
@@ -47,55 +50,7 @@ export const RootApi = (): RootApi => {
     point,
     box,
     image,
+    transform,
   };
 };
-
-export type DetectPayload = {
-  data: string;
-};
-export type DetectionApi = {
-  setUrl: (url: string) => void;
-  detect: (
-    payload: DetectPayload
-  ) => Promise<
-    | {
-        boxes: Box[];
-        scores: number[];
-        imageData: string;
-      }
-    | Error
-  >;
-};
-
-export const DetectionApi = (): DetectionApi => {
-  const http = axios.create();
-  const setUrl = (url: string) => {
-    http.defaults.baseURL = url;
-  };
-  const detect = async (payload: DetectPayload) => {
-    try {
-      const res = await http.post("/api/upload-image", payload);
-      const { boxes, scores, image } = res.data;
-      return {
-        boxes: boxes.map((b) => {
-          return {
-            ...Box(),
-            x0: b[0],
-            y0: b[1],
-            x1: b[2],
-            y1: b[3],
-          };
-        }),
-        scores,
-        imageData: image,
-      };
-    } catch (err) {
-      return toError(err);
-    }
-  };
-
-  return {
-    setUrl,
-    detect,
-  };
-};
+export default RootApi

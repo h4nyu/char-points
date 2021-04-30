@@ -2,6 +2,7 @@ export { ErrorKind } from "./error";
 import { Image } from "./image";
 import { Point } from "./point";
 import { Box } from "./box";
+import { CropFn } from "./transform"
 
 export type ImageStore = {
   filter: (payload: {
@@ -51,4 +52,5 @@ export type Store = {
   image: ImageStore;
   point: PointStore;
   box: BoxStore;
+  crop: CropFn
 };
