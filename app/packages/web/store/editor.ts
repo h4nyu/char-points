@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { RootApi, DetectionApi } from "@charpoints/api";
+import { RootApi } from "@charpoints/api";
 import { ErrorStore } from "./error";
 import { State as ImageState } from "@charpoints/core/image";
 import { Point, Points, Boxes, History, Level, InputMode, Box } from ".";
@@ -59,7 +59,6 @@ export type Editor = {
   move: (pos: { x: number; y: number }) => void;
   del: () => void;
   changeSize: (size: number) => void;
-  detectBoxes: () => void;
   setWeight: (weight: number) => void;
   addLabel: () => void;
   setLabel: (value: string) => void;
@@ -74,7 +73,6 @@ export type Editor = {
 export const Editor = (root: {
   history: History;
   api: RootApi;
-  detectionApi: DetectionApi;
   loading: <T>(fn: () => Promise<T>) => Promise<T>;
   toast: ToastStore;
   error: ErrorStore;
@@ -89,7 +87,6 @@ export const Editor = (root: {
     loading,
     toast,
     error,
-    detectionApi,
     onSave,
     onInit,
     onDelete,
@@ -281,26 +278,6 @@ export const Editor = (root: {
     state.size = value;
   };
 
-  const detectBoxes = async () => {
-    const { imageData } = state;
-    if (imageData === undefined) {
-      return;
-    }
-    const res = await detectionApi.detect({ data: imageData });
-    if (res instanceof Error) {
-      return error.notify(res);
-    }
-    state.gtBoxes = Map(
-      keyBy(
-        zip(res.boxes, res.scores).map((z: any) => {
-          return { ...z[0], imageId: state.id, confidence: z[1]?.toFixed(2) };
-        }),
-        (_) => uuid()
-      )
-    );
-    state.imageData = res.imageData;
-  };
-
   const save = async (imageState: ImageState) => {
     await loading(async () => {
       const boxErr = await api.box.annotate({
@@ -352,7 +329,6 @@ export const Editor = (root: {
     toggleDrag,
     move,
     changeSize,
-    detectBoxes,
     setWeight,
     addLabel,
     toggleLabel,

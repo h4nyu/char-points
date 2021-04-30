@@ -38,7 +38,6 @@ const Content = observer(() => {
     toggleDrag,
     move,
     setMode,
-    detectBoxes,
     del,
     clear,
   } = editor;

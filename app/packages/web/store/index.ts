@@ -1,7 +1,7 @@
 import { DataStore } from "./data";
 import { LoadingStore } from "./loading";
 import { ToastStore } from "./toast";
-import { RootApi, DetectionApi } from "@charpoints/api";
+import { RootApi } from "@charpoints/api";
 import { ErrorStore } from "./error";
 import { Map, List } from "immutable";
 import { Editor } from "./editor";
@@ -47,12 +47,10 @@ export type RootStore = {
   history: History;
   editor: Editor;
   api: RootApi;
-  detectionApi: DetectionApi;
   init: () => Promise<void>;
 };
 export const RootStore = (): RootStore => {
   const api = RootApi();
-  const detectionApi = DetectionApi();
   const loading = LoadingStore();
   const toast = ToastStore();
   const error = ErrorStore({ toast });
@@ -62,7 +60,6 @@ export const RootStore = (): RootStore => {
   const editor = Editor({
     history,
     api,
-    detectionApi,
     loading: loading.loading,
     toast,
     error,
@@ -80,16 +77,10 @@ export const RootStore = (): RootStore => {
   });
   const init = async () => {
     await data.init();
-    const url = await api.detectionUrl();
-    if (url instanceof Error) {
-      return;
-    }
-    detectionApi.setUrl(url);
     toast.info("Success");
   };
   return {
     api,
-    detectionApi,
     data,
     toast,
     loading,
