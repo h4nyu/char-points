@@ -105,17 +105,9 @@ export const Editor = (root: {
       }
       state.labels = state.labels.merge(Set(boxes.map((x) => x.label || "")));
       state.currentLabel = state.labels.first();
-      state.gtBoxes = Map(
-        boxes.filter((x) => x.isGrandTruth === true).map((x) => [uuid(), x])
-      );
-      state.predictedBoxes = Map(
-        boxes.filter((x) => x.isGrandTruth === false).map((x) => [uuid(), x])
-      );
+      state.gtBoxes = Map(boxes.map((x) => [uuid(), x]));
 
-      const gtPoints = await api.point.filter({
-        imageId: id,
-        isGrandTruth: true,
-      });
+      const gtPoints = await api.point.filter({ imageId: id });
       if (gtPoints instanceof Error) {
         toast.show(gtPoints.message, Level.Error);
         return;
@@ -277,32 +269,32 @@ export const Editor = (root: {
   };
 
   const save = async (imageState: ImageState) => {
-    await loading(async () => {
-      const boxErr = await api.box.annotate({
-        boxes: state.gtBoxes.toList().toJS(),
-        imageId: state.id,
-      });
-      if (boxErr instanceof Error) {
-        return error.notify(boxErr);
-      }
-      const pointErr = await api.point.annotate({
-        points: state.gtPoints.toList().toJS(),
-        imageId: state.id,
-      });
-      if (pointErr instanceof Error) {
-        return error.notify(pointErr);
-      }
-      const imageErr = await api.image.update({
-        id: state.id,
-        data: state.imageData,
-      });
-      if (imageErr instanceof Error) {
-        return error.notify(imageErr);
-      }
-      state.state = imageState;
-      onSave && onSave(state.id);
-      toast.show("Success", Level.Success);
-    });
+    // await loading(async () => {
+    //   const boxErr = await api.box.annotate({
+    //     boxes: state.gtBoxes.toList().toJS(),
+    //     imageId: state.id,
+    //   });
+    //   if (boxErr instanceof Error) {
+    //     return error.notify(boxErr);
+    //   }
+    //   const pointErr = await api.point.annotate({
+    //     points: state.gtPoints.toList().toJS(),
+    //     imageId: state.id,
+    //   });
+    //   if (pointErr instanceof Error) {
+    //     return error.notify(pointErr);
+    //   }
+    //   const imageErr = await api.image.update({
+    //     id: state.id,
+    //     data: state.imageData,
+    //   });
+    //   if (imageErr instanceof Error) {
+    //     return error.notify(imageErr);
+    //   }
+    //   state.state = imageState;
+    //   onSave && onSave(state.id);
+    //   toast.show("Success", Level.Success);
+    // });
   };
 
   const delete_ = async () => {

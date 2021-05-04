@@ -8,12 +8,7 @@ import TableHeader from "@charpoints/web/components/TableHeader";
 const columns = [
   "Id",
   "Name",
-  "State",
-  "Box",
-  "Point",
-  "Score",
   "Create",
-  "Update",
   "",
   "",
 ];
@@ -33,7 +28,6 @@ export const ImageTable = (props: {
       Id: x.id,
       Name: x.name,
       Create: x.createdAt,
-      Update: x.updatedAt,
       onClick: () => onClick && onClick(x.id),
       onDownload: () => onDownload && onDownload(x.id),
     };
@@ -55,14 +49,8 @@ export const ImageTable = (props: {
                 <td> {x.Id} </td>
                 <td> {x.Name}</td>
                 <td>
-                </td>
-                <td>
                   {" "}
                   <DateView value={x.createdAt} />{" "}
-                </td>
-                <td>
-                  {" "}
-                  <DateView value={x.updatedAt} />{" "}
                 </td>
                 <td>
                   {" "}

@@ -41,22 +41,6 @@ const Content = observer(() => {
           value={store.data.state.keyword}
           onChange={(e) => store.data.setKeyword(e.target.value)}
         />
-        <button
-          className={"button is-light".concat(
-            (tag === ImageState.Todo && " is-info") || ""
-          )}
-          onClick={() => updateFilter({ tag: ImageState.Todo })}
-        >
-          Todo
-        </button>
-        <button
-          className={"button is-light".concat(
-            (tag === ImageState.Done && " is-info") || ""
-          )}
-          onClick={() => updateFilter({ tag: ImageState.Done })}
-        >
-          Done
-        </button>
       </div>
       <div
         style={{

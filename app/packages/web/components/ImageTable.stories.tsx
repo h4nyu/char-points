@@ -7,5 +7,9 @@ export default {
   component: ImageTable,
 };
 
-const images = [{ ...Image() }];
+const images = [Image({
+  id: "imageId",
+  name: "imageName",
+  createdAt: new Date(),
+})];
 export const Primary = (args) => <ImageTable {...args} images={images} />;
