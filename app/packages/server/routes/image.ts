@@ -10,17 +10,44 @@ import {
   CreatePayload,
 } from "@charpoints/core/image";
 
-export const ImageRoutes = (args: {
+export const Schema = {
+  type: 'object',
+  required: ['id', 'data', "name", "createdAt"],
+  properties: {
+    id: { type: 'string' },
+    data: { type: 'string' },
+    name: { type: 'string' },
+    createdAt: { type: 'string', format: "date-time" },
+  }
+}
+
+export const Routes = (args: {
   store: Store;
   lock: Lock;
 }): FastifyPlugin<{ prefix: string }> => {
   const { store, lock } = args;
   const srv = Service({ store, lock });
   return function (app, opts, done) {
-    app.post<{ Body: CreatePayload }>("/create", {}, async (req, reply) => {
-      const res = await srv.create(req.body);
-      reply.send(res);
-    });
+    app.post<{ Body: CreatePayload }>(
+      "/create", 
+      {
+        schema: {
+          body: {
+            ...Schema,
+          },
+          response: {
+            200: {
+              description: 'Successful response',
+              ...Schema
+            }
+          },
+        },
+      }, 
+      async (req, reply) => {
+        const res = await srv.create(req.body);
+        reply.send(res);
+      }
+    );
     app.post<{ Body: UpdatePayload }>("/update", {}, async (req, reply) => {
       const res = await srv.update(req.body);
       reply.send(res);
@@ -40,3 +67,4 @@ export const ImageRoutes = (args: {
     done();
   };
 };
+export default Routes

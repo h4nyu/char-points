@@ -1,11 +1,13 @@
 import fastify, { FastifyPlugin } from "fastify";
 import { Lock, Store } from "@charpoints/core";
 import path from "path";
-import { ImageRoutes } from "./image";
+import ImageRoutes, { Schema as ImageSchema } from "./image";
 import { Routes as PointRoutes } from "./point";
-import { Routes as BoxRoutes } from "./box";
+import { Routes as BoxRoutes, Schema as BoxSchema, } from "./box";
 import TransformRoutes from "./transform";
+import packageJson from "@charpoints/server/package.json"
 import fastifyStatic from "fastify-static";
+import fastifySwagger from "fastify-swagger"
 import fastifyCors from "fastify-cors";
 
 export const App = (args: { store: Store; lock: Lock }) => {
@@ -14,11 +16,26 @@ export const App = (args: { store: Store; lock: Lock }) => {
     bodyLimit: 10048576,
     logger: true,
   });
+  app.register(fastifySwagger, {
+    routePrefix: '/documentation',
+    swagger: {
+      info: {
+        title: packageJson.name,
+        version: packageJson.version,
+      },
+      schemes: ['http'],
+      consumes: ['application/json'],
+      produces: ['application/json'],
+      tags: [],
+      definitions: {
+        Image: ImageSchema,
+        Box: BoxSchema,
+      },
+    },
+    exposeRoute: true
+  })
   app.register(fastifyCors);
   const prefix = path.join("/", process.env.PREFIX || "", "/api/v1");
-  app.get(`${prefix}/detection-api`, {}, async (req, rep) => {
-    rep.send(process.env.DETECTION_API);
-  });
   app.register(fastifyStatic, {
     root: "/srv/packages/web/dist",
   });
