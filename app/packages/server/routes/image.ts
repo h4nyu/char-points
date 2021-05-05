@@ -33,7 +33,13 @@ export const Routes = (args: {
       {
         schema: {
           body: {
-            ...Schema,
+            type: 'object',
+            required: ['data', "name"],
+            properties: {
+              id: { type: 'string' },
+              data: { type: 'string' },
+              name: { type: 'string' },
+            }
           },
           response: {
             200: {

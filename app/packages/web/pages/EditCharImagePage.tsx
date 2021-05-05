@@ -19,8 +19,8 @@ const Content = observer(() => {
   const {
     id,
     labels,
-    gtPoints,
-    gtBoxes,
+    points,
+    boxes,
     predictedBoxes,
     size,
     draggingId,
@@ -61,7 +61,6 @@ const Content = observer(() => {
         className="field p-1"
       >
         <label className="label">
-          <Tag value={editor.state.state} />
           {editor.state.loss && (
             <span className="tag is-light">{editor.state.loss}</span>
           )}
@@ -75,59 +74,13 @@ const Content = observer(() => {
           gridColumn: "3",
         }}
       >
-        <div className="field">
-          <label className="label">Label</label>
-          <div className="control">
-            <input
-              className="input"
-              style={{ width: 100 }}
-              value={editor.state.label}
-              onChange={(e) => editor.setLabel(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && editor.addLabel()}
-            />
-          </div>
-          <div
-            className="tags are-medium"
-            style={{ display: "flex", flexDirection: "column" }}
-          >
-            {labels.map((x) => (
-              <span
-                key={x}
-                className={
-                  "tag is-light " +
-                  (editor.state.currentLabel === x ? " is-info" : "")
-                }
-                style={{ cursor: "pointer" }}
-                onClick={() => editor.toggleLabel(x)}
-              >
-                {x}
-                <button
-                  className="delete is-small"
-                  onClick={() => editor.delLabel(x)}
-                />
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className="field">
-          <label className="label">Weight</label>
-          <div className="control">
-            <input
-              className="input"
-              type="number"
-              style={{ width: 50 }}
-              value={weight}
-              onChange={(e) => editor.setWeight(parseFloat(e.target.value))}
-            />
-          </div>
-        </div>
       </div>
 
       <div
         style={{
           display: "flex",
           gridRow: "2",
-          gridColumn: "1 / span 2",
+          gridColumn: "1 / span 3",
           overflow: "scroll",
         }}
         className={"card"}
@@ -141,10 +94,10 @@ const Content = observer(() => {
       >
         <SvgCharPlot
           data={imageData}
-          gtPoints={gtPoints}
+          points={points}
           predictedBoxes={predictedBoxes}
           mode={mode}
-          gtBoxes={gtBoxes}
+          boxes={boxes}
           selectedId={draggingId}
           onMove={move}
           onAdd={add}
@@ -160,9 +113,6 @@ const Content = observer(() => {
           gridRow: "1",
         }}
       >
-        <button className="button is-danger is-light" onClick={clear}>
-          Clear
-        </button>
       </div>
       <div
         className="buttons"
@@ -171,18 +121,6 @@ const Content = observer(() => {
           gridColumn: "1",
         }}
       >
-        <button
-          className="button is-info is-light"
-          onClick={() => save(ImageState.Done)}
-        >
-          Done
-        </button>
-        <button
-          className="button is-warning is-light"
-          onClick={() => save(ImageState.Todo)}
-        >
-          Todo
-        </button>
         <button
           className="button is-light"
           onClick={() => {
@@ -236,8 +174,8 @@ const Content = observer(() => {
         >
           Box
         </button>
-        <button className="button is-light is-danger" onClick={editor.copyAsGT}>
-          GT
+        <button className="button is-danger is-light" onClick={clear}>
+          Reset
         </button>
       </div>
 
@@ -248,6 +186,12 @@ const Content = observer(() => {
           gridColumn: "3",
         }}
       >
+        <button
+          className="button is-info is-light"
+          onClick={() => save()}
+        >
+          Save
+        </button>
         <button
           className="button is-danger is-light"
           onClick={() => editor.delete()}

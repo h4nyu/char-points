@@ -16,8 +16,8 @@ export type State = {
   loss?: number;
   label: string;
   currentLabel?: string;
-  gtPoints: Points;
-  gtBoxes: Boxes;
+  points: Points;
+  boxes: Boxes;
   predictedBoxes: Boxes;
   mode: InputMode;
   weight: number;
@@ -32,8 +32,8 @@ export type State = {
 export const State = (): State => {
   return {
     id: "",
-    gtPoints: Map(),
-    gtBoxes: Map(),
+    points: Map(),
+    boxes: Map(),
     labels: Set(),
     label: "",
     state: ImageState.Todo,
@@ -64,7 +64,7 @@ export type Editor = {
   setLabel: (value: string) => void;
   toggleLabel: (value: string) => void;
   delLabel: (value: string) => void;
-  save: (imageState: ImageState) => Promise<void>;
+  save: () => Promise<void>;
   copyAsGT: () => void;
   init: (id: string) => void;
   delete: () => Promise<void>;
@@ -105,22 +105,22 @@ export const Editor = (root: {
       }
       state.labels = state.labels.merge(Set(boxes.map((x) => x.label || "")));
       state.currentLabel = state.labels.first();
-      state.gtBoxes = Map(boxes.map((x) => [uuid(), x]));
+      state.boxes = Map(boxes.map((x) => [uuid(), x]));
 
-      const gtPoints = await api.point.filter({ imageId: id });
-      if (gtPoints instanceof Error) {
-        toast.show(gtPoints.message, Level.Error);
+      const points = await api.point.filter({ imageId: id });
+      if (points instanceof Error) {
+        toast.show(points.message, Level.Error);
         return;
       }
-      state.gtPoints = Map(gtPoints.map((x) => [uuid(), x]));
+      state.points = Map(points.map((x) => [uuid(), x]));
       state.id = image.id;
       state.imageData = image.data;
       onInit && onInit(id);
     });
   };
   const clear = () => {
-    state.gtPoints = Map();
-    state.gtBoxes = Map();
+    state.points = Map();
+    state.boxes = Map();
   };
 
   const setMode = (mode: InputMode) => {
@@ -128,7 +128,7 @@ export const Editor = (root: {
   };
 
   const copyAsGT = () => {
-    state.gtBoxes = state.predictedBoxes;
+    state.boxes = state.predictedBoxes;
   };
 
   const setLabel = (value: string) => {
@@ -167,15 +167,15 @@ export const Editor = (root: {
   };
 
   const move = (pos: { x: number; y: number }) => {
-    const { gtPoints, gtBoxes, draggingId, mode } = state;
+    const { points, boxes, draggingId, mode } = state;
     state.pos = pos;
     if (draggingId === undefined) {
       return;
     }
     if (mode === InputMode.Point) {
-      state.gtPoints = gtPoints.update(draggingId, (x) => ({ ...x, ...pos }));
+      state.points = points.update(draggingId, (x) => ({ ...x, ...pos }));
     } else if (mode === InputMode.TL) {
-      const box = gtBoxes.get(draggingId);
+      const box = boxes.get(draggingId);
       if (box === undefined) {
         return;
       }
@@ -185,9 +185,9 @@ export const Editor = (root: {
       if (pos.y > box.y1) {
         return setMode(InputMode.BL);
       }
-      state.gtBoxes = gtBoxes.set(draggingId, { ...box, x0: pos.x, y0: pos.y });
+      state.boxes = boxes.set(draggingId, { ...box, x0: pos.x, y0: pos.y });
     } else if (mode === InputMode.BR) {
-      const box = gtBoxes.get(draggingId);
+      const box = boxes.get(draggingId);
       if (box === undefined) {
         return;
       }
@@ -197,9 +197,9 @@ export const Editor = (root: {
       if (pos.y < box.y0) {
         return setMode(InputMode.TR);
       }
-      state.gtBoxes = gtBoxes.set(draggingId, { ...box, x1: pos.x, y1: pos.y });
+      state.boxes = boxes.set(draggingId, { ...box, x1: pos.x, y1: pos.y });
     } else if (mode === InputMode.BL) {
-      const box = gtBoxes.get(draggingId);
+      const box = boxes.get(draggingId);
       if (box === undefined) {
         return;
       }
@@ -209,9 +209,9 @@ export const Editor = (root: {
       if (pos.y < box.y0) {
         return setMode(InputMode.TL);
       }
-      state.gtBoxes = gtBoxes.set(draggingId, { ...box, x0: pos.x, y1: pos.y });
+      state.boxes = boxes.set(draggingId, { ...box, x0: pos.x, y1: pos.y });
     } else if (mode === InputMode.TR) {
-      const box = gtBoxes.get(draggingId);
+      const box = boxes.get(draggingId);
       if (box === undefined) {
         return;
       }
@@ -221,19 +221,19 @@ export const Editor = (root: {
       if (pos.y > box.y1) {
         return setMode(InputMode.BR);
       }
-      state.gtBoxes = gtBoxes.set(draggingId, { ...box, x1: pos.x, y0: pos.y });
+      state.boxes = boxes.set(draggingId, { ...box, x1: pos.x, y0: pos.y });
     }
   };
 
   const add = () => {
-    const { mode, pos, gtBoxes, gtPoints, id } = state;
+    const { mode, pos, boxes, points, id } = state;
     if ((state.draggingId = undefined)) {
       state.draggingId = undefined;
       return;
     }
     const newId = uuid();
     if (mode === InputMode.Point) {
-      state.gtPoints = gtPoints.set(newId, { ...Point(), ...pos, imageId: id });
+      state.points = points.set(newId, { ...Point(), ...pos, imageId: id });
     } else if (
       [
         InputMode.Box,
@@ -243,7 +243,7 @@ export const Editor = (root: {
         InputMode.BR,
       ].includes(mode)
     ) {
-      state.gtBoxes = state.gtBoxes.set(newId, {
+      state.boxes = state.boxes.set(newId, {
         ...Box(),
         imageId: id,
         x0: pos.x,
@@ -258,9 +258,9 @@ export const Editor = (root: {
   };
 
   const del = () => {
-    const { gtPoints, gtBoxes, draggingId } = state;
-    state.gtPoints = gtPoints.filter((v, k) => k !== draggingId);
-    state.gtBoxes = gtBoxes.filter((v, k) => k !== draggingId);
+    const { points, boxes, draggingId } = state;
+    state.points = points.filter((v, k) => k !== draggingId);
+    state.boxes = boxes.filter((v, k) => k !== draggingId);
     state.draggingId = undefined;
   };
 
@@ -268,17 +268,17 @@ export const Editor = (root: {
     state.size = value;
   };
 
-  const save = async (imageState: ImageState) => {
+  const save = async () => {
     // await loading(async () => {
     //   const boxErr = await api.box.annotate({
-    //     boxes: state.gtBoxes.toList().toJS(),
+    //     boxes: state.boxes.toList().toJS(),
     //     imageId: state.id,
     //   });
     //   if (boxErr instanceof Error) {
     //     return error.notify(boxErr);
     //   }
     //   const pointErr = await api.point.annotate({
-    //     points: state.gtPoints.toList().toJS(),
+    //     points: state.points.toList().toJS(),
     //     imageId: state.id,
     //   });
     //   if (pointErr instanceof Error) {

@@ -10,7 +10,6 @@ const columns = [
   "Name",
   "Create",
   "",
-  "",
 ];
 
 export const ImageTable = (props: {
@@ -43,26 +42,21 @@ export const ImageTable = (props: {
           sort={[sortColumn, asc]}
         />
         <tbody>
-          {rows.map((x, i) => {
+          {rows.map((x) => {
             return (
-              <tr key={i}>
+              <tr key={x.Id}>
                 <td> {x.Id} </td>
                 <td> {x.Name}</td>
                 <td>
-                  {" "}
-                  <DateView value={x.createdAt} />{" "}
+                  <DateView value={x.createdAt} />
                 </td>
                 <td>
-                  {" "}
                   <a onClick={x.onClick} className="button is-small">
                     Edit
-                  </a>{" "}
-                </td>
-                <td>
-                  {" "}
+                  </a>
                   <a onClick={x.onDownload} className="button is-small">
                     Download
-                  </a>{" "}
+                  </a>
                 </td>
               </tr>
             );

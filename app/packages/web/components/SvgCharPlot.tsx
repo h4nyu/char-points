@@ -4,8 +4,8 @@ import { Image, Points, Boxes, InputMode } from "../store";
 export const SvgCharPlot = (props: {
   data?: string;
   mode?: InputMode;
-  gtPoints?: Points;
-  gtBoxes?: Boxes;
+  points?: Points;
+  boxes?: Boxes;
   predictedBoxes?: Boxes;
   size?: number;
   selectedId?: string;
@@ -20,8 +20,8 @@ export const SvgCharPlot = (props: {
     onAdd,
     onMove,
     selectedId,
-    gtPoints,
-    gtBoxes,
+    points,
+    boxes,
     predictedBoxes,
     onSelect,
     onLeave,
@@ -94,7 +94,7 @@ export const SvgCharPlot = (props: {
           onAdd && onAdd();
         }}
       >
-        {gtPoints
+        {points
           ?.map((p, i) => (
             <circle
               key={i}
@@ -113,7 +113,7 @@ export const SvgCharPlot = (props: {
           ))
           .toList()}
 
-        {gtBoxes
+        {boxes
           ?.map((b, i) => (
             <g key={i}>
               <text
