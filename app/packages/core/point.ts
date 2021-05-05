@@ -1,6 +1,8 @@
 import { Store, Lock, ErrorKind } from "@charpoints/core";
+import { v4 as uuid } from "uuid";
 
 export type Point = {
+  id: string;
   x: number;
   y: number;
   imageId: string;
@@ -23,6 +25,7 @@ export const Point = (args?: any): Point => {
     )
   }
   const self = {
+    id: uuid(),
     x: 0,
     y: 0,
     imageId: "",

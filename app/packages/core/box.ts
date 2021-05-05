@@ -1,14 +1,16 @@
 import { Lock, ErrorKind, Store } from "@charpoints/core";
 import { zip } from "lodash";
+import { v4 as uuid } from "uuid";
 
-type PascalBox = {
+export type PascalBox = {
   x0: number;
   y0: number;
   x1: number;
   y1: number;
-  label?: string;
 };
+
 export type Box = PascalBox & {
+  id: string;
   imageId: string;
   label?: string;
   validate: () => void | Error;
@@ -29,6 +31,7 @@ export const Box = (args?:any) => {
     )
   }
   const self = {
+    id: uuid(),
     x0: 0.0,
     y0: 0.0,
     x1: 0.0,

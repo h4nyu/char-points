@@ -3,6 +3,7 @@ import { Box } from "@charpoints/core/box";
 import { BoxStore } from "@charpoints/core";
 
 const COLUMNS = [
+  "id",
   "x0",
   "y0",
   "x1",
@@ -14,6 +15,7 @@ const COLUMNS = [
 export const Store = (sql: Sql<any>): BoxStore => {
   const to = (r: Row): Box => {
     return Box({
+      id: r.id,
       x0: r.x0,
       y0: r.y0,
       x1: r.x1,
@@ -25,6 +27,7 @@ export const Store = (sql: Sql<any>): BoxStore => {
 
   const from = (b: Box): Row => {
     return {
+      id: b.id,
       x0: b.x0,
       y0: b.y0,
       x1: b.x1,
