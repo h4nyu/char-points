@@ -46,7 +46,7 @@ export const Box = (args?:any) => {
 }
 
 export type ReplacePayload = {
-  boxes: PascalBox[];
+  boxes: Box[];
   imageId: string;
 };
 
@@ -56,17 +56,17 @@ export type FilterPayload = {
 
 export type Service = {
   filter: (payload: FilterPayload) => Promise<Box[] | Error>;
-  replace: (payload: ReplacePayload) => Promise<void | Error>;
+  replace: (payload: ReplacePayload) => Promise<Box[] | Error>;
 };
 
 export const Service = (args: { store: Store; lock: Lock }): Service => {
   const { store, lock } = args;
   const replace = async (payload: {
     imageId: string;
-    boxes: PascalBox[];
+    boxes: Box[];
   }) => {
     const { imageId } = payload;
-    const boxes = payload.boxes.map((b) => Box(b));
+    const boxes = payload.boxes.map((b) => Box(b)).filter(x => x.imageId === imageId);
     for (const b of boxes) {
       const bErr = b.validate();
       if (bErr instanceof Error) {
@@ -85,12 +85,11 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       if (err instanceof Error) {
         return err;
       }
-      err = await store.box.load(
-        boxes.filter((x) => x.imageId === imageId)
-      );
+      err = await store.box.load(boxes);
       if (err instanceof Error) {
         return err;
       }
+      return boxes
     });
   };
   const filter = async (payload: FilterPayload) => {
