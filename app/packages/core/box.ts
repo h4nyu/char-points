@@ -85,7 +85,7 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
       if (err instanceof Error) {
         return err;
       }
-      err = await store.box.load(boxes);
+      err = await store.box.load(boxes.filter(x => x.imageId === imageId));
       if (err instanceof Error) {
         return err;
       }

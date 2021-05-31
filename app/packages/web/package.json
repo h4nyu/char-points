@@ -1,14 +1,15 @@
 {
   "name": "@charpoints/web",
-  "version": "0.1.7",
+  "version": "0.1.9",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "test": "jest",
     "clean": "tsc --build --clean && rm -rf dist",
-    "build": "tsc && webpack --progress",
+    "build": "webpack --progress",
     "prebuild": "yarn clean",
-    "prepack": "yarn clean && tsc",
+    "prepack": "yarn tsc --noEmit false",
+    "postpack": "yarn clean",
     "watch": "yarn clean && webpack --watch --mode development --progress",
     "storybook": "yarn clean && start-storybook -p $STORYBOOK_PORT -c .storybook --ci"
   },
