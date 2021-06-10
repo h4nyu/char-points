@@ -11,7 +11,7 @@ export const crop:CropFn = async ({imageData, box}) => {
     const width = x1 - x0
     const height = y1 - y0
     const buf = await sharp(Buffer.from(imageData, "base64"))
-      .extract({ width, height, left: box.x0, top: box.y0 })
+      .extract({ width, height, left: x0, top: y0 })
       .resize(width, height)
       .toBuffer();
     return buf.toString("base64")
