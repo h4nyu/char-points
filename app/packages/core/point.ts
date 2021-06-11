@@ -75,9 +75,12 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
         return err;
       }
       err = await store.point.load(
-        points
-          .filter((x) => x.imageId === imageId)
-      );
+        points.map((x) => {
+          return {
+            ...x,
+            imageId
+          }
+        }));
       if (err instanceof Error) {
         return err;
       }
