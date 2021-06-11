@@ -49,14 +49,16 @@ export const Store = (sql: Sql<any>): ImageStore => {
   }): Promise<Image[] | Error> => {
     try {
       const { ids, state } = payload;
-      let rows = [];
-      if (ids !== undefined && ids.length > 0) {
-        rows = await sql`SELECT * FROM images WHERE id IN (${ids})`;
-      } else if (state !== undefined) {
-        rows = await sql`SELECT * FROM images WHERE state = ${state}`;
-      } else {
-        rows = await sql`SELECT * FROM images`;
-      }
+      const rows = await (async () => {
+        if (ids !== undefined && ids.length > 0) {
+          return await sql`SELECT * FROM images WHERE id IN (${ids})`;
+        } else if (state !== undefined) {
+          return await sql`SELECT * FROM images WHERE state = ${state}`;
+        } else if (ids === undefined && state === undefined) {
+          await sql`SELECT * FROM images`;
+        }
+        return []
+      })()
       return rows.map(to);
     } catch (err) {
       return err;
