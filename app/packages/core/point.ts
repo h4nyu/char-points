@@ -63,11 +63,11 @@ export const Service = (args: { store: Store; lock: Lock }): Service => {
   }) => {
     const { imageId, points } = payload;
     return await lock.auto(async () => {
-      const hasImage = await store.image.has({ id: imageId });
-      if (hasImage instanceof Error) {
-        return hasImage;
+      const img = await store.image.find({ id: imageId });
+      if (img instanceof Error) {
+        return img;
       }
-      if (!hasImage) {
+      if (img === undefined) {
         return new Error(ErrorKind.ImageNotFound);
       }
       let err = await store.point.delete({ imageId });
